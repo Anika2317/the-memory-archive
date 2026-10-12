@@ -6,7 +6,7 @@
 <title>The Memory Archive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Caveat:wght@500;600;700&family=Patrick+Hand&family=Patrick+Hand+SC&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Caveat:wght@500;600;700&family=Kalam:wght@300;400;700&family=Architects+Daughter&display=swap">
 <style>
 /* Layout: the archive as one wide living network. A full-width night field of neurons; bright ones are memories, gathered into named clusters by what they're about. Choosing one fires its connections and slides in a reading card. */
 :root {
@@ -27,15 +27,15 @@
 
   --script: "Pinyon Script", "Snell Roundhand", cursive;
   --display: "Caveat", "Bradley Hand", cursive;
-  --body: "Patrick Hand", "Bradley Hand", "Comic Sans MS", cursive;
-  --mono: "Patrick Hand SC", "Patrick Hand", cursive;
+  --body: "Kalam", "Bradley Hand", cursive;
+  --mono: "Architects Daughter", "Kalam", cursive;
   --ease: cubic-bezier(.2, .75, .2, 1);
   color-scheme: light;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 1.15rem; line-height: 1.55; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-weight: 300; font-size: 1.05rem; line-height: 1.55; }
 a { color: var(--lilac); text-underline-offset: 3px; }
 button { font: inherit; color: inherit; cursor: pointer; }
 :focus-visible { outline: 2px solid var(--lilac); outline-offset: 3px; }
@@ -54,6 +54,7 @@ p { margin: 0; }
 .top .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; padding-block: .9rem; }
 .brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--ink); }
 .brand span { font-family: var(--script); font-weight: 400; font-size: 2rem; line-height: 1.2; padding-top: .2rem; }
+.brand-org { font-family: var(--mono); font-size: .8rem; letter-spacing: .05em; color: var(--muted); padding-top: .55rem; }
 .nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; align-items: center; font-size: .95rem; }
 .nav a { color: var(--muted); text-decoration: none; }
 .nav a:hover { color: var(--ink); }
@@ -310,6 +311,7 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.3rem
     <a class="brand" href="#top">
       <svg width="30" height="30" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="70" r="27" fill="#C7ADF2"/><circle cx="128.5" cy="90.7" r="27" fill="#A98BDE"/><circle cx="117.6" cy="124.3" r="27" fill="#C7ADF2"/><circle cx="82.4" cy="124.3" r="27" fill="#A98BDE"/><circle cx="71.5" cy="90.7" r="27" fill="#C7ADF2"/><circle cx="100" cy="100" r="14" fill="#F4F1F8"/><circle cx="100" cy="100" r="6" fill="#3B2160"/></svg>
       <span>The Memory Archive</span>
+      <small class="brand-org">a project of Leucent</small>
     </a>
     <nav class="nav" aria-label="Main">
       <a href="#question">Question of the month</a>
@@ -460,7 +462,7 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.3rem
 
 <footer>
   <div class="wrap">
-    <div><div class="tag">Still here. Still them.</div><div>The Memory Archive · A Del Norte High School DECA project</div></div>
+    <div><div class="tag">Still here. Still them.</div><div>The Memory Archive · A project of Leucent, a nonprofit · Del Norte High School DECA</div></div>
     <div style="max-width: 26rem">No names, addresses, or medical details are ever published.</div>
   </div>
 </footer>
