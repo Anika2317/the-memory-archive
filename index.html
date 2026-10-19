@@ -246,29 +246,39 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
 .years { margin-top: .5rem; padding-left: .2rem; }
 .years .fchip { min-height: 2.2rem; padding: .25rem .75rem; font-size: .85rem; }
 
-/* Question of the month: a constellation of answers, opened from the nav */
+/* Question of the month: answers bloom around the question like petals, opened from the nav */
 #qmDlg { max-width: min(60rem, calc(100vw - 2rem)); }
 .qm-title { font-size: clamp(1.4rem, 2.6vw, 1.8rem); padding-right: 3rem; }
 .navbtn { background: none; border: 0; padding: 0; color: var(--muted); }
 .navbtn:hover { color: var(--ink); }
 .qm-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem 2rem; }
 .qm-months { display: flex; flex-wrap: wrap; gap: .4rem; }
-.sky { position: relative; margin-top: 1.25rem; height: clamp(26rem, 42vw, 32rem); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: radial-gradient(ellipse 55% 60% at 50% 50%, #EFE4F7 0%, #F4EDF2 70%, #F8F3EA 100%); }
+.sky { position: relative; margin-top: 1.25rem; height: clamp(28rem, 44vw, 34rem); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: radial-gradient(ellipse 48% 52% at 50% 50%, #F3EAFA 0%, #F6F0F4 55%, #F8F3EA 100%); }
 .sky-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.sky-lines line { stroke: rgba(122, 80, 194, .25); stroke-width: 1; transition: stroke .3s; }
-.sky-lines line.on { stroke: rgba(122, 80, 194, .8); }
-.sky-lines circle { fill: #B79AE0; }
-.sky-lines circle.on { fill: var(--lilac); }
-.bgstar { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #B79AE0; opacity: .35; animation: twinkle 4s ease-in-out infinite; pointer-events: none; }
-@keyframes twinkle { 0%, 100% { opacity: .15; } 50% { opacity: .6; } }
-.sky-q { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(30rem, 40%); text-align: center; display: grid; gap: .8rem; justify-items: center; z-index: 2; }
+.sky-lines .petal { fill: url(#petalFill); stroke: rgba(122, 80, 194, .18); stroke-width: 1; transform-box: view-box; transition: fill .35s, stroke .35s; }
+.sky-lines .petal.hov { fill: url(#petalHov); stroke: rgba(122, 80, 194, .35); }
+.sky-lines .petal.on { fill: url(#petalOn); stroke: rgba(122, 80, 194, .6); }
+.sky-lines .vein { stroke: rgba(122, 80, 194, .16); stroke-width: 1; fill: none; transform-box: view-box; }
+.sky-lines .grow { animation: petalGrow 1.1s var(--ease) both; }
+@keyframes petalGrow { from { transform: scale(.12) rotate(-10deg); opacity: 0; } }
+.bgstar { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #C6AEE8; opacity: .35; animation: drift 7s ease-in-out infinite; pointer-events: none; }
+.bgstar.gold { background: #EBCB78; }
+@keyframes drift { 0%, 100% { opacity: .15; transform: translateY(0); } 50% { opacity: .6; transform: translateY(-6px); } }
+.sky-q { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(26rem, 38%); text-align: center; display: grid; gap: .7rem; justify-items: center; z-index: 2; }
+.sky-q::before { content: ""; position: absolute; inset: -3rem -3.5rem; z-index: -1; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 253, 248, .97) 0%, rgba(255, 253, 248, .85) 55%, rgba(255, 253, 248, 0) 100%); }
 .sky-q .mono { color: var(--lilac); }
-.sky-q h3 { font-size: clamp(1.25rem, 2vw, 1.7rem); line-height: 1.12; }
+.sky-q h3 { font-size: clamp(1.25rem, 2vw, 1.65rem); line-height: 1.15; }
 .sky-q .add-btn { margin-top: .2rem; }
-.bubble { position: absolute; transform: translate(-50%, -50%); max-width: min(15rem, 20%); background: rgba(255, 253, 248, .95); border: 1px solid var(--line-2); border-radius: 1.4rem; padding: .65rem 1rem; font-family: var(--display); font-size: 0.86rem; line-height: 1.2; color: var(--silver); text-align: center; z-index: 2; transition: border-color .25s, box-shadow .25s, color .25s; }
-.bubble:hover, .bubble.on { border-color: var(--lilac); color: var(--plum); box-shadow: 0 0 0 1px var(--lilac), 0 0 26px rgba(122, 80, 194, .45); }
-.bubble.mine { border-style: dashed; }
-.bubble.more { font-family: var(--mono); font-size: 0.76rem; letter-spacing: .05em; text-transform: uppercase; color: var(--lilac); }
+.bubble { position: absolute; transform: translate(-50%, -50%); max-width: min(12.5rem, 19%); background: none; border: 0; border-radius: 10px; padding: .3rem .45rem; font-family: var(--display); font-style: italic; font-size: 0.98rem; line-height: 1.25; color: var(--silver); text-align: center; text-wrap: balance; text-shadow: 0 0 12px var(--bg-2), 0 0 4px var(--bg-2); z-index: 2; transition: color .25s; }
+.bubble.grow { animation: bloomIn .9s var(--ease) both; }
+.bubble::before { content: ""; display: block; width: 15px; height: 15px; margin: 0 auto .35rem; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-10 -10 20 20'%3E%3Cg fill='%23B79AE0'%3E%3Ccircle cx='0' cy='-5.2' r='3.6'/%3E%3Ccircle cx='4.95' cy='-1.6' r='3.6'/%3E%3Ccircle cx='3.06' cy='4.2' r='3.6'/%3E%3Ccircle cx='-3.06' cy='4.2' r='3.6'/%3E%3Ccircle cx='-4.95' cy='-1.6' r='3.6'/%3E%3C/g%3E%3Ccircle r='2.3' fill='%23F1CF6B'/%3E%3C/svg%3E") center / contain no-repeat; transition: transform .5s var(--ease); }
+.bubble:hover, .bubble.on { color: var(--plum); }
+.bubble:hover::before, .bubble.on::before { transform: rotate(36deg) scale(1.3); }
+.bubble.on::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-10 -10 20 20'%3E%3Cg fill='%237A50C2'%3E%3Ccircle cx='0' cy='-5.2' r='3.6'/%3E%3Ccircle cx='4.95' cy='-1.6' r='3.6'/%3E%3Ccircle cx='3.06' cy='4.2' r='3.6'/%3E%3Ccircle cx='-3.06' cy='4.2' r='3.6'/%3E%3Ccircle cx='-4.95' cy='-1.6' r='3.6'/%3E%3C/g%3E%3Ccircle r='2.3' fill='%23F1CF6B'/%3E%3C/svg%3E"); }
+.bubble.mine { text-decoration: underline dotted var(--lilac); text-underline-offset: 4px; }
+.bubble.more { font-family: var(--mono); font-style: normal; font-size: 0.74rem; letter-spacing: .05em; text-transform: uppercase; color: var(--lilac); }
+.bubble.more::before { display: none; }
+@keyframes bloomIn { from { opacity: 0; filter: blur(4px); } }
 .qm-detail { margin-top: 1.25rem; min-height: 6rem; border-left: 2px solid var(--lilac); padding: .3rem 0 .3rem 1.25rem; max-width: 48rem; }
 .qm-detail .mono { color: var(--lilac); }
 .qm-detail blockquote { margin: .45rem 0 .4rem; font-family: var(--display); font-size: clamp(1.12rem, 2.08vw, 1.52rem); line-height: 1.25; }
@@ -279,7 +289,10 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
   .sky { height: auto; padding: 1.25rem; display: grid; gap: .6rem; }
   .sky-lines, .bgstar { display: none; }
   .sky-q { position: static; transform: none; width: auto; margin-bottom: .6rem; }
-  .bubble { position: static; transform: none; max-width: none; text-align: left; }
+  .sky-q::before { display: none; }
+  .bubble { position: static; transform: none; max-width: none; display: flex; align-items: center; gap: .7rem; text-align: left; background: var(--bg-2); border: 1px solid var(--line); padding: .7rem .9rem; text-shadow: none; }
+  .bubble::before { margin: 0; flex: none; }
+  .bubble.on { border-color: var(--line-2); }
 }
 
 @media (max-width: 52rem) {
@@ -329,7 +342,7 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
     <div class="under">
       <div class="chips" id="regionChips" role="group" aria-label="Light up a theme"></div>
       <div class="right">
-        <button class="linkbtn" id="fireRandom">Open a random memory</button>
+        <button class="linkbtn" id="fireRandom">Open a memory</button>
         <a class="linkbtn" href="#all">Browse every memory</a>
       </div>
     </div>
@@ -477,7 +490,7 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
         <div>
           <span class="mono eyebrow">The Monthly Bloom</span>
           <h2 class="qm-title" id="qmTitle">One question. Every family answers.</h2>
-          <p class="lede">Each month we ask one question. Choose a star to read an answer, or add your own.</p>
+          <p class="lede">Each month we ask one question. Choose a petal to read an answer, or add your own.</p>
         </div>
         <div class="qm-months" id="qmMonths" role="group" aria-label="Choose a month"></div>
       </div>
@@ -1234,13 +1247,12 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
     ] }
   ];
   var qm = { i: 0, sel: -1 };
-  var SLOTS = [[15, 13], [38, 8], [62, 8], [85, 13], [90, 38], [90, 62], [85, 87], [62, 92], [38, 92], [15, 87], [10, 62], [10, 38]];
   function qmBuildStars() {
     var sky = $('sky'), r = rng(911);
-    for (var i = 0; i < 46; i++) {
-      var d = document.createElement('span'); d.className = 'bgstar';
+    for (var i = 0; i < 34; i++) {
+      var d = document.createElement('span'); d.className = 'bgstar' + (r() < 0.3 ? ' gold' : '');
       d.style.left = (r() * 100) + '%'; d.style.top = (r() * 100) + '%'; d.style.animationDelay = (-r() * 4) + 's';
-      if (r() < 0.25) { d.style.width = d.style.height = '3px'; }
+      if (r() < 0.4) { d.style.width = d.style.height = '2px'; }
       sky.insertBefore(d, sky.firstChild);
     }
   }
@@ -1250,41 +1262,54 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
     $('qmMonths').querySelectorAll('[data-qm]').forEach(function (b) { b.addEventListener('click', function () { qm.i = +b.getAttribute('data-qm'); qm.sel = -1; qmRender(); }); });
     $('skyQ').innerHTML = '<span class="mono">' + esc(Q.month) + (qm.i === 0 ? ' · This month' : '') + '</span><h3>' + esc(Q.q) + '</h3><button class="add-btn" id="qmAnswer">Answer this question</button>';
     $('qmAnswer').addEventListener('click', openAnswer);
-    var n = Q.answers.length, shown = n > 12 ? 11 : n, used = [];
-    for (var k = 0; k < shown; k++) used.push(Math.round(k * 12 / shown) % 12);
-    if (n > 12) used.push(used.length ? (used[used.length - 1] + 1) % 12 : 0);
-    var html = '';
-    for (var j = 0; j < shown; j++) { var sl = SLOTS[used[j]], a = Q.answers[j]; html += '<button class="bubble' + (a.mine ? ' mine' : '') + (qm.sel === j ? ' on' : '') + '" data-b="' + j + '" style="left:' + sl[0] + '%;top:' + sl[1] + '%">' + esc(a.s) + '</button>'; }
-    if (n > 12) { var sl2 = SLOTS[used[shown]]; html += '<button class="bubble more" data-b="more" style="left:' + sl2[0] + '%;top:' + sl2[1] + '%">+' + (n - 11) + ' more answers</button>'; }
+    var n = Q.answers.length, shown = n > 12 ? 11 : n, total = shown + (n > 12 ? 1 : 0), html = '';
+    // answers sit around the question like petals around a flower's center
+    function slot(k) { var t = (-90 + k * 360 / total) * Math.PI / 180; return [50 + 39 * Math.cos(t), 50 + 39 * Math.sin(t)]; }
+    for (var j = 0; j < shown; j++) { var sl = slot(j), a = Q.answers[j]; html += '<button class="bubble' + (a.mine ? ' mine' : '') + (qm.sel === j ? ' on' : '') + '" data-b="' + j + '" style="left:' + sl[0].toFixed(2) + '%;top:' + sl[1].toFixed(2) + '%;animation-delay:' + (0.25 + j * 0.06).toFixed(2) + 's">' + esc(a.s) + '</button>'; }
+    if (n > 12) { var sl2 = slot(shown); html += '<button class="bubble more" data-b="more" style="left:' + sl2[0].toFixed(2) + '%;top:' + sl2[1].toFixed(2) + '%">+' + (n - 11) + ' more answers</button>'; }
     $('skyBubbles').innerHTML = html;
-    $('skyBubbles').querySelectorAll('[data-b]').forEach(function (b) { b.addEventListener('click', function () { var v = b.getAttribute('data-b'); qmSelect(v === 'more' ? 'more' : +v); }); });
-    qmDetail(); requestAnimationFrame(qmLines);
+    $('skyBubbles').querySelectorAll('[data-b]').forEach(function (b) {
+      var v = b.getAttribute('data-b');
+      b.addEventListener('click', function () { qmSelect(v === 'more' ? 'more' : +v); });
+      b.addEventListener('mouseenter', function () { qmHover(v, true); });
+      b.addEventListener('mouseleave', function () { qmHover(v, false); });
+    });
+    qmDetail(); requestAnimationFrame(function () { qmLines(true); });
   }
-  /* constellation lines: a star sits where each line leaves a bubble, like stars joined in the night sky */
-  function qmLines() {
+  function qmHover(v, on) { var p = $('skyLines').querySelector('.petal[data-p="' + v + '"]'); if (p) p.classList.toggle('hov', on); }
+  /* petals: each answer grows out of the question at the center, like a forget-me-not in bloom */
+  function qmLines(grow) {
     var svg = $('skyLines'), sky = $('sky');
     if (window.matchMedia('(max-width: 51rem)').matches) { svg.innerHTML = ''; return; }
-    var box = sky.getBoundingClientRect(); svg.setAttribute('viewBox', '0 0 ' + box.width + ' ' + box.height);
-    var els = [].slice.call($('skyBubbles').querySelectorAll('.bubble')), q = $('skyQ');
-    function rect(el) { var r = el.getBoundingClientRect(); return { x: r.left - box.left, y: r.top - box.top, w: r.width, h: r.height, cx: r.left - box.left + r.width / 2, cy: r.top - box.top + r.height / 2 }; }
-    function exitPt(R, tx, ty, pad) { var dx = tx - R.cx, dy = ty - R.cy, sx = Math.abs(dx) > 0.01 ? (R.w / 2 + pad) / Math.abs(dx) : 1e9, sy = Math.abs(dy) > 0.01 ? (R.h / 2 + pad) / Math.abs(dy) : 1e9, k = Math.min(sx, sy); return [R.cx + dx * k, R.cy + dy * k]; }
-    var R = els.map(rect), QR = rect(q), out = '', seg = [];
-    // walk around the ring, leaving a gap now and then so it reads as constellations, not a fence
-    for (var i = 0; i < R.length; i++) { var j = (i + 1) % R.length; if (R.length > 2 && i % 4 !== 3) seg.push([i, j]); }
-    for (var s2 = 0; s2 < R.length; s2 += 3) seg.push([s2, 'q']);
-    seg.forEach(function (p) {
-      var A = R[p[0]], B = p[1] === 'q' ? QR : R[p[1]];
-      var a = exitPt(A, B.cx, B.cy, 7), b = exitPt(B, A.cx, A.cy, p[1] === 'q' ? 16 : 7);
-      var on = qm.sel === p[0] || qm.sel === p[1];
-      out += '<line class="' + (on ? 'on' : '') + '" x1="' + a[0].toFixed(1) + '" y1="' + a[1].toFixed(1) + '" x2="' + b[0].toFixed(1) + '" y2="' + b[1].toFixed(1) + '"/>';
-      out += '<circle class="' + (on ? 'on' : '') + '" cx="' + a[0].toFixed(1) + '" cy="' + a[1].toFixed(1) + '" r="' + (on ? 2.6 : 2) + '"/><circle class="' + (on ? 'on' : '') + '" cx="' + b[0].toFixed(1) + '" cy="' + b[1].toFixed(1) + '" r="' + (on ? 2.6 : 2) + '"/>';
+    var box = sky.getBoundingClientRect(); if (!box.width) return;
+    svg.setAttribute('viewBox', '0 0 ' + box.width + ' ' + box.height);
+    var els = [].slice.call($('skyBubbles').querySelectorAll('.bubble'));
+    var cx = box.width / 2, cy = box.height / 2, far = Math.hypot(cx, cy);
+    var out = '<defs>' +
+      '<radialGradient id="petalFill" gradientUnits="userSpaceOnUse" cx="' + cx + '" cy="' + cy + '" r="' + far + '"><stop offset="0" stop-color="#7A50C2" stop-opacity=".02"/><stop offset=".7" stop-color="#9C7BD6" stop-opacity=".16"/><stop offset="1" stop-color="#B79AE0" stop-opacity=".24"/></radialGradient>' +
+      '<radialGradient id="petalHov" gradientUnits="userSpaceOnUse" cx="' + cx + '" cy="' + cy + '" r="' + far + '"><stop offset="0" stop-color="#7A50C2" stop-opacity=".04"/><stop offset=".7" stop-color="#9C7BD6" stop-opacity=".26"/><stop offset="1" stop-color="#B79AE0" stop-opacity=".36"/></radialGradient>' +
+      '<radialGradient id="petalOn" gradientUnits="userSpaceOnUse" cx="' + cx + '" cy="' + cy + '" r="' + far + '"><stop offset="0" stop-color="#7A50C2" stop-opacity=".08"/><stop offset=".6" stop-color="#8A62CC" stop-opacity=".38"/><stop offset="1" stop-color="#B79AE0" stop-opacity=".5"/></radialGradient>' +
+      '</defs>';
+    function f(v) { return v.toFixed(1); }
+    els.forEach(function (el, i) {
+      var r = el.getBoundingClientRect(), bx = r.left - box.left + r.width / 2, by = r.top - box.top + r.height / 2;
+      var dx = bx - cx, dy = by - cy, len = Math.hypot(dx, dy) || 1, ux = dx / len, uy = dy / len;
+      // stop the petal just short of the label so the words sit at its tip
+      var kx = Math.abs(ux) > 0.01 ? (r.width / 2 + 6) / Math.abs(ux) : 1e9, ky = Math.abs(uy) > 0.01 ? (r.height / 2 + 6) / Math.abs(uy) : 1e9;
+      var L = Math.max(len - Math.min(kx, ky), len * 0.45), nx = -uy, ny = ux, w = Math.min(L * 0.2, 52);
+      function pt(t, o) { return f(cx + ux * L * t + nx * o) + ' ' + f(cy + uy * L * t + ny * o); }
+      var v = el.getAttribute('data-b'), on = String(qm.sel) === v;
+      if (grow) { el.classList.remove('grow'); void el.offsetWidth; el.classList.add('grow'); }
+      var g = grow ? ' grow" style="transform-origin:' + f(cx) + 'px ' + f(cy) + 'px;animation-delay:' + (i * 0.06).toFixed(2) + 's' : '';
+      out += '<path class="petal' + (on ? ' on' : '') + g + '" data-p="' + v + '" d="M' + pt(0, 0) + ' C' + pt(0.3, w) + ' ' + pt(0.88, w * 0.95) + ' ' + pt(1, 0) + ' C' + pt(0.88, -w * 0.95) + ' ' + pt(0.3, -w) + ' ' + pt(0, 0) + 'Z"/>';
+      out += '<path class="vein' + g + '" d="M' + pt(0.12, 0) + ' Q' + pt(0.55, w * 0.12) + ' ' + pt(0.92, 0) + '"/>';
     });
     svg.innerHTML = out;
   }
   function qmSelect(j) {
     qm.sel = j;
     $('skyBubbles').querySelectorAll('[data-b]').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-b') === String(j)); });
-    qmDetail(); qmLines();
+    qmDetail(); qmLines(false);
   }
   function qmDetail() {
     var Q = QUESTIONS[qm.i], el = $('qmDetail');
@@ -1293,7 +1318,7 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
       return;
     }
     var a = Q.answers[qm.sel];
-    if (!a) { el.innerHTML = '<span class="mono">' + Q.answers.length + ' answers so far</span><p style="margin-top:.4rem">Choose any star above to read the whole answer.</p>'; return; }
+    if (!a) { el.innerHTML = '<span class="mono">' + Q.answers.length + ' answers so far</span><p style="margin-top:.4rem">Choose any petal above to read the whole answer.</p>'; return; }
     el.innerHTML = '<span class="mono">' + esc(Q.month) + ' · ' + esc(a.by) + '</span><blockquote>' + esc(a.full) + '</blockquote>' +
       (a.mem ? '<button class="linkbtn" id="qmMem">See this memory in the archive</button>' : '');
     var b = $('qmMem'); if (b) b.addEventListener('click', function () { $('qmDlg').close(); $('stage').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); setTimeout(function () { openMemory(a.mem); }, reduce ? 0 : 450); });
@@ -1314,10 +1339,10 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
     $('ansForm').reset(); $('ansDlg').close();
     qm.sel = 0; qmRender();
   });
-  $('qmOpen').addEventListener('click', function () { try { $('qmDlg').showModal(); } catch (e) { $('qmDlg').setAttribute('open', ''); } requestAnimationFrame(qmLines); });
+  $('qmOpen').addEventListener('click', function () { try { $('qmDlg').showModal(); } catch (e) { $('qmDlg').setAttribute('open', ''); } requestAnimationFrame(function () { qmLines(true); }); });
   $('qmClose').addEventListener('click', function () { $('qmDlg').close(); });
   $('qmDlg').addEventListener('click', function (e) { if (e.target === this) this.close(); });
-  var qrt; window.addEventListener('resize', function () { clearTimeout(qrt); qrt = setTimeout(qmLines, 120); });
+  var qrt; window.addEventListener('resize', function () { clearTimeout(qrt); qrt = setTimeout(function () { qmLines(false); }, 120); });
 
 
   /* ---------- Start ---------- */
