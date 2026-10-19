@@ -209,6 +209,8 @@ p { margin: 0; }
 .fact .src { font-size: .8rem; color: var(--faint); margin-top: .25rem; }
 .about { display: grid; gap: 1rem; max-width: 46rem; }
 .about p { color: var(--muted); }
+.about ul { margin: -.4rem 0 0; padding-left: 1.2rem; color: var(--muted); display: grid; gap: .35rem; }
+.about a { color: inherit; text-underline-offset: 3px; }
 .tbd { border: 1.5px dashed var(--line-2); border-radius: 4px; padding: 1rem; color: var(--faint); text-align: center; }
 .partners { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: .75rem; }
 footer { border-top: 1px solid var(--line); color: var(--faint); font-size: .9rem; margin-top: 5rem; }
@@ -303,7 +305,7 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
       <button class="navbtn" id="qmOpen">Question of the month</button>
       <a href="#all">Browse</a>
       <a href="#about">About</a>
-      <button class="add-btn" id="addTop">Open the Mailbox</button>
+      <button class="add-btn" id="addTop">Fold in a memory</button>
     </nav>
   </div>
 </header>
@@ -397,16 +399,19 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
     <section class="section about" id="about">
       <span class="mono eyebrow">About</span>
       <h2 class="h2">Alzheimer's changes memory. Not who someone is.</h2>
-      <p></p>
-      <p>Not every memory here is sunshine. Families also share the hard moments and the unexpected ones, like the first time a parent forgot a name, or the day a grandfather started painting. They sit right alongside the happy memories, because that is what living with Alzheimer's is really like, and talking about it openly is how stigma ends.</p>
-      <p>The Memory Archive is a community awareness campaign by Anika Seksaria and Maleesha [Last Name] at Del Norte High School. Every memory needs consent from the person or their family. We never publish names, addresses, or medical details. Every memory is reviewed before it appears, and families can ask us to remove theirs at any time.</p>
-      <div class="partners">
-        <div class="tbd">[Alzheimer's organization]</div>
-        <div class="tbd">[UC San Diego]</div>
-        <div class="tbd">[Memory-care community]</div>
-        <div class="tbd">[Local sponsor]</div>
+      <p>The forget-me-not has long stood for remembrance. The Memory Archive carries that meaning forward: a community campaign that preserves stories, challenges misconceptions about Alzheimer's, and connects generations through memory.</p>
+      <p>Alzheimer's can affect memory, but it does not erase a person's identity, relationships, or history. Like the petals of a single flower, each shared memory, whether a song, a recipe, or a place, is one part of a whole person. Together, the petals reveal the person behind the diagnosis.</p>
+      <p>Within the archive:</p>
+      <ul>
+        <li>A network of memories, connected by the songs, places, and moments they share</li>
+        <li>A monthly question answered by families across San Diego</li>
+        <li>A collection organized by theme, decade, and year</li>
+      </ul>
+      <p>Joyful, difficult, and unexpected moments are held alike, reflecting the full reality of living with Alzheimer's.</p>
+      <p>Every memory needs consent from the person or their family. We never publish names, addresses, or medical details. Every memory is reviewed before it appears, and families can ask us to remove theirs at any time.</p>
+      <p>Founded by Anika Seksaria and Maleesha Weerakkody, Del Norte High School, San Diego.</p>
       </div>
-      <p>Contact: [project email] · Instagram @[handle]</p>
+      <p>Contact: <a href="mailto:thememoryarchive.sd@gmail.com">thememoryarchive.sd@gmail.com</a> · Instagram <a href="https://www.instagram.com/memoryarchive.the/" target="_blank" rel="noopener">@memoryarchive.the</a></p>
     </section>
   </div>
 </main>
@@ -425,8 +430,8 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
 <dialog id="addDlg" aria-labelledby="addTitle">
   <div class="sheet">
     <button class="close" id="addClose" aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-    <span class="mono" style="color: var(--lilac)">The Mailbox</span>
-    <h2 id="addTitle" style="font-size: clamp(1.5rem, 3vw, 1.9rem); margin-top: .3rem; padding-right: 3rem">Drop in a memory. Bring a piece, skip what you don't remember.</h2>
+    <span class="mono" style="color: var(--lilac)">Add a memory</span>
+    <h2 id="addTitle" style="font-size: clamp(1.5rem, 3vw, 1.9rem); margin-top: .3rem; padding-right: 3rem">Fold in a memory. Bring a piece, skip what you don't remember.</h2>
     <form class="form" id="addForm" novalidate>
       <fieldset class="kinds">
         <legend><span class="k">WHAT KIND OF MEMORY</span><span class="q">Every kind belongs in the archive</span></legend>
@@ -460,7 +465,7 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
       <div><label for="fBy"><span class="k">SHARED BY</span><span class="q">Who is sharing it?</span></label><select id="fBy"><option>In their own words</option><option>Their child</option><option>Their grandchild</option><option>Their spouse or partner</option><option>Their sibling</option><option>A friend or caregiver</option></select></div>
       <label class="check"><input type="checkbox" id="fConsent"><span>This memory belongs to someone living with Alzheimer's. I have their or their family's permission to share it, including any recording, photo, or drawing, and I understand it can be removed at any time.</span></label>
       <p class="err" id="fErr" hidden></p>
-      <button class="submit" type="submit">Send it to the archive</button>
+      <button class="submit" type="submit">Add it to the archive</button>
     </form>
   </div>
 </dialog>
