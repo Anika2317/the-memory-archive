@@ -71,7 +71,7 @@ p { margin: 0; }
 /* Hero copy, overlaid on the network */
 .hero-copy { position: absolute; left: clamp(1.25rem, 3vw, 2.5rem); top: clamp(1.25rem, 3vw, 2.25rem); max-width: 25rem; z-index: 2; pointer-events: none; transition: opacity .5s; }
 .hero-copy h1 { font-size: clamp(2.2rem, 3.6vw, 3.2rem); }
-.hero-copy h1 em { color: var(--lilac); font-weight: 500; }
+.hero-copy h1 em { display: block; margin-top: .15em; font-family: var(--bloom); font-style: normal; font-weight: 400; font-size: .82em; line-height: 1.3; color: var(--lilac); }
 .hero-copy p { color: var(--muted); margin-top: .8rem; font-size: 1rem; }
 .hero-copy .hero-count { font-family: var(--mono); font-size: 0.73rem; letter-spacing: .05em; text-transform: uppercase; color: var(--lilac); }
 .stage.open .hero-copy { opacity: .12; }
@@ -336,7 +336,7 @@ footer .mark img { border-radius: 10px; flex: none; }
 <main>
   <div class="stage" id="stage">
     <section class="hero-copy" id="top">
-      <h1>A city's memory, <em>still connected.</em></h1>
+      <h1>Every story, <em>a forget-me-not.</em></h1>
       <p>Every light is a memory from someone living with Alzheimer's or their family. When two share a piece, like a song or a Sunday dinner, they connect.</p>
       <p class="hero-count"><span id="heroCount">0</span> memories · <span id="heroLinks">0</span> connections</p>
     </section>
