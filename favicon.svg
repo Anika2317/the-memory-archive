@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 200 200">
+  <defs>
+    <filter id="g" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <g id="p">
+      <path d="M0 -20 C-22 -26 -38 -50 -32 -68 C-29 -80 -15 -86 -6 -81 L0 -77 L6 -81 C15 -86 29 -80 32 -68 C38 -50 22 -26 0 -20 Z" fill="#4B336F" stroke="#E2D4FA" stroke-width="4.5" stroke-linejoin="round"/>
+      <g fill="#fff" filter="url(#g)"><circle cx="-12" cy="-84" r="4.6"/><circle cx="12" cy="-84" r="4.6"/><circle cx="-34" cy="-55" r="3.4"/><circle cx="34" cy="-55" r="3.4"/></g>
+    </g>
+  </defs>
+  <rect x="-100" y="-100" width="200" height="200" rx="44" fill="#2D1450"/>
+  <g transform="translate(0 5) scale(.9)">
+    <use href="#p"/><use href="#p" transform="rotate(72)"/><use href="#p" transform="rotate(144)"/><use href="#p" transform="rotate(216)"/><use href="#p" transform="rotate(288)"/>
+    <circle r="21" fill="#2D1450" stroke="#E2D4FA" stroke-width="5"/>
+    <circle r="13" fill="#4B336F" stroke="#E2D4FA" stroke-width="2.5"/>
+    <circle r="4.5" fill="#fff"/>
+    <g fill="#E2D4FA"><circle cy="-8.5" r="1.9"/><circle cx="8.1" cy="-2.6" r="1.9"/><circle cx="5" cy="6.9" r="1.9"/><circle cx="-5" cy="6.9" r="1.9"/><circle cx="-8.1" cy="-2.6" r="1.9"/></g>
+  </g>
+</svg>

@@ -4,9 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Memory Archive</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="logo.png">
+<meta property="og:image" content="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Petit+Formal+Script&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap">
 <style>
 /* Layout: the archive as one wide living network. A full-width night field of neurons; bright ones are memories, gathered into named clusters by what they're about. Choosing one fires its connections and slides in a reading card. */
 :root {
@@ -25,7 +28,8 @@
   --line: rgba(74, 48, 120, 0.14);
   --line-2: rgba(122, 80, 194, 0.35);
 
-  --script: "Newsreader", Georgia, serif;
+  --script: "Cormorant Garamond", "Newsreader", Georgia, serif;
+  --bloom: "Petit Formal Script", "Newsreader", Georgia, serif;
   --display: "Newsreader", Georgia, serif;
   --body: "Inter", system-ui, -apple-system, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
@@ -53,7 +57,8 @@ p { margin: 0; }
 .top { border-bottom: 1px solid var(--line); }
 .top .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; padding-block: .9rem; }
 .brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--ink); }
-.brand span { font-family: var(--script); font-weight: 500; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.brand span { font-family: var(--script); font-weight: 500; font-size: 1.5rem; line-height: 1.2; font-feature-settings: "dlig"; }
+.brand img { border-radius: 8px; flex: none; }
 .brand-org { font-family: var(--mono); font-size: .68rem; letter-spacing: .06em; color: var(--muted); padding-top: .2rem; }
 .nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; align-items: center; font-size: .95rem; }
 .nav a { color: var(--muted); text-decoration: none; }
@@ -215,7 +220,9 @@ p { margin: 0; }
 .partners { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: .75rem; }
 footer { border-top: 1px solid var(--line); color: var(--faint); font-size: .9rem; margin-top: 5rem; }
 footer .wrap { padding-block: 2.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2rem; }
-footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04rem; color: var(--lilac); }
+footer .tag { font-family: var(--script); font-style: italic; font-size: 1.15rem; color: var(--lilac); border: 0; padding: 0; }
+footer .mark { display: flex; align-items: center; gap: .8rem; }
+footer .mark img { border-radius: 10px; flex: none; }
 
 /* Kinds of memories and media */
 .kind-tag { display: inline-block; margin-left: .6rem; font-family: var(--mono); font-size: 0.63rem; letter-spacing: .05em; text-transform: uppercase; color: var(--silver); border: 1px solid var(--line-2); border-radius: 999px; padding: .12rem .5rem; vertical-align: 1px; }
@@ -248,39 +255,40 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
 
 /* Question of the month: answers bloom around the question like petals, opened from the nav */
 #qmDlg { max-width: min(60rem, calc(100vw - 2rem)); }
-.qm-title { font-size: clamp(1.4rem, 2.6vw, 1.8rem); padding-right: 3rem; }
+.qm-title { font-family: var(--bloom); font-weight: 400; font-size: clamp(1.3rem, 2.4vw, 1.65rem); line-height: 1.4; padding-right: 3rem; }
 .navbtn { background: none; border: 0; padding: 0; color: var(--muted); }
 .navbtn:hover { color: var(--ink); }
+#qmDlg .eyebrow, .sky-q .mono, .qm-detail .mono { color: #8C7AA6; }
+#qmDlg .fchip[aria-pressed="true"] { background: #7E6C99; border-color: #7E6C99; }
+.sky-q .add-btn { background: #7E6C99; }
 .qm-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem 2rem; }
 .qm-months { display: flex; flex-wrap: wrap; gap: .4rem; }
-.sky { position: relative; margin-top: 1.25rem; height: clamp(28rem, 44vw, 34rem); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: radial-gradient(ellipse 48% 52% at 50% 50%, #F3EAFA 0%, #F6F0F4 55%, #F8F3EA 100%); }
+.sky { position: relative; margin-top: 1.25rem; height: clamp(28rem, 44vw, 34rem); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: radial-gradient(ellipse 48% 52% at 50% 50%, #F4EFF5 0%, #F6F2F2 55%, #F8F4EE 100%); }
 .sky-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.sky-lines .petal { fill: url(#petalFill); stroke: rgba(122, 80, 194, .22); stroke-width: 1; transform-box: view-box; transition: fill .35s, stroke .35s; pointer-events: visiblePainted; cursor: pointer; }
-.sky-lines .petal:hover, .sky-lines .petal.hov { fill: url(#petalHov); stroke: rgba(122, 80, 194, .35); }
-.sky-lines .petal.on { fill: url(#petalOn); stroke: rgba(122, 80, 194, .6); }
+.sky-lines .petal { fill: url(#petalFill); stroke: rgba(110, 90, 140, .12); stroke-width: 1; transform-box: view-box; transition: fill .35s, stroke .35s; pointer-events: visiblePainted; cursor: pointer; }
+.sky-lines .petal:hover, .sky-lines .petal.hov { fill: url(#petalHov); stroke: rgba(110, 90, 140, .2); }
+.sky-lines .petal.on { fill: url(#petalOn); stroke: rgba(110, 90, 140, .3); }
 .sky-lines .grow { animation: petalGrow 1.1s var(--ease) both; }
 @keyframes petalGrow { from { transform: scale(.12) rotate(-10deg); opacity: 0; } }
-.bgstar { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #C6AEE8; opacity: .35; animation: drift 7s ease-in-out infinite; pointer-events: none; }
-.bgstar.gold { background: #EBCB78; }
+.bgstar { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #CFC3DC; opacity: .3; animation: drift 7s ease-in-out infinite; pointer-events: none; }
+.bgstar.gold { background: #E3D3A8; }
 @keyframes drift { 0%, 100% { opacity: .15; transform: translateY(0); } 50% { opacity: .6; transform: translateY(-6px); } }
 .sky-q { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(26rem, 38%); text-align: center; display: grid; gap: .7rem; justify-items: center; z-index: 2; }
-.sky-q::before { content: ""; position: absolute; inset: -3rem -3.5rem; z-index: -1; border-radius: 50%; background: radial-gradient(closest-side, #FFFDF8 0%, rgba(255, 253, 248, .96) 78%, rgba(246, 227, 166, .55) 88%, rgba(246, 227, 166, 0) 100%); }
-.sky-q .mono { color: var(--lilac); }
-.sky-q h3 { font-size: clamp(1.25rem, 2vw, 1.65rem); line-height: 1.15; }
+.sky-q::before { content: ""; position: absolute; inset: -3rem -3.5rem; z-index: -1; border-radius: 50%; background: radial-gradient(closest-side, #FFFDF8 0%, rgba(255, 253, 248, .94) 78%, rgba(236, 224, 190, .35) 88%, rgba(236, 224, 190, 0) 100%); }
+.sky-q h3 { font-family: var(--bloom); font-weight: 400; font-size: clamp(1.1rem, 1.8vw, 1.4rem); line-height: 1.45; color: var(--silver); }
 .sky-q .add-btn { margin-top: .2rem; }
-.bubble { position: absolute; transform: translate(-50%, -50%); max-width: min(10rem, 16%); background: none; border: 0; border-radius: 10px; padding: .3rem .45rem; font-family: var(--display); font-style: italic; font-size: 0.98rem; line-height: 1.25; color: var(--plum); text-align: center; text-wrap: balance; z-index: 2; transition: color .25s; }
+.bubble { position: absolute; transform: translate(-50%, -50%); max-width: min(10rem, 16%); background: none; border: 0; border-radius: 10px; padding: .3rem .45rem; font-family: var(--bloom); font-size: 0.8rem; line-height: 1.55; color: var(--muted); text-align: center; text-wrap: balance; z-index: 2; transition: color .25s; }
 .bubble.grow { animation: bloomIn .9s var(--ease) both; }
 .bubble::before { content: ""; display: none; width: 15px; height: 15px; margin: 0 auto .35rem; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-10 -10 20 20'%3E%3Cg fill='%23B79AE0'%3E%3Ccircle cx='0' cy='-5.2' r='3.6'/%3E%3Ccircle cx='4.95' cy='-1.6' r='3.6'/%3E%3Ccircle cx='3.06' cy='4.2' r='3.6'/%3E%3Ccircle cx='-3.06' cy='4.2' r='3.6'/%3E%3Ccircle cx='-4.95' cy='-1.6' r='3.6'/%3E%3C/g%3E%3Ccircle r='2.3' fill='%23F1CF6B'/%3E%3C/svg%3E") center / contain no-repeat; transition: transform .5s var(--ease); }
-.bubble:hover, .bubble.on { color: var(--ink); }
+.bubble:hover, .bubble.on { color: var(--silver); }
 .bubble:hover::before, .bubble.on::before { transform: rotate(36deg) scale(1.3); }
 .bubble.on::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-10 -10 20 20'%3E%3Cg fill='%237A50C2'%3E%3Ccircle cx='0' cy='-5.2' r='3.6'/%3E%3Ccircle cx='4.95' cy='-1.6' r='3.6'/%3E%3Ccircle cx='3.06' cy='4.2' r='3.6'/%3E%3Ccircle cx='-3.06' cy='4.2' r='3.6'/%3E%3Ccircle cx='-4.95' cy='-1.6' r='3.6'/%3E%3C/g%3E%3Ccircle r='2.3' fill='%23F1CF6B'/%3E%3C/svg%3E"); }
-.bubble.mine { text-decoration: underline dotted var(--lilac); text-underline-offset: 4px; }
-.bubble.more { font-family: var(--mono); font-style: normal; font-size: 0.74rem; letter-spacing: .05em; text-transform: uppercase; color: var(--lilac); }
+.bubble.mine { text-decoration: underline dotted #A898BC; text-underline-offset: 4px; }
+.bubble.more { font-family: var(--mono); font-size: 0.74rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
 .bubble.more::before { display: none; }
 @keyframes bloomIn { from { opacity: 0; filter: blur(4px); } }
-.qm-detail { margin-top: 1.25rem; min-height: 6rem; border-left: 2px solid var(--lilac); padding: .3rem 0 .3rem 1.25rem; max-width: 48rem; }
-.qm-detail .mono { color: var(--lilac); }
-.qm-detail blockquote { margin: .45rem 0 .4rem; font-family: var(--display); font-size: clamp(1.12rem, 2.08vw, 1.52rem); line-height: 1.25; }
+.qm-detail { margin-top: 1.25rem; min-height: 6rem; border-left: 2px solid #C4B9D2; padding: .3rem 0 .3rem 1.25rem; max-width: 48rem; }
+.qm-detail blockquote { margin: .45rem 0 .4rem; font-family: var(--bloom); font-size: clamp(.98rem, 1.7vw, 1.2rem); line-height: 1.7; color: var(--silver); }
 .qm-detail p { color: var(--muted); font-size: .95rem; }
 .qm-detail ul { margin: .5rem 0 0; padding-left: 1.1rem; color: var(--silver); }
 
@@ -311,7 +319,7 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#top">
-      <svg width="30" height="30" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="70" r="27" fill="#C7ADF2"/><circle cx="128.5" cy="90.7" r="27" fill="#A98BDE"/><circle cx="117.6" cy="124.3" r="27" fill="#C7ADF2"/><circle cx="82.4" cy="124.3" r="27" fill="#A98BDE"/><circle cx="71.5" cy="90.7" r="27" fill="#C7ADF2"/><circle cx="100" cy="100" r="14" fill="#F4F1F8"/><circle cx="100" cy="100" r="6" fill="#3B2160"/></svg>
+      <img src="favicon.svg" width="32" height="32" alt="">
       <span>The Memory Archive</span>
       <small class="brand-org">Leucent Inc.</small>
     </a>
@@ -431,7 +439,7 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
 
 <footer>
   <div class="wrap">
-    <div><div class="tag">Forget Me Not</div><div>The Memory Archive ·  Leucent Inc · Del Norte High School</div></div>
+    <div class="mark"><img src="favicon.svg" width="40" height="40" alt=""><div><div class="tag">Forget Me Not</div><div>The Memory Archive · Leucent Inc · Del Norte High School</div></div></div>
     <div style="max-width: 26rem"></div>
   </div>
 </footer>
@@ -1286,9 +1294,9 @@ footer .tag { font-family: var(--display); font-style: italic; font-size: 1.04re
     var els = [].slice.call($('skyBubbles').querySelectorAll('.bubble'));
     var cx = box.width / 2, cy = box.height / 2, far = Math.hypot(cx, cy);
     var out = '<defs>' +
-      '<radialGradient id="petalFill" gradientUnits="userSpaceOnUse" cx="' + cx + '" cy="' + cy + '" r="' + far + '"><stop offset="0" stop-color="#B79AE0" stop-opacity=".12"/><stop offset=".45" stop-color="#B79AE0" stop-opacity=".26"/><stop offset=".8" stop-color="#C6AEE8" stop-opacity=".34"/></radialGradient>' +
-      '<radialGradient id="petalHov" gradientUnits="userSpaceOnUse" cx="' + cx + '" cy="' + cy + '" r="' + far + '"><stop offset="0" stop-color="#9C7BD6" stop-opacity=".2"/><stop offset=".45" stop-color="#9C7BD6" stop-opacity=".36"/><stop offset=".8" stop-color="#B79AE0" stop-opacity=".46"/></radialGradient>' +
-      '<radialGradient id="petalOn" gradientUnits="userSpaceOnUse" cx="' + cx + '" cy="' + cy + '" r="' + far + '"><stop offset="0" stop-color="#8A62CC" stop-opacity=".3"/><stop offset=".45" stop-color="#8A62CC" stop-opacity=".46"/><stop offset=".8" stop-color="#9C7BD6" stop-opacity=".56"/></radialGradient>' +
+      '<radialGradient id="petalFill" gradientUnits="userSpaceOnUse" cx="' + cx + '" cy="' + cy + '" r="' + far + '"><stop offset="0" stop-color="#B9ADC9" stop-opacity=".08"/><stop offset=".45" stop-color="#B9ADC9" stop-opacity=".16"/><stop offset=".8" stop-color="#C4B9D2" stop-opacity=".22"/></radialGradient>' +
+      '<radialGradient id="petalHov" gradientUnits="userSpaceOnUse" cx="' + cx + '" cy="' + cy + '" r="' + far + '"><stop offset="0" stop-color="#A898BC" stop-opacity=".12"/><stop offset=".45" stop-color="#A898BC" stop-opacity=".22"/><stop offset=".8" stop-color="#B5A8C6" stop-opacity=".3"/></radialGradient>' +
+      '<radialGradient id="petalOn" gradientUnits="userSpaceOnUse" cx="' + cx + '" cy="' + cy + '" r="' + far + '"><stop offset="0" stop-color="#9886AE" stop-opacity=".16"/><stop offset=".45" stop-color="#9886AE" stop-opacity=".28"/><stop offset=".8" stop-color="#A696B8" stop-opacity=".36"/></radialGradient>' +
       '</defs>';
     function f(v) { return v.toFixed(1); }
     els.forEach(function (el, i) {
