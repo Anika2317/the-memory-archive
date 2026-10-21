@@ -37,8 +37,7 @@
         <section class="hero-copy" id="top">
           <h1>Every story, <em>a forget-me-not.</em></h1>
           <p>
-            Every light is a memory from someone living with Alzheimer's or their family. When two
-            share a piece, like a song or a Sunday dinner, they connect.
+            Each one a memory, Together they reveal what Alzheimer's cannot erase.
           </p>
           <p class="hero-count">
             <span id="heroCount">0</span> memories · <span id="heroLinks">0</span> connections
@@ -120,59 +119,59 @@
               city, never by address. Choose a light to open its memory.
             </p>
           </div>
-          <div class="atlas" id="atlas">
-            <div class="world">
-              <div class="world-plot" id="worldPlot">
-                <img src="img/world-dots.svg" alt="" />
-                <span class="sd-pin" id="sdPin" aria-hidden="true"></span>
-                <div class="world-dots" id="worldDots"></div>
+          <div class="maps">
+            <div class="mapbox">
+              <div class="map">
+                <svg viewBox="0 0 600 800" preserveAspectRatio="none" aria-hidden="true">
+                  <path
+                    fill="#EDE3D3"
+                    stroke="#B9A5D6"
+                    stroke-width="1.5"
+                    stroke-linejoin="round"
+                    d="M43 0 L55 68 L77 136 L62 200 L46 255 L31 272 L52 296 L72 323 L74 345 L81 391 L77 412 L81 425 L77 477 L86 525 L101 570 L111 528 L129 477 L146 460 L171 451 L200 470 L223 485 L266 519 L300 548 L326 579 L334 630 L326 690 L300 704 L291 723 L296 760 L300 800 L600 800 L600 0 Z"
+                  />
+                  <path
+                    fill="#E6DCF3"
+                    stroke="#B9A5D6"
+                    stroke-width="1.2"
+                    d="M79 409 C92 386 118 372 142 374 C162 377 168 395 158 410 C146 424 118 425 96 419 Z"
+                  />
+                  <path
+                    fill="#EDE3D3"
+                    stroke="#B9A5D6"
+                    stroke-width="1.5"
+                    stroke-linejoin="round"
+                    d="M162 506 C178 496 200 496 214 508 C222 522 226 545 236 568 L262 628 L292 700 L284 712 L272 708 L244 640 L216 580 L198 556 C184 546 168 530 162 506 Z"
+                  />
+                  <g
+                    fill="#6F6482"
+                    font-family="Inter, system-ui, sans-serif"
+                    font-size="14"
+                    letter-spacing="1"
+                  >
+                    <text x="92" y="48">DEL MAR</text>
+                    <text x="74" y="246">LA JOLLA</text>
+                    <text x="100" y="340">PACIFIC BEACH</text>
+                    <text x="100" y="452">OCEAN BEACH</text>
+                    <text x="232" y="478">DOWNTOWN</text>
+                    <text x="300" y="420">NORTH PARK</text>
+                    <text x="380" y="630">CHULA VISTA</text>
+                    <text x="22" y="730" font-size="12" letter-spacing="4">PACIFIC</text>
+                    <text x="22" y="752" font-size="12" letter-spacing="4">OCEAN</text>
+                  </g>
+                </svg>
+                <div id="dots"></div>
               </div>
+              <p class="map-caption">San Diego. Illustrative map, not to scale.</p>
             </div>
-            <svg class="atlas-lines" id="atlasLines" aria-hidden="true"></svg>
-            <div class="map sd-inset" id="sdInset">
-              <svg viewBox="0 0 600 800" preserveAspectRatio="none" aria-hidden="true">
-                <path
-                  fill="#EDE3D3"
-                  stroke="#B9A5D6"
-                  stroke-width="1.5"
-                  stroke-linejoin="round"
-                  d="M43 0 L55 68 L77 136 L62 200 L46 255 L31 272 L52 296 L72 323 L74 345 L81 391 L77 412 L81 425 L77 477 L86 525 L101 570 L111 528 L129 477 L146 460 L171 451 L200 470 L223 485 L266 519 L300 548 L326 579 L334 630 L326 690 L300 704 L291 723 L296 760 L300 800 L600 800 L600 0 Z"
-                />
-                <path
-                  fill="#E6DCF3"
-                  stroke="#B9A5D6"
-                  stroke-width="1.2"
-                  d="M79 409 C92 386 118 372 142 374 C162 377 168 395 158 410 C146 424 118 425 96 419 Z"
-                />
-                <path
-                  fill="#EDE3D3"
-                  stroke="#B9A5D6"
-                  stroke-width="1.5"
-                  stroke-linejoin="round"
-                  d="M162 506 C178 496 200 496 214 508 C222 522 226 545 236 568 L262 628 L292 700 L284 712 L272 708 L244 640 L216 580 L198 556 C184 546 168 530 162 506 Z"
-                />
-                <g
-                  fill="#6F6482"
-                  font-family="Inter, system-ui, sans-serif"
-                  font-size="14"
-                  letter-spacing="1"
-                >
-                  <text x="92" y="48">DEL MAR</text>
-                  <text x="74" y="246">LA JOLLA</text>
-                  <text x="100" y="340">PACIFIC BEACH</text>
-                  <text x="100" y="452">OCEAN BEACH</text>
-                  <text x="232" y="478">DOWNTOWN</text>
-                  <text x="300" y="420">NORTH PARK</text>
-                  <text x="380" y="630">CHULA VISTA</text>
-                  <text x="22" y="730" font-size="12" letter-spacing="4">PACIFIC</text>
-                  <text x="22" y="752" font-size="12" letter-spacing="4">OCEAN</text>
-                </g>
-              </svg>
-              <div id="dots"></div>
-              <span class="mono inset-label">San Diego</span>
+            <div class="worldbox">
+              <div class="world">
+                <img src="img/world-dots.svg" alt="" />
+                <div id="worldDots"></div>
+              </div>
+              <p class="map-caption" id="worldCaption">Beyond San Diego.</p>
             </div>
           </div>
-          <p class="map-caption" id="worldCaption"></p>
         </section>
 
         <section class="section">
