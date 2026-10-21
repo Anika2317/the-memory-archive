@@ -24,22 +24,44 @@
   }
 }
 
-.where {
+.maps {
   display: flex;
   flex-wrap: wrap;
-  gap: 2.5rem;
-  align-items: center;
-
-  .txt {
-    flex: 1 1 20rem;
-    min-width: 0;
-  }
+  gap: 1.5rem 2rem;
+  align-items: flex-end;
+  margin-top: 2rem;
 }
 
 .mapbox {
-  flex: 1 1 18rem;
+  flex: 1 1 16rem;
   min-width: 0;
   max-width: 22rem;
+}
+
+.worldbox {
+  flex: 3 1 24rem;
+  min-width: 0;
+}
+
+.world {
+  position: relative;
+  aspect-ratio: 720 / 280;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+
+  img {
+    position: absolute;
+    inset: 4%;
+    width: 92%;
+    height: 92%;
+  }
+
+  #worldDots {
+    position: absolute;
+    inset: 4%;
+  }
 }
 
 .map {

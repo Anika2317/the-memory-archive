@@ -1371,13 +1371,20 @@
     openMemory(pool[Math.floor(Math.random() * pool.length)].id);
   });
   function drawDots() {
-    var box = $('dots');
-    box.innerHTML = '';
+    $('dots').innerHTML = '';
+    $('worldDots').innerHTML = '';
+    var away = 0;
     MEMORIES.forEach(function (m) {
       var b = document.createElement('button');
       b.className = 'dot';
-      b.style.left = (m.xy[0] / 600) * 100 + '%';
-      b.style.top = (m.xy[1] / 800) * 100 + '%';
+      if (m.world) {
+        away++;
+        b.style.left = ((m.world[0] + 180) / 360) * 100 + '%';
+        b.style.top = ((80 - m.world[1]) / 140) * 100 + '%';
+      } else {
+        b.style.left = (m.xy[0] / 600) * 100 + '%';
+        b.style.top = (m.xy[1] / 800) * 100 + '%';
+      }
       b.setAttribute('aria-label', 'Open the memory from ' + m.hood + ', ' + yr(m));
       b.title = yr(m) + ' · ' + m.hood;
       b.innerHTML = '<span class="core"></span>';
@@ -1390,8 +1397,11 @@
           reduce ? 0 : 500,
         );
       });
-      box.appendChild(b);
+      (m.world ? $('worldDots') : $('dots')).appendChild(b);
     });
+    $('worldCaption').textContent = away
+      ? 'Beyond San Diego. ' + away + (away === 1 ? ' memory' : ' memories') + ' from other places.'
+      : 'Beyond San Diego. Memories from other cities and countries will appear here.';
     $('memCount').textContent = MEMORIES.length;
     $('heroCount').textContent = MEMORIES.length;
     $('heroLinks').textContent = links.length;
@@ -1399,11 +1409,17 @@
       ? 'Choose a bright cell to open its memory.'
       : 'The archive is just getting started. Add the first memory.';
   }
-  $('placeList').innerHTML = Object.keys(PLACES)
-    .map(function (h) {
-      return '<option value="' + esc(h) + '"></option>';
-    })
-    .join('');
+  $('fWhere').innerHTML =
+    Object.keys(PLACES)
+      .filter(function (h) {
+        return h !== 'Somewhere else in San Diego';
+      })
+      .map(function (h) {
+        return '<option>' + esc(h) + '</option>';
+      })
+      .join('') +
+    '<option value="sd">Another place in San Diego</option>' +
+    '<option value="away">Somewhere else</option>';
   $('fKindSel').innerHTML =
     '<option value="">Not sure</option>' +
     FEELINGS.map(function (k) {
@@ -1416,30 +1432,38 @@
 
   var placeFound = null;
   var placeTimer;
-  function knownPlace(text) {
-    var low = text.trim().toLowerCase();
-    return Object.keys(PLACES).filter(function (h) {
-      return h.toLowerCase() === low;
-    })[0];
+  function syncWhere() {
+    var mode = $('fWhere').value;
+    var typing = mode === 'sd' || mode === 'away';
+    $('fPlaceWrap').hidden = !typing;
+    $('fPlaceLabel').textContent =
+      mode === 'away' ? 'City and country' : 'Neighborhood or landmark';
+    $('fPlace').value = '';
+    $('fPlaceNote').textContent = '';
+    placeFound = null;
+  }
+  $('fWhere').addEventListener('change', syncWhere);
+
+  function placeName(hit, away) {
+    var a = hit.address || {};
+    if (!away) return hit.display_name.split(',')[0];
+    var city =
+      a.city || a.town || a.village || a.county || a.state || hit.display_name.split(',')[0];
+    return a.country ? city + ', ' + a.country : city;
   }
   function findPlace() {
     var text = $('fPlace').value.trim();
+    var away = $('fWhere').value === 'away';
     var note = $('fPlaceNote');
     placeFound = null;
     if (!text) {
       note.textContent = '';
       return;
     }
-    var known = knownPlace(text);
-    if (known) {
-      placeFound = { name: known, xy: PLACES[known] };
-      note.textContent = 'On the map at ' + known + '.';
-      return;
-    }
     note.textContent = 'Looking for it…';
     var url =
-      'https://nominatim.openstreetmap.org/search?format=json&limit=1&bounded=1&viewbox=' +
-      SD_BOX.join(',') +
+      'https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=1&accept-language=en' +
+      (away ? '' : '&bounded=1&viewbox=' + SD_BOX.join(',')) +
       '&q=' +
       encodeURIComponent(text);
     fetch(url)
@@ -1449,16 +1473,19 @@
       .then(function (res) {
         if (text !== $('fPlace').value.trim()) return;
         if (!res.length) {
-          note.textContent = 'We couldn’t find that, so it will go under somewhere in San Diego.';
+          note.textContent = away
+            ? 'We couldn’t find that. Try adding the country.'
+            : 'We couldn’t find that, so it will go under somewhere in San Diego.';
           return;
         }
-        var name = res[0].display_name.split(',')[0];
-        placeFound = { name: name, xy: toMap(+res[0].lon, +res[0].lat) };
-        note.textContent = 'Found it: ' + name + '.';
+        var lng = +res[0].lon,
+          lat = +res[0].lat;
+        placeFound = { name: placeName(res[0], away), lng: lng, lat: lat };
+        if (!away) placeFound.xy = toMap(lng, lat);
+        note.textContent = 'Found it: ' + placeFound.name + '.';
       })
       .catch(function () {
-        note.textContent =
-          'We couldn’t look that up right now. It will go under somewhere in San Diego.';
+        note.textContent = 'We couldn’t look that up right now. Try again in a moment.';
       });
   }
   $('fPlace').addEventListener('input', function () {
@@ -1644,17 +1671,26 @@
           return f[2];
         })[0] || [])[2] || all[0]
       ] || 'family';
-    var placeText = $('fPlace').value.trim();
-    var known = knownPlace(placeText);
-    var hood = known || (placeFound && placeFound.name) || 'Somewhere in San Diego';
-    var base = known
-        ? PLACES[known]
-        : placeFound
-          ? placeFound.xy
-          : PLACES['Somewhere else in San Diego'],
-      jit = function () {
-        return Math.random() * 16 - 8;
-      };
+    var where = $('fWhere').value;
+    if (where === 'away' && !placeFound) {
+      err.textContent = 'Type the city and country, and wait until we find it on the map.';
+      err.hidden = false;
+      return;
+    }
+    var hood, base, world;
+    if (where === 'away') {
+      hood = placeFound.name;
+      world = [placeFound.lng, placeFound.lat];
+    } else if (where === 'sd') {
+      hood = placeFound ? placeFound.name : 'Somewhere in San Diego';
+      base = placeFound ? placeFound.xy : PLACES['Somewhere else in San Diego'];
+    } else {
+      hood = where;
+      base = PLACES[where];
+    }
+    var jit = function () {
+      return Math.random() * 16 - 8;
+    };
     MEMORIES.forEach(function (m) {
       m.fresh = false;
     });
@@ -1663,7 +1699,7 @@
       year: y ? +y : null,
       hood: hood,
       region: region,
-      xy: [base[0] + jit(), base[1] + jit()],
+      xy: base ? [base[0] + jit(), base[1] + jit()] : null,
       by: byLine($('fBy').value),
       frags: frags,
       text:
@@ -1676,6 +1712,7 @@
       mine: true,
       fresh: true,
     };
+    if (world) mem.world = world;
     if (kind) mem.kind = kind;
     if (mType)
       mem.media = { type: mType, label: file.name, dur: '', url: URL.createObjectURL(file) };
@@ -1698,7 +1735,7 @@
     $('fMediaPrev').innerHTML = '';
     $('fPlaceNote').textContent = '';
     $('fKindOtherWrap').hidden = true;
-    placeFound = null;
+    syncWhere();
     listen();
     $('addDlg').close();
     if (state.active != null) closeMemory();
