@@ -148,7 +148,19 @@
     movies: ['movie', 'movies', 'film', 'films', 'theater', 'theatre', 'cinema', 'drive-in'],
     books: ['book', 'books', 'read', 'reading', 'library', 'novel', 'poem', 'poems'],
   };
-  var KINDS = { hard: 'A hard moment', unexpected: 'Something unexpected' };
+  var FEELINGS = ['Happy', 'Funny', 'Everyday', 'Bittersweet', 'Hard', 'Surprising'];
+  var SD_BOX = [-117.6, 32.53, -116.08, 33.51];
+
+  function toMap(lng, lat) {
+    var x = 1729.78 * lng + 20.29 * lat + 202238.71;
+    var y = -20.76 * lng - 1777.53 * lat + 56207.36;
+    return [Math.max(12, Math.min(588, x)), Math.max(12, Math.min(788, y))];
+  }
+
+  function byLine(rel) {
+    if (rel === "It's my own memory") return 'In their own words';
+    return 'Shared by ' + rel.replace(/^I'm /, '');
+  }
   var MEDIA_NAME = {
     audio: 'Voice recording',
     video: 'Video clip',
@@ -257,16 +269,16 @@
   function buildDust() {
     var r = rng(77);
     dust = [];
-    while (dust.length < 950) {
+    while (dust.length < 620) {
       var a = r() * Math.PI * 2,
-        d = Math.pow(r(), 0.6);
+        d = Math.pow(r(), 0.7);
       var br = [];
       var nb = 2 + Math.floor(r() * 3);
       for (var b = 0; b < nb; b++)
         br.push({ a: r() * 6.283, l: 4 + r() * 9, bend: (r() - 0.5) * 0.8 });
       dust.push({
-        x: FW / 2 + Math.cos(a) * d * FW * 0.58,
-        y: FH / 2 + Math.sin(a) * d * FH * 0.6,
+        x: FW / 2 + Math.cos(a) * d * FW * 0.54,
+        y: FH / 2 + Math.sin(a) * d * FH * 0.54,
         r: 0.8 + r() * 1.4,
         br: br,
       });
@@ -333,43 +345,10 @@
     cctx.save();
     cctx.translate(ox, oy);
     cctx.scale(s, s);
-    var k = 1 / Math.max(s, 0.6);
-    cctx.lineCap = 'round';
-    cctx.lineWidth = 0.7 * k;
-    cctx.strokeStyle = 'rgba(122,80,194,0.09)';
-    cctx.beginPath();
-    dustLinks.forEach(function (l) {
-      var a = dust[l[0]],
-        b = dust[l[1]];
-      cctx.moveTo(a.x, a.y);
-      cctx.quadraticCurveTo(
-        (a.x + b.x) / 2 - (b.y - a.y) * l[2],
-        (a.y + b.y) / 2 + (b.x - a.x) * l[2],
-        b.x,
-        b.y,
-      );
-    });
-    cctx.stroke();
-    cctx.strokeStyle = 'rgba(122,80,194,0.13)';
-    cctx.beginPath();
     dust.forEach(function (d) {
-      d.br.forEach(function (b) {
-        var ex = d.x + Math.cos(b.a) * b.l * k,
-          ey = d.y + Math.sin(b.a) * b.l * k;
-        cctx.moveTo(d.x, d.y);
-        cctx.quadraticCurveTo(
-          d.x + Math.cos(b.a + b.bend) * b.l * 0.6 * k,
-          d.y + Math.sin(b.a + b.bend) * b.l * 0.6 * k,
-          ex,
-          ey,
-        );
-      });
-    });
-    cctx.stroke();
-    dust.forEach(function (d) {
-      cctx.fillStyle = 'rgba(122,80,194,0.22)';
+      cctx.fillStyle = 'rgba(122,80,194,0.16)';
       cctx.beginPath();
-      cctx.arc(d.x, d.y, d.r * k, 0, 6.283);
+      cctx.arc(d.x, d.y, d.r / Math.max(s, 0.6), 0, 6.283);
       cctx.fill();
     });
     cctx.restore();
@@ -508,22 +487,21 @@
     REGIONS.forEach(function (r) {
       var c = S(r.c[0], r.c[1]),
         on = state.region === r.id;
-      var g = ctx.createRadialGradient(c[0], c[1], 0, c[0], c[1], 180 * s);
-      g.addColorStop(0, 'rgba(122,80,194,' + (on ? 0.26 : 0.1) + ')');
+      var g = ctx.createRadialGradient(c[0], c[1], 0, c[0], c[1], 140 * s);
+      g.addColorStop(0, 'rgba(122,80,194,' + (on ? 0.24 : 0.08) + ')');
       g.addColorStop(1, 'rgba(122,80,194,0)');
       ctx.fillStyle = g;
       ctx.beginPath();
-      ctx.arc(c[0], c[1], 180 * s, 0, 6.283);
+      ctx.arc(c[0], c[1], 140 * s, 0, 6.283);
       ctx.fill();
       if (W >= 560) {
         var a = on ? 0.95 : state.region ? 0.22 : open ? 0.3 : 0.6;
         ctx.textAlign = 'center';
         ctx.font =
-          'italic ' +
-          Math.max(15, Math.round(20 * Math.min(1.3, s * 1.2))) +
-          'px Newsreader, Georgia, serif';
+          Math.max(11, Math.round(13 * Math.min(1.25, s * 1.2))) +
+          'px Inter, system-ui, sans-serif';
         ctx.fillStyle = 'rgba(74,48,120,' + a + ')';
-        ctx.fillText(r.name, c[0], c[1] - 118 * s);
+        ctx.fillText(r.name.toUpperCase(), c[0], c[1] - 112 * s);
       }
     });
 
@@ -905,7 +883,7 @@
         : '') +
       '<span class="mono region">' +
       esc(reg.name) +
-      (m.kind ? '<span class="kind-tag">' + esc(KINDS[m.kind]) + '</span>' : '') +
+      (m.kind ? '<span class="kind-tag">' + esc(m.kind) + '</span>' : '') +
       '</span>' +
       '<h2>' +
       esc(m.hood) +
@@ -1026,7 +1004,7 @@
       ' · ' +
       esc(m.hood) +
       '</span>' +
-      (m.kind ? '<span class="kind-tag">' + esc(KINDS[m.kind]) + '</span>' : '') +
+      (m.kind ? '<span class="kind-tag">' + esc(m.kind) + '</span>' : '') +
       '<blockquote>“' +
       esc(m.text) +
       '”</blockquote>' +
@@ -1117,6 +1095,20 @@
   }
   var all = { q: '', theme: '', decade: '', year: '', who: '', piece: '', kind: '', shown: 24 };
   function fillFilters() {
+    var kinds = FEELINGS.slice();
+    MEMORIES.forEach(function (m) {
+      if (m.kind && kinds.indexOf(m.kind) === -1) kinds.push(m.kind);
+    });
+    $('fKind').innerHTML =
+      '<option value="">Every kind of memory</option>' +
+      kinds
+        .map(function (k) {
+          return '<option' + (all.kind === k ? ' selected' : '') + '>' + esc(k) + '</option>';
+        })
+        .join('') +
+      '<option value="media"' +
+      (all.kind === 'media' ? ' selected' : '') +
+      '>With recordings, photos, or art</option>';
     $('fTheme').innerHTML =
       '<option value="">All themes</option>' +
       REGIONS.map(function (r) {
@@ -1250,9 +1242,8 @@
       if (all.decade && (decade(m) || 'Undated') !== all.decade) return false;
       if (all.year && String(m.year) !== all.year) return false;
       if (all.piece && !holds(m, all.piece)) return false;
-      if (all.kind === 'treasured' && m.kind) return false;
-      if ((all.kind === 'hard' || all.kind === 'unexpected') && m.kind !== all.kind) return false;
       if (all.kind === 'media' && !m.media) return false;
+      if (all.kind && all.kind !== 'media' && m.kind !== all.kind) return false;
       if (all.who && m.person !== all.who) return false;
       if (all.q) {
         var hay = (
@@ -1272,7 +1263,7 @@
           ' ' +
           (m.person ? PEOPLE[m.person] : '') +
           ' ' +
-          (m.kind ? KINDS[m.kind] : '') +
+          (m.kind || '') +
           ' ' +
           (m.media ? MEDIA_NAME[m.media.type] : '')
         ).toLowerCase();
@@ -1305,7 +1296,7 @@
               esc(reg.name) +
               '</span>' +
               (m.person ? '<span class="tag who">' + esc(PEOPLE[m.person]) + '</span>' : '') +
-              (m.kind ? '<span class="tag">' + esc(KINDS[m.kind]) + '</span>' : '') +
+              (m.kind ? '<span class="tag">' + esc(m.kind) + '</span>' : '') +
               (m.media
                 ? '<span class="tag">' +
                   mediaIcon(m.media.type) +
@@ -1408,11 +1399,73 @@
       ? 'Choose a bright cell to open its memory.'
       : 'The archive is just getting started. Add the first memory.';
   }
-  $('fHood').innerHTML = Object.keys(PLACES)
+  $('placeList').innerHTML = Object.keys(PLACES)
     .map(function (h) {
-      return '<option>' + esc(h) + '</option>';
+      return '<option value="' + esc(h) + '"></option>';
     })
     .join('');
+  $('fKindSel').innerHTML =
+    '<option value="">Not sure</option>' +
+    FEELINGS.map(function (k) {
+      return '<option>' + k + '</option>';
+    }).join('') +
+    '<option value="other">Something else</option>';
+  $('fKindSel').addEventListener('change', function () {
+    $('fKindOtherWrap').hidden = this.value !== 'other';
+  });
+
+  var placeFound = null;
+  var placeTimer;
+  function knownPlace(text) {
+    var low = text.trim().toLowerCase();
+    return Object.keys(PLACES).filter(function (h) {
+      return h.toLowerCase() === low;
+    })[0];
+  }
+  function findPlace() {
+    var text = $('fPlace').value.trim();
+    var note = $('fPlaceNote');
+    placeFound = null;
+    if (!text) {
+      note.textContent = '';
+      return;
+    }
+    var known = knownPlace(text);
+    if (known) {
+      placeFound = { name: known, xy: PLACES[known] };
+      note.textContent = 'On the map at ' + known + '.';
+      return;
+    }
+    note.textContent = 'Looking for it…';
+    var url =
+      'https://nominatim.openstreetmap.org/search?format=json&limit=1&bounded=1&viewbox=' +
+      SD_BOX.join(',') +
+      '&q=' +
+      encodeURIComponent(text);
+    fetch(url)
+      .then(function (r) {
+        return r.json();
+      })
+      .then(function (res) {
+        if (text !== $('fPlace').value.trim()) return;
+        if (!res.length) {
+          note.textContent = 'We couldn’t find that, so it will go under somewhere in San Diego.';
+          return;
+        }
+        var name = res[0].display_name.split(',')[0];
+        placeFound = { name: name, xy: toMap(+res[0].lon, +res[0].lat) };
+        note.textContent = 'Found it: ' + name + '.';
+      })
+      .catch(function () {
+        note.textContent =
+          'We couldn’t look that up right now. It will go under somewhere in San Diego.';
+      });
+  }
+  $('fPlace').addEventListener('input', function () {
+    clearTimeout(placeTimer);
+    placeTimer = setTimeout(findPlace, 700);
+  });
+
   function keysIn(text) {
     var out = [],
       low =
@@ -1433,7 +1486,7 @@
     return out;
   }
   function addText() {
-    return ['fSound', 'fObject', 'fPieceText', 'fDetail', 'fWords']
+    return ['fDetails', 'fWords']
       .map(function (id) {
         return $(id).value;
       })
@@ -1468,7 +1521,7 @@
         .join(', ') +
       '.</span>';
   }
-  ['fSound', 'fObject', 'fPieceText', 'fDetail', 'fWords'].forEach(function (id) {
+  ['fDetails', 'fWords'].forEach(function (id) {
     $(id).addEventListener('input', listen);
   });
   function mediaTypeOf(f) {
@@ -1500,7 +1553,7 @@
   });
   var addFor = null;
   function personOptions() {
-    var opts = '<option value="new">Someone new</option>';
+    var opts = '<option value="new">Someone not in the archive yet</option>';
     if (addFor && !addFor.person)
       opts +=
         '<option value="m:' +
@@ -1551,25 +1604,25 @@
     e.preventDefault();
     var err = $('fErr');
     err.hidden = true;
-    var y = $('fYear').value.trim(),
-      hood = $('fHood').value;
-    var sound = $('fSound').value.trim(),
-      obj = $('fObject').value.trim(),
-      det = $('fDetail').value.trim(),
-      words = $('fWords').value.trim();
-    var pType = $('fPieceType').value,
-      pText = $('fPieceText').value.trim(),
-      file = $('fMedia').files && $('fMedia').files[0],
+    var y = $('fYear').value.trim();
+    var words = $('fWords').value.trim();
+    var details = $('fDetails')
+      .value.split(',')
+      .map(function (d) {
+        return d.trim();
+      })
+      .filter(Boolean);
+    var file = $('fMedia').files && $('fMedia').files[0],
       mType = mediaTypeOf(file);
-    var kindR = (document.querySelector('input[name="fKindR"]:checked') || {}).value || '';
+    var kindSel = $('fKindSel').value;
+    var kind = kindSel === 'other' ? $('fKindOther').value.trim() : kindSel;
     if (y && !(/^\d{4}$/.test(y) && +y >= 1900 && +y <= 2026)) {
       err.textContent = 'Enter a four-digit year between 1900 and 2026, or leave it blank.';
       err.hidden = false;
       return;
     }
-    if (!sound && !obj && !det && !words && !pText && !mType) {
-      err.textContent =
-        'Add at least one piece: something you heard, held, or can still picture, or attach a recording or picture.';
+    if (!words && !details.length && !mType) {
+      err.textContent = 'Write the memory, add a detail, or attach a recording or picture.';
       err.hidden = false;
       return;
     }
@@ -1578,30 +1631,8 @@
       err.hidden = false;
       return;
     }
-    var frags = [];
-    [
-      ['Sound', sound],
-      ['Object', obj],
-      [pType, pText],
-      ['Detail', det],
-    ].forEach(function (f) {
-      if (f[1]) {
-        var k =
-          f[0] === 'Song'
-            ? 'music'
-            : f[0] === 'Movie'
-              ? 'movies'
-              : f[0] === 'Book'
-                ? 'books'
-                : f[0] === 'Food'
-                  ? 'recipes'
-                  : keysIn(f[1])[0] || null;
-        frags.push([
-          f[0],
-          ((f[0] === 'Sound' && k === 'music') || f[0] === 'Song' ? '♪ ' : '') + f[1],
-          k,
-        ]);
-      }
+    var frags = details.slice(0, 6).map(function (d) {
+      return ['Detail', d, keysIn(d)[0] || null];
     });
     var all = keysIn(addText());
     if (!frags.length && words)
@@ -1613,8 +1644,14 @@
           return f[2];
         })[0] || [])[2] || all[0]
       ] || 'family';
-    var rel = $('fBy').value,
-      base = PLACES[hood],
+    var placeText = $('fPlace').value.trim();
+    var known = knownPlace(placeText);
+    var hood = known || (placeFound && placeFound.name) || 'Somewhere in San Diego';
+    var base = known
+        ? PLACES[known]
+        : placeFound
+          ? placeFound.xy
+          : PLACES['Somewhere else in San Diego'],
       jit = function () {
         return Math.random() * 16 - 8;
       };
@@ -1627,10 +1664,7 @@
       hood: hood,
       region: region,
       xy: [base[0] + jit(), base[1] + jit()],
-      by:
-        rel === 'In their own words'
-          ? 'In their own words'
-          : 'Shared by ' + rel.charAt(0).toLowerCase() + rel.slice(1),
+      by: byLine($('fBy').value),
       frags: frags,
       text:
         words ||
@@ -1642,7 +1676,7 @@
       mine: true,
       fresh: true,
     };
-    if (kindR) mem.kind = kindR;
+    if (kind) mem.kind = kind;
     if (mType)
       mem.media = { type: mType, label: file.name, dur: '', url: URL.createObjectURL(file) };
     var pv = $('fPerson').value,
@@ -1662,6 +1696,9 @@
     MEMORIES.push(mem);
     $('addForm').reset();
     $('fMediaPrev').innerHTML = '';
+    $('fPlaceNote').textContent = '';
+    $('fKindOtherWrap').hidden = true;
+    placeFound = null;
     listen();
     $('addDlg').close();
     if (state.active != null) closeMemory();
@@ -1995,10 +2032,7 @@
     Q.answers.unshift({
       s: sh,
       full: full || sh,
-      by:
-        rel === 'In their own words'
-          ? rel
-          : 'Shared by ' + rel.charAt(0).toLowerCase() + rel.slice(1),
+      by: byLine(rel),
       mine: true,
     });
     $('ansForm').reset();

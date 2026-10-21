@@ -81,12 +81,7 @@
                 <circle cx="11" cy="11" r="7" />
                 <path d="M20 20l-3.5-3.5" />
               </svg>
-              <input
-                id="q"
-                type="search"
-                placeholder="Search a place, year, song, or word"
-                aria-label="Search memories"
-              />
+              <input id="q" type="search" aria-label="Search memories" />
             </label>
             <select id="fTheme" aria-label="Filter by theme"></select>
             <select id="fPiece" aria-label="Filter by what the memory holds">
@@ -98,10 +93,6 @@
             </select>
             <select id="fKind" aria-label="Filter by kind of memory">
               <option value="">Every kind of memory</option>
-              <option value="treasured">Memories we treasure</option>
-              <option value="hard">Hard moments</option>
-              <option value="unexpected">Unexpected moments</option>
-              <option value="media">With recordings, photos, or art</option>
             </select>
             <select id="fWho" aria-label="Filter by person"></select>
           </div>
@@ -274,95 +265,52 @@
             <path d="M6 6l12 12M18 6L6 18" />
           </svg>
         </button>
-        <span class="mono sheet-eyebrow">Add a memory</span>
-        <h2 class="sheet-title" id="addTitle">
-          Fold in a memory. Bring a piece, skip what you don't remember.
-        </h2>
+        <h2 class="sheet-title" id="addTitle">Add a memory</h2>
+        <p class="lede">Share as much or as little as you remember.</p>
         <form class="form" id="addForm" novalidate>
-          <fieldset class="kinds">
-            <legend>
-              <span class="k">WHAT KIND OF MEMORY</span
-              ><span class="q">Every kind belongs in the archive</span>
-            </legend>
-            <div class="row">
-              <label><input type="radio" name="fKindR" value="" checked />One we treasure</label>
-              <label><input type="radio" name="fKindR" value="hard" />A hard moment</label>
-              <label
-                ><input type="radio" name="fKindR" value="unexpected" />Something unexpected</label
-              >
-            </div>
-            <p class="hint">
-              Hard and surprising moments help people understand what Alzheimer's is really like.
-              They sit right alongside the happy ones.
-            </p>
-          </fieldset>
-          <div class="two">
-            <div>
-              <label for="fYear"
-                ><span class="k">TIME</span><span class="q">When was it?</span></label
-              ><input
-                id="fYear"
-                type="number"
-                inputmode="numeric"
-                min="1900"
-                max="2026"
-                placeholder="1967"
-              />
-            </div>
-            <div>
-              <label for="fHood"
-                ><span class="k">PLACE</span><span class="q">Where in San Diego?</span></label
-              ><select id="fHood"></select>
-            </div>
-          </div>
-          <div class="two">
-            <div>
-              <label for="fSound"
-                ><span class="k">SOUND</span><span class="q">What could you hear?</span></label
-              ><input id="fSound" type="text" placeholder="A song on the radio…" />
-            </div>
-            <div>
-              <label for="fObject"
-                ><span class="k">OBJECT</span><span class="q">What belongs to it?</span></label
-              ><input id="fObject" type="text" placeholder="A red convertible…" />
-            </div>
-          </div>
-          <div class="two">
-            <div>
-              <label for="fPieceType"
-                ><span class="k">A FAVORITE</span
-                ><span class="q">Song, movie, book, or food?</span></label
-              ><select id="fPieceType">
-                <option>Song</option>
-                <option>Movie</option>
-                <option>Book</option>
-                <option>Food</option>
-              </select>
-            </div>
-            <div>
-              <label for="fPieceText"
-                ><span class="k">WHICH ONE</span><span class="q">Name it</span></label
-              ><input id="fPieceText" type="text" placeholder="The Sound of Music…" />
-            </div>
-          </div>
-          <div>
-            <label for="fDetail"
-              ><span class="k">DETAIL</span
-              ><span class="q">One thing you can still picture</span></label
-            ><input id="fDetail" type="text" placeholder="Windows down, summer evenings…" />
-          </div>
           <div>
             <label for="fWords"
               ><span class="k">THE MEMORY</span
-              ><span class="q">Tell it in your words (optional)</span></label
-            ><textarea id="fWords" placeholder="A few sentences is perfect."></textarea>
+              ><span class="q">Tell it however you like, a line or a few paragraphs</span></label
+            ><textarea id="fWords"></textarea>
+          </div>
+          <div class="two">
+            <div>
+              <label for="fYear"
+                ><span class="k">WHEN</span><span class="q">Year, if you know it</span></label
+              ><input id="fYear" type="number" inputmode="numeric" min="1900" max="2026" />
+            </div>
+            <div>
+              <label for="fPlace"
+                ><span class="k">WHERE</span><span class="q">Any place in San Diego</span></label
+              ><input id="fPlace" type="text" list="placeList" autocomplete="off" />
+              <datalist id="placeList"></datalist>
+              <p class="hint" id="fPlaceNote" aria-live="polite"></p>
+            </div>
+          </div>
+          <div class="two">
+            <div>
+              <label for="fKindSel"
+                ><span class="k">FEELING</span
+                ><span class="q">What kind of memory is it?</span></label
+              ><select id="fKindSel"></select>
+            </div>
+            <div id="fKindOtherWrap" hidden>
+              <label for="fKindOther"
+                ><span class="k">IN YOUR WORDS</span><span class="q">Describe it</span></label
+              ><input id="fKindOther" type="text" maxlength="30" />
+            </div>
+          </div>
+          <div>
+            <label for="fDetails"
+              ><span class="k">DETAILS</span
+              ><span class="q">Anything tied to it, separated by commas</span></label
+            ><input id="fDetails" type="text" />
           </div>
           <div>
             <label for="fMedia"
               ><span class="k">MORE THAN WORDS</span
-              ><span class="q"
-                >Add a voice recording, video, drawing, photo, or music piece</span
-              ></label
+              ><span class="q">A recording, video, photo, or drawing</span></label
             ><input id="fMedia" type="file" accept="audio/*,video/*,image/*" />
             <p class="hint">Optional. Only with permission from the person or their family.</p>
             <div id="fMediaPrev"></div>
@@ -376,27 +324,29 @@
           <div class="two">
             <div>
               <label for="fPerson"
-                ><span class="k">WHO IT'S ABOUT</span
-                ><span class="q">Is this someone already here?</span></label
+                ><span class="k">WHO</span><span class="q">Who is this memory about?</span></label
               ><select id="fPerson"></select>
             </div>
             <div id="fCallWrap">
               <label for="fCall"
-                ><span class="k">WHAT THE FAMILY CALLS THEM</span
-                ><span class="q">Like Nana, Papa, or Tío</span></label
-              ><input id="fCall" type="text" placeholder="Optional. No full names." />
+                ><span class="k">THEIR NAME</span
+                ><span class="q"
+                  >What you call them. A first name or nickname is enough.</span
+                ></label
+              ><input id="fCall" type="text" />
             </div>
           </div>
           <div>
             <label for="fBy"
-              ><span class="k">SHARED BY</span><span class="q">Who is sharing it?</span></label
+              ><span class="k">YOU</span
+              ><span class="q">How are you connected to them?</span></label
             ><select id="fBy">
-              <option>In their own words</option>
-              <option>Their child</option>
-              <option>Their grandchild</option>
-              <option>Their spouse or partner</option>
-              <option>Their sibling</option>
-              <option>A friend or caregiver</option>
+              <option>It's my own memory</option>
+              <option>I'm their child</option>
+              <option>I'm their grandchild</option>
+              <option>I'm their spouse or partner</option>
+              <option>I'm their sibling</option>
+              <option>I'm a friend or caregiver</option>
             </select>
           </div>
           <label class="check"
@@ -469,23 +419,24 @@
             <label for="aShort"
               ><span class="k">IN A FEW WORDS</span
               ><span class="q">This becomes a petal on the flower</span></label
-            ><input id="aShort" type="text" maxlength="60" placeholder="A short line" />
+            ><input id="aShort" type="text" maxlength="60" />
           </div>
           <div>
             <label for="aFull"
               ><span class="k">TELL US MORE</span
               ><span class="q">A sentence or two (optional)</span></label
-            ><textarea id="aFull" placeholder="What happened that day?"></textarea>
+            ><textarea id="aFull"></textarea>
           </div>
           <div>
             <label for="aBy"
               ><span class="k">SHARED BY</span><span class="q">Who is answering?</span></label
             ><select id="aBy">
-              <option>In their own words</option>
-              <option>Their child</option>
-              <option>Their grandchild</option>
-              <option>Their spouse or partner</option>
-              <option>A friend or caregiver</option>
+              <option>It's my own memory</option>
+              <option>I'm their child</option>
+              <option>I'm their grandchild</option>
+              <option>I'm their spouse or partner</option>
+              <option>I'm their sibling</option>
+              <option>I'm a friend or caregiver</option>
             </select>
           </div>
           <label class="check"

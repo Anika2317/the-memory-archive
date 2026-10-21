@@ -39,7 +39,7 @@
 .stage {
   position: relative;
   border-block: 1px solid var(--line);
-  background: radial-gradient(ellipse 70% 80% at 50% 50%, #f1e8f9 0%, #fcf9f4 78%);
+  background: radial-gradient(ellipse 60% 70% at 45% 50%, #efe4f7 0%, #fcf9f4 72%);
   overflow: hidden;
 
   &.open .hero-copy {
@@ -50,7 +50,7 @@
 #net {
   display: block;
   width: 100%;
-  height: clamp(44rem, calc(100vh - 4.5rem), 72rem);
+  height: clamp(40rem, calc(100vh - 6rem), 66rem);
   touch-action: manipulation;
 }
 
