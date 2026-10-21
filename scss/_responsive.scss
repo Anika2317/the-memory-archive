@@ -1,0 +1,48 @@
+@use "tokens" as *;
+
+@media (max-width: $bp-bloom) {
+  .sky { height: auto; padding: 1.25rem; display: grid; gap: .6rem; }
+  .sky-lines, .bgstar { display: none; }
+
+  .sky-q {
+    position: static;
+    transform: none;
+    width: auto;
+    margin-bottom: .6rem;
+
+    &::before { display: none; }
+  }
+
+  .bubble {
+    position: static;
+    transform: none;
+    max-width: none;
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    text-align: left;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    padding: .7rem .9rem;
+    text-shadow: none;
+    color: var(--silver);
+
+    &:hover, &.on { color: var(--plum); }
+    &::before { display: block; margin: 0; flex: none; }
+    &.on { border-color: var(--line-2); }
+  }
+}
+
+@media (max-width: $bp-stage) {
+  #net { height: clamp(26rem, 95vw, 34rem); }
+  .hero-copy { position: static; max-width: none; padding: 1.5rem 1.25rem .5rem; }
+  .card { position: static; width: auto; transform: none; border-radius: 0; border-width: 1px 0 0; background: var(--bg-2); backdrop-filter: none; display: none; }
+  .stage.open .card { display: block; }
+  .region-note { left: .75rem; right: .75rem; top: .75rem; max-width: none; }
+  .stage-hint { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

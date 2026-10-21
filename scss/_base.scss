@@ -1,0 +1,56 @@
+@use "tokens" as *;
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+a { color: var(--lilac); text-underline-offset: 3px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--lilac); outline-offset: 3px; }
+
+h1, h2, h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: -.015em;
+  margin: 0;
+  text-wrap: balance;
+  line-height: 1.12;
+}
+
+p { margin: 0; }
+
+.wrap { max-width: 80rem; margin: 0 auto; padding-inline: 1.25rem; }
+.mono { font-family: var(--mono); letter-spacing: .08em; text-transform: uppercase; font-size: .72rem; }
+.eyebrow { color: var(--lilac); display: block; margin-bottom: .7rem; }
+.h2 { font-size: clamp(1.9rem, 3.6vw, 2.6rem); }
+.lede { color: var(--muted); max-width: 42rem; margin-top: .7rem; }
+.section { padding-block: 5.5rem 0; scroll-margin-top: 1rem; }
+
+.linkbtn {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--lilac);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-size: .95rem;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

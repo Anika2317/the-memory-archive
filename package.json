@@ -1,0 +1,11 @@
+{
+  "name": "the-memory-archive",
+  "private": true,
+  "scripts": {
+    "build": "sass --no-source-map --style=compressed scss/main.scss css/main.css",
+    "watch": "sass --no-source-map --watch scss/main.scss css/main.css"
+  },
+  "devDependencies": {
+    "sass": "1.104.0"
+  }
+}

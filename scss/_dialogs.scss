@@ -1,0 +1,84 @@
+@use "tokens" as *;
+
+// Add dialog
+#addDlg, #ansDlg, #qmDlg {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--ink);
+  max-width: min(42rem, calc(100vw - 2rem));
+  width: 100%;
+  max-height: calc(100dvh - 2rem);
+
+  &::backdrop { background: rgba($ink-deep, .4); backdrop-filter: blur(3px); }
+}
+
+.sheet {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1.75rem;
+  position: relative;
+  overflow: auto;
+  max-height: calc(100dvh - 2rem);
+
+  .close { position: absolute; top: .9rem; right: .9rem; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--bg-2); border: 1px solid var(--line); display: grid; place-items: center; }
+}
+
+.form {
+  display: grid;
+  gap: .95rem;
+  margin-top: 1.25rem;
+
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: .95rem; }
+  label { display: block; margin-bottom: .3rem; }
+  .k { @include mono-small(0.65rem); color: var(--lilac); display: block; }
+  .q { font-family: var(--body); font-size: 1rem; font-weight: 500; line-height: 1.2; }
+
+  input[type="text"], input[type="number"], select, textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--bg-2);
+    border: 1.5px solid var(--line-2);
+    border-radius: 4px;
+    padding: .65rem .75rem;
+  }
+
+  textarea { min-height: 5rem; resize: vertical; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--lilac); outline-offset: 1px; }
+
+  .check {
+    display: flex;
+    gap: .6rem;
+    align-items: flex-start;
+    font-size: .92rem;
+    color: var(--muted);
+
+    input { width: 1.15rem; height: 1.15rem; margin-top: .2rem; flex: none; accent-color: var(--lilac); }
+  }
+}
+
+.listen {
+  border: 1px dashed var(--line-2);
+  border-radius: 4px;
+  padding: .7rem .85rem;
+  font-size: .9rem;
+  color: var(--muted);
+  display: flex;
+  gap: .6rem;
+  align-items: baseline;
+
+  strong { color: var(--ink); @include mono-small(0.77rem); font-weight: 500; }
+}
+
+.pulse { flex: none; width: .5rem; height: .5rem; border-radius: 50%; background: var(--lilac); box-shadow: 0 0 10px var(--lilac); transform: translateY(-1px); }
+.err { color: $err; font-weight: 600; font-size: .9rem; }
+
+.submit {
+  @include pill-solid;
+  justify-self: start;
+  padding: .8rem 1.4rem;
+  font-weight: 700;
+}

@@ -1,0 +1,66 @@
+// Layout: the archive as one wide living network. A full-width night field of neurons; bright ones are memories, gathered into named clusters by what they're about. Choosing one fires its connections and slides in a reading card.
+
+// Sass-side values. The palette also lives on :root as custom properties, since the page's script reads var(--lilac) etc.
+$lilac: #7A50C2;
+$ink-deep: #2B1D40;
+$paper-bg: #FFFDF8;
+$night: rgb(60, 35, 100);
+$mist: #8C7AA6;
+$mist-2: #7E6C99;
+$err: #B3264F;
+
+$bp-bloom: 51rem;
+$bp-stage: 52rem;
+
+@function glow($alpha) {
+  @return rgba($lilac, $alpha);
+}
+
+:root {
+  --bg: #F8F3EA;
+  --bg-2: #{$paper-bg};
+  --ink: #{$ink-deep};
+  --muted: #5D5070;
+  --faint: #6F6482;
+  --lilac: #{$lilac};
+  --plum: #5A3596;
+  --silver: #3A2D4F;
+  --paper: #6B43B5;
+  --paper-2: #EFE7F8;
+  --paper-ink: #FFFFFF;
+  --water: #E6DCF3;
+  --line: rgba(74, 48, 120, 0.14);
+  --line-2: #{glow(.35)};
+
+  --script: "Cormorant Garamond", "Newsreader", Georgia, serif;
+  --bloom: "Petit Formal Script", "Newsreader", Georgia, serif;
+  --display: "Newsreader", Georgia, serif;
+  --body: "Inter", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --ease: cubic-bezier(.2, .75, .2, 1);
+  color-scheme: light;
+}
+
+// Shared button shapes
+@mixin pill-solid {
+  background: var(--paper);
+  color: var(--paper-ink);
+  border: 0;
+  border-radius: 999px;
+}
+
+@mixin pill-line {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--line-2);
+  border-radius: 999px;
+  font-weight: 700;
+
+  &:hover { border-color: var(--lilac); }
+}
+
+@mixin mono-small($size) {
+  font-family: var(--mono);
+  font-size: $size;
+  letter-spacing: .05em;
+}
