@@ -1,13 +1,10 @@
-// Layout: the archive as one wide living network. A full-width night field of neurons; bright ones are memories, gathered into named clusters by what they're about. Choosing one fires its connections and slides in a reading card.
-
-// Sass-side values. The palette also lives on :root as custom properties, since the page's script reads var(--lilac) etc.
-$lilac: #7A50C2;
-$ink-deep: #2B1D40;
-$paper-bg: #FFFDF8;
+$lilac: #7a50c2;
+$ink-deep: #2b1d40;
+$paper-bg: #fffefb;
 $night: rgb(60, 35, 100);
-$mist: #8C7AA6;
-$mist-2: #7E6C99;
-$err: #B3264F;
+$mist: #8c7aa6;
+$mist-2: #7e6c99;
+$err: #b3264f;
 
 $bp-bloom: 51rem;
 $bp-stage: 52rem;
@@ -17,31 +14,30 @@ $bp-stage: 52rem;
 }
 
 :root {
-  --bg: #F8F3EA;
+  --bg: #fcf9f4;
   --bg-2: #{$paper-bg};
   --ink: #{$ink-deep};
-  --muted: #5D5070;
-  --faint: #6F6482;
+  --muted: #5d5070;
+  --faint: #6f6482;
   --lilac: #{$lilac};
-  --plum: #5A3596;
-  --silver: #3A2D4F;
-  --paper: #6B43B5;
-  --paper-2: #EFE7F8;
-  --paper-ink: #FFFFFF;
-  --water: #E6DCF3;
+  --plum: #5a3596;
+  --silver: #3a2d4f;
+  --paper: #6b43b5;
+  --paper-2: #efe7f8;
+  --paper-ink: #ffffff;
+  --water: #e6dcf3;
   --line: rgba(74, 48, 120, 0.14);
-  --line-2: #{glow(.35)};
+  --line-2: #{glow(0.35)};
 
-  --script: "Cormorant Garamond", "Newsreader", Georgia, serif;
-  --bloom: "Petit Formal Script", "Newsreader", Georgia, serif;
-  --display: "Newsreader", Georgia, serif;
-  --body: "Inter", system-ui, -apple-system, sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
-  --ease: cubic-bezier(.2, .75, .2, 1);
+  --script: 'Cormorant Garamond', 'Newsreader', Georgia, serif;
+  --bloom: 'Petit Formal Script', 'Newsreader', Georgia, serif;
+  --display: 'Newsreader', Georgia, serif;
+  --body: 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --ease: cubic-bezier(0.2, 0.75, 0.2, 1);
   color-scheme: light;
 }
 
-// Shared button shapes
 @mixin pill-solid {
   background: var(--paper);
   color: var(--paper-ink);
@@ -56,11 +52,13 @@ $bp-stage: 52rem;
   border-radius: 999px;
   font-weight: 700;
 
-  &:hover { border-color: var(--lilac); }
+  &:hover {
+    border-color: var(--lilac);
+  }
 }
 
 @mixin mono-small($size) {
   font-family: var(--mono);
   font-size: $size;
-  letter-spacing: .05em;
+  letter-spacing: 0.05em;
 }

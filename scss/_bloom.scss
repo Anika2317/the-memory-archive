@@ -1,23 +1,31 @@
-@use "tokens" as *;
-
-// Question of the month: answers bloom around the question like petals, opened from the nav
+@use 'tokens' as *;
 
 @function flower-icon($petal) {
   @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-10 -10 20 20'%3E%3Cg fill='%23#{$petal}'%3E%3Ccircle cx='0' cy='-5.2' r='3.6'/%3E%3Ccircle cx='4.95' cy='-1.6' r='3.6'/%3E%3Ccircle cx='3.06' cy='4.2' r='3.6'/%3E%3Ccircle cx='-3.06' cy='4.2' r='3.6'/%3E%3Ccircle cx='-4.95' cy='-1.6' r='3.6'/%3E%3C/g%3E%3Ccircle r='2.3' fill='%23F1CF6B'/%3E%3C/svg%3E");
 }
 
 $petal-edge: rgb(110, 90, 140);
-$petal-gap: #F7F3EF;
+$petal-gap: #faf7f4;
 
 #qmDlg {
   max-width: min(60rem, calc(100vw - 2rem));
 
-  .eyebrow { color: $mist; }
-  .fchip[aria-pressed="true"] { background: $mist-2; border-color: $mist-2; }
+  .eyebrow {
+    color: $mist;
+  }
+  .fchip[aria-pressed='true'] {
+    background: $mist-2;
+    border-color: $mist-2;
+  }
 }
 
-.qm-title { font-size: clamp(1.7rem, 3vw, 2.2rem); padding-right: 3rem; }
-#qmDlg .lede { margin-top: .4rem; }
+.qm-title {
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+  padding-right: 3rem;
+}
+#qmDlg .lede {
+  margin-top: 0.4rem;
+}
 
 .navbtn {
   background: none;
@@ -25,11 +33,26 @@ $petal-gap: #F7F3EF;
   padding: 0;
   color: var(--muted);
 
-  &:hover { color: var(--ink); }
+  &:hover {
+    color: var(--ink);
+  }
 }
 
-.qm-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem 2rem; }
-.qm-months { display: flex; flex-wrap: wrap; gap: .4rem; }
+.qm-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem 2rem;
+}
+.qm-months {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.sky-bubbles {
+  display: contents;
+}
 
 .sky {
   position: relative;
@@ -38,7 +61,7 @@ $petal-gap: #F7F3EF;
   border: 1px solid var(--line);
   border-radius: 18px;
   overflow: hidden;
-  background: radial-gradient(ellipse 48% 52% at 50% 50%, #F4EFF5 0%, #F6F2F2 55%, #F8F4EE 100%);
+  background: radial-gradient(ellipse 48% 52% at 50% 50%, #f7f3f8 0%, #faf7f5 55%, #fcf9f4 100%);
 }
 
 .sky-lines {
@@ -54,42 +77,73 @@ $petal-gap: #F7F3EF;
     stroke-width: 3;
     stroke-linejoin: round;
     transform-box: view-box;
-    transition: fill .35s;
+    transition: fill 0.35s;
     pointer-events: visiblePainted;
     cursor: pointer;
 
-    .vein { fill: none; stroke: rgba($petal-edge, .18); stroke-width: 1; stroke-linecap: round; pointer-events: none; }
+    .vein {
+      fill: none;
+      stroke: rgba($petal-edge, 0.18);
+      stroke-width: 1;
+      stroke-linecap: round;
+      pointer-events: none;
+    }
 
-    &:hover, &.hov { fill: url(#petalHov); }
+    &:hover,
+    &.hov {
+      fill: url(#petalHov);
+    }
+
+    &.blank {
+      pointer-events: none;
+    }
 
     &.on {
       fill: url(#petalOn);
 
-      .vein { stroke: rgba($paper-bg, .55); }
+      .vein {
+        stroke: rgba($paper-bg, 0.55);
+      }
     }
   }
 
-  .grow { animation: petalGrow 1.1s var(--ease) both; }
+  .grow {
+    animation: petalGrow 1.1s var(--ease) both;
+  }
 }
 
-@keyframes petalGrow { from { transform: scale(.12) rotate(-10deg); opacity: 0; } }
+@keyframes petalGrow {
+  from {
+    transform: scale(0.12) rotate(-10deg);
+    opacity: 0;
+  }
+}
 
 .bgstar {
   position: absolute;
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: #CFC3DC;
-  opacity: .3;
+  background: #cfc3dc;
+  opacity: 0.3;
   animation: drift 7s ease-in-out infinite;
   pointer-events: none;
 
-  &.gold { background: #E3D3A8; }
+  &.gold {
+    background: #e3d3a8;
+  }
 }
 
 @keyframes drift {
-  0%, 100% { opacity: .15; transform: translateY(0); }
-  50% { opacity: .6; transform: translateY(-6px); }
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(-6px);
+  }
 }
 
 .sky-q {
@@ -100,15 +154,16 @@ $petal-gap: #F7F3EF;
   width: 12.5rem;
   text-align: center;
   display: grid;
-  gap: .7rem;
+  gap: 0.7rem;
   justify-items: center;
   z-index: 2;
 
-  .mono { color: $mist; }
+  .mono {
+    color: $mist;
+  }
 
-  // the flower's center: a plain round disc the question sits on
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     left: 50%;
     top: 50%;
@@ -117,12 +172,21 @@ $petal-gap: #F7F3EF;
     transform: translate(-50%, -50%);
     z-index: -1;
     border-radius: 50%;
-    background: radial-gradient(circle, $paper-bg 0 70%, #FBF4E2 100%);
-    box-shadow: 0 0 0 1px rgba(201, 170, 90, .28), 0 14px 34px -18px rgba($night, .35);
+    background: radial-gradient(circle, $paper-bg 0 70%, #fbf4e2 100%);
+    box-shadow:
+      0 0 0 1px rgba(201, 170, 90, 0.28),
+      0 14px 34px -18px rgba($night, 0.35);
   }
 
-  h3 { font-size: 1.2rem; line-height: 1.3; color: var(--silver); }
-  .add-btn { background: $mist-2; margin-top: .2rem; }
+  h3 {
+    font-size: 1.2rem;
+    line-height: 1.3;
+    color: var(--silver);
+  }
+  .add-btn {
+    background: $mist-2;
+    margin-top: 0.2rem;
+  }
 }
 
 .bubble {
@@ -132,7 +196,7 @@ $petal-gap: #F7F3EF;
   background: none;
   border: 0;
   border-radius: 10px;
-  padding: .3rem .45rem;
+  padding: 0.3rem 0.45rem;
   font-family: var(--display);
   font-style: italic;
   font-size: 0.95rem;
@@ -141,45 +205,81 @@ $petal-gap: #F7F3EF;
   text-align: center;
   text-wrap: balance;
   z-index: 2;
-  transition: color .25s;
+  transition: color 0.25s;
 
-  &.grow { animation: bloomIn .9s var(--ease) both; }
+  &.grow {
+    animation: bloomIn 0.9s var(--ease) both;
+  }
 
   &::before {
-    content: "";
+    content: '';
     display: none;
     width: 15px;
     height: 15px;
-    margin: 0 auto .35rem;
-    background: flower-icon("B79AE0") center / contain no-repeat;
-    transition: transform .5s var(--ease);
+    margin: 0 auto 0.35rem;
+    background: flower-icon('B79AE0') center / contain no-repeat;
+    transition: transform 0.5s var(--ease);
   }
 
-  &:hover, &.on { color: var(--silver); }
-  &:hover::before, &.on::before { transform: rotate(36deg) scale(1.3); }
-  &.on::before { background-image: flower-icon("7A50C2"); }
-  &.mine { text-decoration: underline dotted #A898BC; text-underline-offset: 4px; }
+  &:hover,
+  &.on {
+    color: var(--silver);
+  }
+  &:hover::before,
+  &.on::before {
+    transform: rotate(36deg) scale(1.3);
+  }
+  &.on::before {
+    background-image: flower-icon('7A50C2');
+  }
+  &.mine {
+    text-decoration: underline dotted #a898bc;
+    text-underline-offset: 4px;
+  }
 
   &.more {
     @include mono-small(0.74rem);
     text-transform: uppercase;
     color: var(--muted);
 
-    &::before { display: none; }
+    &::before {
+      display: none;
+    }
   }
 }
 
-@keyframes bloomIn { from { opacity: 0; filter: blur(4px); } }
+@keyframes bloomIn {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
 
 .qm-detail {
   margin-top: 1.25rem;
   min-height: 6rem;
-  border-left: 2px solid #C4B9D2;
-  padding: .3rem 0 .3rem 1.25rem;
+  border-left: 2px solid #c4b9d2;
+  padding: 0.3rem 0 0.3rem 1.25rem;
   max-width: 48rem;
 
-  .mono { color: $mist; }
-  blockquote { margin: .45rem 0 .4rem; font-family: var(--bloom); font-size: clamp(.98rem, 1.7vw, 1.2rem); line-height: 1.7; color: var(--silver); }
-  p { color: var(--muted); font-size: .95rem; }
-  ul { margin: .5rem 0 0; padding-left: 1.1rem; color: var(--silver); }
+  .mono {
+    color: $mist;
+  }
+  blockquote {
+    margin: 0.45rem 0 0.4rem;
+    font-family: var(--bloom);
+    font-size: clamp(0.98rem, 1.7vw, 1.2rem);
+    line-height: 1.7;
+    color: var(--silver);
+  }
+  p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-top: 0.4rem;
+  }
+  ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1.1rem;
+    color: var(--silver);
+  }
 }

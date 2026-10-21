@@ -1,13 +1,12 @@
-// Entry point. Compiles to css/main.css (npm run build). Order matters for the cascade.
-@use "tokens";
-@use "base";
-@use "header";
-@use "stage";
-@use "card";
-@use "archive";
-@use "reading";
-@use "dialogs";
-@use "lower";
-@use "media";
-@use "bloom";
-@use "responsive";
+@use 'tokens';
+@use 'base';
+@use 'header';
+@use 'stage';
+@use 'card';
+@use 'archive';
+@use 'reading';
+@use 'dialogs';
+@use 'lower';
+@use 'media';
+@use 'bloom';
+@use 'responsive';
