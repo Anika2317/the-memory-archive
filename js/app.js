@@ -158,8 +158,9 @@
   }
 
   function byLine(rel) {
-    if (rel === "It's my own memory") return 'In their own words';
-    return 'Shared by ' + rel.replace(/^I'm /, '');
+    rel = rel.trim();
+    if (!rel || /^it'?s my own/i.test(rel)) return 'In their own words';
+    return 'Shared by ' + rel.replace(/^(i'?m|i am)\s+/i, '');
   }
   var MEDIA_NAME = {
     audio: 'Voice recording',
@@ -234,9 +235,22 @@
       return (a.year || 9999) - (b.year || 9999);
     });
   }
+  function themesOf(m) {
+    return m.themes && m.themes.length ? m.themes : [m.region];
+  }
+  function inTheme(m, id) {
+    return themesOf(m).indexOf(id) !== -1;
+  }
+  function themeNames(m) {
+    return themesOf(m)
+      .map(function (id) {
+        return (REG[id] || REG.family).name;
+      })
+      .join(' · ');
+  }
   function regionCount(id) {
     return MEMORIES.filter(function (m) {
-      return m.region === id;
+      return inTheme(m, id);
     }).length;
   }
 
@@ -526,7 +540,7 @@
       var A = nodes[l.a],
         B = nodes[l.b];
       var hot = ai >= 0 && (l.a === ai || l.b === ai);
-      var inReg = state.region && A.m.region === state.region && B.m.region === state.region;
+      var inReg = state.region && inTheme(A.m, state.region) && inTheme(B.m, state.region);
       var alpha = hot ? 0.6 : inReg ? 0.5 : state.region ? 0.06 : open ? 0.1 : 0.2;
       alpha *= Math.min(A.born, B.born);
       var pA = P[l.a],
@@ -678,7 +692,7 @@
         isN = near.indexOf(i) !== -1,
         isHL = !!hlIds[n.m.id];
       var dim =
-        (state.region && n.m.region !== state.region) ||
+        (state.region && !inTheme(n.m, state.region)) ||
         (open && i !== ai && !isN && !isHL && n.lit < 0.2);
       var a = (dim ? 0.3 : 1) * n.born;
       var bright = i === ai || isH || isHL || n.lit > 0.4;
@@ -854,12 +868,11 @@
   }
   function openMemory(id, banner) {
     clearTimers();
-    var m = byId(id),
-      reg = REG[m.region] || REG.family;
+    var m = byId(id);
     state.active = id;
     state.hlKey = null;
     state.lockKey = null;
-    if (state.region && state.region !== m.region) {
+    if (state.region && !inTheme(m, state.region)) {
       state.region = null;
       drawChips();
     }
@@ -882,7 +895,7 @@
         ? '<span class="archived-tag">Your memory joined the network · preview only</span>'
         : '') +
       '<span class="mono region">' +
-      esc(reg.name) +
+      esc(themeNames(m)) +
       (m.kind ? '<span class="kind-tag">' + esc(m.kind) + '</span>' : '') +
       '</span>' +
       '<h2>' +
@@ -1087,7 +1100,7 @@
     drawList();
     if (id) {
       nodes.forEach(function (n) {
-        if (n.m.region === id) n.lit = 1;
+        if (inTheme(n.m, id)) n.lit = 1;
       });
       $('stage').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' });
     }
@@ -1233,12 +1246,12 @@
         if (piece === 'food') return f[0] === 'Food' || f[2] === 'recipes';
         return true;
       }) ||
-      (piece === 'food' && m.region === 'smell')
+      (piece === 'food' && inTheme(m, 'smell'))
     );
   }
   function drawList() {
     var ms = MEMORIES.filter(function (m) {
-      if (all.theme && m.region !== all.theme) return false;
+      if (all.theme && !inTheme(m, all.theme)) return false;
       if (all.decade && (decade(m) || 'Undated') !== all.decade) return false;
       if (all.year && String(m.year) !== all.year) return false;
       if (all.piece && !holds(m, all.piece)) return false;
@@ -1259,7 +1272,7 @@
             })
             .join(' ') +
           ' ' +
-          (REG[m.region] || {}).name +
+          themeNames(m) +
           ' ' +
           (m.person ? PEOPLE[m.person] : '') +
           ' ' +
@@ -1281,8 +1294,7 @@
       ? ms
           .slice(0, all.shown)
           .map(function (m) {
-            var f = m.frags[0],
-              reg = REG[m.region] || REG.family;
+            var f = m.frags[0];
             return (
               '<button class="mcard" data-id="' +
               m.id +
@@ -1292,9 +1304,12 @@
               esc(m.hood) +
               '</span><span class="first">' +
               esc(f ? f[1] : '') +
-              '</span><span class="tags"><span class="tag">' +
-              esc(reg.name) +
-              '</span>' +
+              '</span><span class="tags">' +
+              themesOf(m)
+                .map(function (id) {
+                  return '<span class="tag">' + esc((REG[id] || REG.family).name) + '</span>';
+                })
+                .join('') +
               (m.person ? '<span class="tag who">' + esc(PEOPLE[m.person]) + '</span>' : '') +
               (m.kind ? '<span class="tag">' + esc(m.kind) + '</span>' : '') +
               (m.media
@@ -1364,61 +1379,12 @@
       return;
     }
     var pool = MEMORIES.filter(function (m) {
-      return m.id !== state.active && (!state.region || m.region === state.region);
+      return m.id !== state.active && (!state.region || inTheme(m, state.region));
     });
     if (!pool.length) pool = MEMORIES;
     $('stage').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' });
     openMemory(pool[Math.floor(Math.random() * pool.length)].id);
   });
-  function drawAtlasLines() {
-    var svg = $('atlasLines');
-    var box = $('atlas').getBoundingClientRect();
-    if (!box.width) return;
-    var pin = $('sdPin').getBoundingClientRect();
-    var inset = $('sdInset').getBoundingClientRect();
-    var px = pin.left + pin.width / 2 - box.left,
-      py = pin.top + pin.height / 2 - box.top;
-    var l = inset.left - box.left,
-      r = inset.right - box.left,
-      t = inset.top - box.top;
-    var out =
-      '<polygon class="lens" points="' +
-      [px, py, l, t, r, t]
-        .map(function (v) {
-          return v.toFixed(1);
-        })
-        .join(' ') +
-      '"/>';
-    var plot = $('worldPlot').getBoundingClientRect();
-    MEMORIES.forEach(function (m) {
-      if (!m.world) return;
-      var x = plot.left - box.left + ((m.world[0] + 180) / 360) * plot.width,
-        y = plot.top - box.top + ((80 - m.world[1]) / 140) * plot.height;
-      var cx = (px + x) / 2,
-        cy = Math.min(py, y) - Math.abs(x - px) * 0.18 - 10;
-      out +=
-        '<path class="trip" d="M' +
-        px.toFixed(1) +
-        ' ' +
-        py.toFixed(1) +
-        ' Q' +
-        cx.toFixed(1) +
-        ' ' +
-        cy.toFixed(1) +
-        ' ' +
-        x.toFixed(1) +
-        ' ' +
-        y.toFixed(1) +
-        '"/>';
-    });
-    svg.innerHTML = out;
-  }
-  var atlasTimer;
-  window.addEventListener('resize', function () {
-    clearTimeout(atlasTimer);
-    atlasTimer = setTimeout(drawAtlasLines, 120);
-  });
-
   function drawDots() {
     $('dots').innerHTML = '';
     $('worldDots').innerHTML = '';
@@ -1448,12 +1414,32 @@
       });
       (m.world ? $('worldDots') : $('dots')).appendChild(b);
     });
+    $('trips').innerHTML = MEMORIES.filter(function (m) {
+      return m.world;
+    })
+      .map(function (m) {
+        var x = m.world[0] + 180,
+          y = 80 - m.world[1];
+        var cx = (62.84 + x) / 2,
+          cy = Math.min(47.28, y) - Math.abs(x - 62.84) * 0.18 - 4;
+        return (
+          '<path d="M62.84 47.28 Q' +
+          cx.toFixed(1) +
+          ' ' +
+          cy.toFixed(1) +
+          ' ' +
+          x.toFixed(1) +
+          ' ' +
+          y.toFixed(1) +
+          '"/>'
+        );
+      })
+      .join('');
     $('worldCaption').textContent =
-      'San Diego up close, the world around it. ' +
+      'Illustrative map, not to scale. ' +
       (away
-        ? away + (away === 1 ? ' memory has' : ' memories have') + ' come from beyond San Diego.'
-        : 'Memories from other cities and countries will appear on the map.');
-    drawAtlasLines();
+        ? away + (away === 1 ? ' memory comes' : ' memories come') + ' from beyond San Diego.'
+        : 'Memories from other cities and countries appear in the corner.');
     $('memCount').textContent = MEMORIES.length;
     $('heroCount').textContent = MEMORIES.length;
     $('heroLinks').textContent = links.length;
@@ -1461,84 +1447,117 @@
       ? 'Choose a bright cell to open its memory.'
       : 'The archive is just getting started. Add the first memory.';
   }
-  $('fWhere').innerHTML =
-    Object.keys(PLACES)
-      .filter(function (h) {
-        return h !== 'Somewhere else in San Diego';
+  function options(list) {
+    return list
+      .map(function (v) {
+        return '<option value="' + esc(v) + '"></option>';
       })
-      .map(function (h) {
-        return '<option>' + esc(h) + '</option>';
-      })
-      .join('') +
-    '<option value="sd">Another place in San Diego</option>' +
-    '<option value="away">Somewhere else</option>';
-  $('fKindSel').innerHTML =
-    '<option value="">Not sure</option>' +
-    FEELINGS.map(function (k) {
-      return '<option>' + k + '</option>';
-    }).join('') +
-    '<option value="other">Something else</option>';
-  $('fKindSel').addEventListener('change', function () {
-    $('fKindOtherWrap').hidden = this.value !== 'other';
-  });
-
-  var placeFound = null;
-  var placeTimer;
-  function syncWhere() {
-    var mode = $('fWhere').value;
-    var typing = mode === 'sd' || mode === 'away';
-    $('fPlaceWrap').hidden = !typing;
-    $('fPlaceLabel').textContent =
-      mode === 'away' ? 'City and country' : 'Neighborhood or landmark';
-    $('fPlace').value = '';
-    $('fPlaceNote').textContent = '';
-    placeFound = null;
+      .join('');
   }
-  $('fWhere').addEventListener('change', syncWhere);
+  $('placeList').innerHTML = options(
+    Object.keys(PLACES).filter(function (h) {
+      return h !== 'Somewhere else in San Diego';
+    }),
+  );
+  $('feelList').innerHTML = options(FEELINGS);
 
-  function placeName(hit, away) {
+  var pickedThemes = [];
+  function drawThemePick() {
+    $('fThemes').innerHTML = REGIONS.map(function (r) {
+      return (
+        '<button type="button" class="fchip" data-t="' +
+        r.id +
+        '" aria-pressed="' +
+        (pickedThemes.indexOf(r.id) !== -1) +
+        '">' +
+        esc(r.name) +
+        '</button>'
+      );
+    }).join('');
+  }
+  $('fThemes').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-t]');
+    if (!b) return;
+    var id = b.getAttribute('data-t'),
+      at = pickedThemes.indexOf(id);
+    if (at === -1) pickedThemes.push(id);
+    else pickedThemes.splice(at, 1);
+    drawThemePick();
+    listen();
+  });
+  drawThemePick();
+
+  function inSanDiego(lng, lat) {
+    return lng >= SD_BOX[0] && lng <= SD_BOX[2] && lat >= SD_BOX[1] && lat <= SD_BOX[3];
+  }
+  function placeName(hit, local) {
     var a = hit.address || {};
-    if (!away) return hit.display_name.split(',')[0];
-    var city =
-      a.city || a.town || a.village || a.county || a.state || hit.display_name.split(',')[0];
+    var name = hit.display_name.split(',')[0];
+    if (local) return name;
+    var city = a.city || a.town || a.village || a.county || a.state || name;
     return a.country ? city + ', ' + a.country : city;
   }
+  function geocode(text, bounded) {
+    var url =
+      'https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=1&accept-language=en' +
+      (bounded ? '&bounded=1&viewbox=' + SD_BOX.join(',') : '') +
+      '&q=' +
+      encodeURIComponent(text);
+    return fetch(url).then(function (r) {
+      return r.json();
+    });
+  }
+
+  var placeFound = null;
+  var placeLookup = null;
+  var placeTimer = null;
   function findPlace() {
+    placeTimer = null;
     var text = $('fPlace').value.trim();
-    var away = $('fWhere').value === 'away';
     var note = $('fPlaceNote');
     placeFound = null;
     if (!text) {
       note.textContent = '';
-      return;
+      return (placeLookup = Promise.resolve());
+    }
+    var known = Object.keys(PLACES).filter(function (h) {
+      return h.toLowerCase() === text.toLowerCase();
+    })[0];
+    if (known) {
+      placeFound = { name: known, xy: PLACES[known] };
+      note.textContent = 'On the San Diego map at ' + known + '.';
+      return (placeLookup = Promise.resolve());
     }
     note.textContent = 'Looking for it…';
-    var url =
-      'https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=1&accept-language=en' +
-      (away ? '' : '&bounded=1&viewbox=' + SD_BOX.join(',')) +
-      '&q=' +
-      encodeURIComponent(text);
-    fetch(url)
-      .then(function (r) {
-        return r.json();
+    placeLookup = Promise.all([geocode(text, true), geocode(text, false)])
+      .then(function (both) {
+        var near = both[0][0],
+          far = both[1][0];
+        // a street that happens to share a city's name shouldn't win over the city
+        if (near && (near['class'] !== 'highway' || !far)) return [near];
+        return far ? [far] : [];
       })
       .then(function (res) {
         if (text !== $('fPlace').value.trim()) return;
         if (!res.length) {
-          note.textContent = away
-            ? 'We couldn’t find that. Try adding the country.'
-            : 'We couldn’t find that, so it will go under somewhere in San Diego.';
+          note.textContent =
+            'We couldn’t find that on a map, so it will be pinned to San Diego as “' + text + '.”';
           return;
         }
         var lng = +res[0].lon,
-          lat = +res[0].lat;
-        placeFound = { name: placeName(res[0], away), lng: lng, lat: lat };
-        if (!away) placeFound.xy = toMap(lng, lat);
-        note.textContent = 'Found it: ' + placeFound.name + '.';
+          lat = +res[0].lat,
+          local = inSanDiego(lng, lat);
+        placeFound = { name: placeName(res[0], local), lng: lng, lat: lat };
+        if (local) placeFound.xy = toMap(lng, lat);
+        note.textContent =
+          'Found it: ' +
+          placeFound.name +
+          (local ? ', on the San Diego map.' : ', on the world map.');
       })
       .catch(function () {
-        note.textContent = 'We couldn’t look that up right now. Try again in a moment.';
+        note.textContent = 'We couldn’t look that up right now. It will be pinned to San Diego.';
       });
+    return placeLookup;
   }
   $('fPlace').addEventListener('input', function () {
     clearTimeout(placeTimer);
@@ -1574,15 +1593,30 @@
   function listen() {
     var ks = keysIn(addText()),
       el = $('listen');
+    if (pickedThemes.length && !ks.length) {
+      el.innerHTML =
+        '<span class="pulse" aria-hidden="true"></span><span>It will join <strong>' +
+        pickedThemes
+          .map(function (id) {
+            return esc(REG[id].name.toUpperCase());
+          })
+          .join('</strong>, <strong>') +
+        '</strong>.</span>';
+      return;
+    }
     if (!ks.length) {
       el.innerHTML =
         '<span class="pulse" aria-hidden="true"></span><span>As you write, we’ll show where your memory will live and what it connects to.</span>';
       return;
     }
-    var reg = REG[KEY_REGION[ks[0]]] || REG.family;
+    var joins = pickedThemes.length ? pickedThemes : [KEY_REGION[ks[0]] || 'family'];
     el.innerHTML =
       '<span class="pulse" aria-hidden="true"></span><span>It will join <strong>' +
-      esc(reg.name.toUpperCase()) +
+      joins
+        .map(function (id) {
+          return esc(REG[id].name.toUpperCase());
+        })
+        .join('</strong>, <strong>') +
       '</strong> and connect through ' +
       ks
         .slice(0, 3)
@@ -1631,38 +1665,17 @@
     pv.innerHTML = '<p class="hint">' + mediaIcon(t) + ' ' + esc(f.name) + ' is attached.</p>';
   });
   var addFor = null;
-  function personOptions() {
-    var opts = '<option value="new">Someone not in the archive yet</option>';
-    if (addFor && !addFor.person)
-      opts +=
-        '<option value="m:' +
-        addFor.id +
-        '" selected>The person from ' +
-        esc(addFor.hood) +
-        ', ' +
-        esc(yr(addFor)) +
-        '</option>';
-    Object.keys(PEOPLE).forEach(function (p) {
-      opts +=
-        '<option value="' +
-        p +
-        '"' +
-        (addFor && addFor.person === p ? ' selected' : '') +
-        '>' +
-        esc(PEOPLE[p]) +
-        '</option>';
-    });
-    $('fPerson').innerHTML = opts;
-    syncCall();
+  function personFor(m) {
+    return m && m.person ? PEOPLE[m.person] : '';
   }
-  function syncCall() {
-    var v = $('fPerson').value;
-    $('fCallWrap').hidden = !(v === 'new' || v.indexOf('m:') === 0);
-  }
-  $('fPerson').addEventListener('change', syncCall);
   function openAdd(forMem) {
     addFor = forMem || null;
-    personOptions();
+    $('peopleList').innerHTML = options(
+      Object.keys(PEOPLE).map(function (p) {
+        return PEOPLE[p];
+      }),
+    );
+    $('fPersonName').value = personFor(addFor);
     $('fErr').hidden = true;
     try {
       $('addDlg').showModal();
@@ -1681,6 +1694,13 @@
   });
   $('addForm').addEventListener('submit', function (e) {
     e.preventDefault();
+    if (placeTimer) {
+      clearTimeout(placeTimer);
+      findPlace();
+    }
+    Promise.resolve(placeLookup).then(addMemory);
+  });
+  function addMemory() {
     var err = $('fErr');
     err.hidden = true;
     var y = $('fYear').value.trim();
@@ -1693,8 +1713,8 @@
       .filter(Boolean);
     var file = $('fMedia').files && $('fMedia').files[0],
       mType = mediaTypeOf(file);
-    var kindSel = $('fKindSel').value;
-    var kind = kindSel === 'other' ? $('fKindOther').value.trim() : kindSel;
+    var kind = $('fFeel').value.trim();
+    if (kind) kind = kind.charAt(0).toUpperCase() + kind.slice(1);
     if (y && !(/^\d{4}$/.test(y) && +y >= 1900 && +y <= 2026)) {
       err.textContent = 'Enter a four-digit year between 1900 and 2026, or leave it blank.';
       err.hidden = false;
@@ -1717,28 +1737,24 @@
     if (!frags.length && words)
       frags.push(['Detail', words.length > 60 ? words.slice(0, 57) + '…' : words, all[0] || null]);
     if (!frags.length) frags.push(['Detail', 'A ' + MEDIA_NAME[mType].toLowerCase(), null]);
-    var region =
+    var guessed =
       KEY_REGION[
         (frags.filter(function (f) {
           return f[2];
         })[0] || [])[2] || all[0]
       ] || 'family';
-    var where = $('fWhere').value;
-    if (where === 'away' && !placeFound) {
-      err.textContent = 'Type the city and country, and wait until we find it on the map.';
-      err.hidden = false;
-      return;
-    }
+    var themes = pickedThemes.length ? pickedThemes.slice() : [guessed];
+    var placeText = $('fPlace').value.trim();
     var hood, base, world;
-    if (where === 'away') {
+    if (placeFound && !placeFound.xy) {
       hood = placeFound.name;
       world = [placeFound.lng, placeFound.lat];
-    } else if (where === 'sd') {
-      hood = placeFound ? placeFound.name : 'Somewhere in San Diego';
-      base = placeFound ? placeFound.xy : PLACES['Somewhere else in San Diego'];
+    } else if (placeFound) {
+      hood = placeFound.name;
+      base = placeFound.xy;
     } else {
-      hood = where;
-      base = PLACES[where];
+      hood = placeText || 'Somewhere in San Diego';
+      base = PLACES['Somewhere else in San Diego'];
     }
     var jit = function () {
       return Math.random() * 16 - 8;
@@ -1750,7 +1766,8 @@
       id: MEMORIES.length + 1,
       year: y ? +y : null,
       hood: hood,
-      region: region,
+      region: themes[0],
+      themes: themes,
       xy: base ? [base[0] + jit(), base[1] + jit()] : null,
       by: byLine($('fBy').value),
       frags: frags,
@@ -1768,26 +1785,25 @@
     if (kind) mem.kind = kind;
     if (mType)
       mem.media = { type: mType, label: file.name, dur: '', url: URL.createObjectURL(file) };
-    var pv = $('fPerson').value,
-      call = $('fCall').value.trim().slice(0, 30);
-    if (PEOPLE[pv]) mem.person = pv;
-    else if (pv.indexOf('m:') === 0) {
-      var tgt = byId(+pv.slice(2));
+    var name = $('fPersonName').value.trim().slice(0, 30);
+    var existing = Object.keys(PEOPLE).filter(function (p) {
+      return PEOPLE[p].toLowerCase() === name.toLowerCase();
+    })[0];
+    if (existing) mem.person = existing;
+    else if (name || (addFor && !addFor.person)) {
       var pid = 'p' + Date.now();
-      PEOPLE[pid] = call || 'Someone remembered';
-      tgt.person = pid;
+      PEOPLE[pid] = name || 'Someone remembered';
       mem.person = pid;
-    } else if (call) {
-      var pid2 = 'p' + Date.now();
-      PEOPLE[pid2] = call;
-      mem.person = pid2;
+      if (addFor && !addFor.person) addFor.person = pid;
     }
     MEMORIES.push(mem);
     $('addForm').reset();
     $('fMediaPrev').innerHTML = '';
     $('fPlaceNote').textContent = '';
-    $('fKindOtherWrap').hidden = true;
-    syncWhere();
+    placeFound = null;
+    placeLookup = null;
+    pickedThemes = [];
+    drawThemePick();
     listen();
     $('addDlg').close();
     if (state.active != null) closeMemory();
@@ -1803,7 +1819,7 @@
       },
       reduce ? 0 : 900,
     );
-  });
+  }
   var QUESTIONS = [
     { month: 'October 2026', q: 'What’s one unforgettable day you spent with them?', answers: [] },
   ];
@@ -2207,7 +2223,7 @@
       '.section .lede',
       '.allbar',
       '.decades',
-      '.atlas',
+      '.where-map',
       '.fact',
       '.about > p',
       '.about > ul',

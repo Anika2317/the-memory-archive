@@ -36,9 +36,7 @@
       <div class="stage" id="stage">
         <section class="hero-copy" id="top">
           <h1>Every story, <em>a forget-me-not.</em></h1>
-          <p>
-            Each one a memory, Together they reveal what Alzheimer's cannot erase.
-          </p>
+          <p>Each one a memory, Together they reveal what Alzheimer's cannot erase.</p>
           <p class="hero-count">
             <span id="heroCount">0</span> memories · <span id="heroLinks">0</span> connections
           </p>
@@ -119,58 +117,64 @@
               city, never by address. Choose a light to open its memory.
             </p>
           </div>
-          <div class="maps">
-            <div class="mapbox">
-              <div class="map">
-                <svg viewBox="0 0 600 800" preserveAspectRatio="none" aria-hidden="true">
-                  <path
-                    fill="#EDE3D3"
-                    stroke="#B9A5D6"
-                    stroke-width="1.5"
-                    stroke-linejoin="round"
-                    d="M43 0 L55 68 L77 136 L62 200 L46 255 L31 272 L52 296 L72 323 L74 345 L81 391 L77 412 L81 425 L77 477 L86 525 L101 570 L111 528 L129 477 L146 460 L171 451 L200 470 L223 485 L266 519 L300 548 L326 579 L334 630 L326 690 L300 704 L291 723 L296 760 L300 800 L600 800 L600 0 Z"
-                  />
-                  <path
-                    fill="#E6DCF3"
-                    stroke="#B9A5D6"
-                    stroke-width="1.2"
-                    d="M79 409 C92 386 118 372 142 374 C162 377 168 395 158 410 C146 424 118 425 96 419 Z"
-                  />
-                  <path
-                    fill="#EDE3D3"
-                    stroke="#B9A5D6"
-                    stroke-width="1.5"
-                    stroke-linejoin="round"
-                    d="M162 506 C178 496 200 496 214 508 C222 522 226 545 236 568 L262 628 L292 700 L284 712 L272 708 L244 640 L216 580 L198 556 C184 546 168 530 162 506 Z"
-                  />
-                  <g
-                    fill="#6F6482"
-                    font-family="Inter, system-ui, sans-serif"
-                    font-size="14"
-                    letter-spacing="1"
-                  >
-                    <text x="92" y="48">DEL MAR</text>
-                    <text x="74" y="246">LA JOLLA</text>
-                    <text x="100" y="340">PACIFIC BEACH</text>
-                    <text x="100" y="452">OCEAN BEACH</text>
-                    <text x="232" y="478">DOWNTOWN</text>
-                    <text x="300" y="420">NORTH PARK</text>
-                    <text x="380" y="630">CHULA VISTA</text>
-                    <text x="22" y="730" font-size="12" letter-spacing="4">PACIFIC</text>
-                    <text x="22" y="752" font-size="12" letter-spacing="4">OCEAN</text>
-                  </g>
-                </svg>
-                <div id="dots"></div>
+          <div class="where-map">
+            <div class="map sd-map">
+              <svg viewBox="0 0 600 800" preserveAspectRatio="none" aria-hidden="true">
+                <path
+                  fill="#EDE3D3"
+                  stroke="#B9A5D6"
+                  stroke-width="1.5"
+                  stroke-linejoin="round"
+                  d="M43 0 L55 68 L77 136 L62 200 L46 255 L31 272 L52 296 L72 323 L74 345 L81 391 L77 412 L81 425 L77 477 L86 525 L101 570 L111 528 L129 477 L146 460 L171 451 L200 470 L223 485 L266 519 L300 548 L326 579 L334 630 L326 690 L300 704 L291 723 L296 760 L300 800 L600 800 L600 0 Z"
+                />
+                <path
+                  fill="#E6DCF3"
+                  stroke="#B9A5D6"
+                  stroke-width="1.2"
+                  d="M79 409 C92 386 118 372 142 374 C162 377 168 395 158 410 C146 424 118 425 96 419 Z"
+                />
+                <path
+                  fill="#EDE3D3"
+                  stroke="#B9A5D6"
+                  stroke-width="1.5"
+                  stroke-linejoin="round"
+                  d="M162 506 C178 496 200 496 214 508 C222 522 226 545 236 568 L262 628 L292 700 L284 712 L272 708 L244 640 L216 580 L198 556 C184 546 168 530 162 506 Z"
+                />
+                <g
+                  fill="#6F6482"
+                  font-family="Inter, system-ui, sans-serif"
+                  font-size="14"
+                  letter-spacing="1"
+                >
+                  <text x="92" y="48">DEL MAR</text>
+                  <text x="74" y="246">LA JOLLA</text>
+                  <text x="100" y="340">PACIFIC BEACH</text>
+                  <text x="100" y="452">OCEAN BEACH</text>
+                  <text x="232" y="478">DOWNTOWN</text>
+                  <text x="300" y="420">NORTH PARK</text>
+                  <text x="380" y="630">CHULA VISTA</text>
+                  <text x="22" y="730" font-size="12" letter-spacing="4">PACIFIC</text>
+                  <text x="22" y="752" font-size="12" letter-spacing="4">OCEAN</text>
+                </g>
+              </svg>
+              <div id="dots"></div>
+              <div class="world-card">
+                <div class="world-plot">
+                  <img src="img/world-dots.svg" alt="" />
+                  <svg
+                    class="trips"
+                    id="trips"
+                    viewBox="0 0 360 140"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                  ></svg>
+                  <span class="sd-pin" aria-hidden="true"></span>
+                  <div class="world-dots" id="worldDots"></div>
+                </div>
+                <span class="mono world-label">Beyond San Diego</span>
               </div>
-              <p class="map-caption">San Diego. Illustrative map, not to scale.</p>
             </div>
-            <div class="worldbox">
-              <div class="world">
-                <img src="img/world-dots.svg" alt="" />
-                <div id="worldDots"></div>
-              </div>
-              <p class="map-caption" id="worldCaption">Beyond San Diego.</p>
-            </div>
+            <p class="map-caption" id="worldCaption"></p>
           </div>
         </section>
 
@@ -289,34 +293,33 @@
               ><input id="fYear" type="number" inputmode="numeric" min="1900" max="2026" />
             </div>
             <div>
-              <label for="fWhere"
-                ><span class="k">WHERE</span><span class="q">Where did it happen?</span></label
-              ><select id="fWhere"></select>
-              <div id="fPlaceWrap" hidden>
-                <label class="sub" for="fPlace" id="fPlaceLabel"></label
-                ><input id="fPlace" type="text" autocomplete="off" />
-              </div>
+              <label for="fPlace"
+                ><span class="k">WHERE</span
+                ><span class="q">Neighborhood, landmark, or city</span></label
+              ><input id="fPlace" type="text" list="placeList" autocomplete="off" />
+              <datalist id="placeList"></datalist>
               <p class="hint" id="fPlaceNote" aria-live="polite"></p>
             </div>
           </div>
+          <div>
+            <span class="k">THEMES</span
+            ><span class="q">Where does it belong? Pick as many as fit, or none.</span>
+            <div class="theme-pick" id="fThemes" role="group" aria-label="Themes"></div>
+          </div>
           <div class="two">
             <div>
-              <label for="fKindSel"
+              <label for="fFeel"
                 ><span class="k">FEELING</span
                 ><span class="q">What kind of memory is it?</span></label
-              ><select id="fKindSel"></select>
+              ><input id="fFeel" type="text" list="feelList" maxlength="30" autocomplete="off" />
+              <datalist id="feelList"></datalist>
             </div>
-            <div id="fKindOtherWrap" hidden>
-              <label for="fKindOther"
-                ><span class="k">IN YOUR WORDS</span><span class="q">Describe it</span></label
-              ><input id="fKindOther" type="text" maxlength="30" />
+            <div>
+              <label for="fDetails"
+                ><span class="k">DETAILS</span
+                ><span class="q">Anything tied to it, separated by commas</span></label
+              ><input id="fDetails" type="text" />
             </div>
-          </div>
-          <div>
-            <label for="fDetails"
-              ><span class="k">DETAILS</span
-              ><span class="q">Anything tied to it, separated by commas</span></label
-            ><input id="fDetails" type="text" />
           </div>
           <div>
             <label for="fMedia"
@@ -334,31 +337,32 @@
           </div>
           <div class="two">
             <div>
-              <label for="fPerson"
-                ><span class="k">WHO</span><span class="q">Who is this memory about?</span></label
-              ><select id="fPerson"></select>
+              <label for="fPersonName"
+                ><span class="k">WHO</span
+                ><span class="q">Who is it about? A first name or nickname is enough.</span></label
+              ><input
+                id="fPersonName"
+                type="text"
+                list="peopleList"
+                maxlength="30"
+                autocomplete="off"
+              />
+              <datalist id="peopleList"></datalist>
             </div>
-            <div id="fCallWrap">
-              <label for="fCall"
-                ><span class="k">THEIR NAME</span
-                ><span class="q"
-                  >What you call them. A first name or nickname is enough.</span
-                ></label
-              ><input id="fCall" type="text" />
+            <div>
+              <label for="fBy"
+                ><span class="k">YOU</span
+                ><span class="q">How are you connected to them?</span></label
+              ><input id="fBy" type="text" list="relList" maxlength="40" autocomplete="off" />
+              <datalist id="relList">
+                <option value="It's my own memory"></option>
+                <option value="I'm their child"></option>
+                <option value="I'm their grandchild"></option>
+                <option value="I'm their spouse or partner"></option>
+                <option value="I'm their sibling"></option>
+                <option value="I'm a friend or caregiver"></option>
+              </datalist>
             </div>
-          </div>
-          <div>
-            <label for="fBy"
-              ><span class="k">YOU</span
-              ><span class="q">How are you connected to them?</span></label
-            ><select id="fBy">
-              <option>It's my own memory</option>
-              <option>I'm their child</option>
-              <option>I'm their grandchild</option>
-              <option>I'm their spouse or partner</option>
-              <option>I'm their sibling</option>
-              <option>I'm a friend or caregiver</option>
-            </select>
           </div>
           <label class="check"
             ><input type="checkbox" id="fConsent" /><span
@@ -441,14 +445,7 @@
           <div>
             <label for="aBy"
               ><span class="k">SHARED BY</span><span class="q">Who is answering?</span></label
-            ><select id="aBy">
-              <option>It's my own memory</option>
-              <option>I'm their child</option>
-              <option>I'm their grandchild</option>
-              <option>I'm their spouse or partner</option>
-              <option>I'm their sibling</option>
-              <option>I'm a friend or caregiver</option>
-            </select>
+            ><input id="aBy" type="text" list="relList" maxlength="40" autocomplete="off" />
           </div>
           <label class="check"
             ><input type="checkbox" id="aConsent" /><span
