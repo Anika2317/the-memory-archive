@@ -1821,7 +1821,7 @@
     );
   }
   var QUESTIONS = [
-    { month: 'October 2026', q: 'What’s one unforgettable day you spent with them?', answers: [] },
+    { month: 'October 2026', q: 'What’s a memory worth keeping?', answers: [] },
   ];
   var qm = { i: 0, sel: -1 };
   function qmBuildStars() {
