@@ -1370,6 +1370,55 @@
     $('stage').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' });
     openMemory(pool[Math.floor(Math.random() * pool.length)].id);
   });
+  function drawAtlasLines() {
+    var svg = $('atlasLines');
+    var box = $('atlas').getBoundingClientRect();
+    if (!box.width) return;
+    var pin = $('sdPin').getBoundingClientRect();
+    var inset = $('sdInset').getBoundingClientRect();
+    var px = pin.left + pin.width / 2 - box.left,
+      py = pin.top + pin.height / 2 - box.top;
+    var l = inset.left - box.left,
+      r = inset.right - box.left,
+      t = inset.top - box.top;
+    var out =
+      '<polygon class="lens" points="' +
+      [px, py, l, t, r, t]
+        .map(function (v) {
+          return v.toFixed(1);
+        })
+        .join(' ') +
+      '"/>';
+    var plot = $('worldPlot').getBoundingClientRect();
+    MEMORIES.forEach(function (m) {
+      if (!m.world) return;
+      var x = plot.left - box.left + ((m.world[0] + 180) / 360) * plot.width,
+        y = plot.top - box.top + ((80 - m.world[1]) / 140) * plot.height;
+      var cx = (px + x) / 2,
+        cy = Math.min(py, y) - Math.abs(x - px) * 0.18 - 10;
+      out +=
+        '<path class="trip" d="M' +
+        px.toFixed(1) +
+        ' ' +
+        py.toFixed(1) +
+        ' Q' +
+        cx.toFixed(1) +
+        ' ' +
+        cy.toFixed(1) +
+        ' ' +
+        x.toFixed(1) +
+        ' ' +
+        y.toFixed(1) +
+        '"/>';
+    });
+    svg.innerHTML = out;
+  }
+  var atlasTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(atlasTimer);
+    atlasTimer = setTimeout(drawAtlasLines, 120);
+  });
+
   function drawDots() {
     $('dots').innerHTML = '';
     $('worldDots').innerHTML = '';
@@ -1399,9 +1448,12 @@
       });
       (m.world ? $('worldDots') : $('dots')).appendChild(b);
     });
-    $('worldCaption').textContent = away
-      ? 'Beyond San Diego. ' + away + (away === 1 ? ' memory' : ' memories') + ' from other places.'
-      : 'Beyond San Diego. Memories from other cities and countries will appear here.';
+    $('worldCaption').textContent =
+      'San Diego up close, the world around it. ' +
+      (away
+        ? away + (away === 1 ? ' memory has' : ' memories have') + ' come from beyond San Diego.'
+        : 'Memories from other cities and countries will appear on the map.');
+    drawAtlasLines();
     $('memCount').textContent = MEMORIES.length;
     $('heroCount').textContent = MEMORIES.length;
     $('heroLinks').textContent = links.length;
@@ -2155,7 +2207,7 @@
       '.section .lede',
       '.allbar',
       '.decades',
-      '.mapbox',
+      '.atlas',
       '.fact',
       '.about > p',
       '.about > ul',
