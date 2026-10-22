@@ -439,31 +439,39 @@
   }
   function keyName(k) {
     if (/^\d{4}s$/.test(k)) return 'the ' + k;
+    if (/^(d|place):/.test(k)) return k.slice(k.indexOf(':') + 1);
     return KEYNAME[k] || k;
   }
   function plain(s) {
     return String(s).replace(/^♪\s*/, '');
   }
 
-  function pieces(m) {
-    var out = [
-      { type: 'Year', text: yr(m), key: decade(m) },
-      { type: 'Neighborhood', text: m.hood, key: REGION_OF_HOOD[m.hood] || null },
-    ];
+  // What a memory can connect through: topics anywhere in its words, its details,
+  // its place and decade. Two memories that share any of these are linked.
+  function memKeys(m) {
+    var out = keysIn(
+      m.text +
+        ' ' +
+        m.frags
+          .map(function (f) {
+            return f[1];
+          })
+          .join(' '),
+    );
     m.frags.forEach(function (f) {
-      out.push({ type: f[0], text: f[1], key: f[2] });
+      if (f[2]) out.push(f[2]);
+      if (f[0] === 'Detail' && f[1].length <= 40) out.push('d:' + plain(f[1]).toLowerCase());
     });
-    return out;
+    if (m.hood && !/^somewhere/i.test(m.hood)) out.push('place:' + m.hood.toLowerCase());
+    if (decade(m)) out.push(decade(m));
+    return out.filter(function (k, i) {
+      return out.indexOf(k) === i;
+    });
   }
   function sharing(key, exceptId) {
     if (!key) return [];
     return MEMORIES.filter(function (o) {
-      return (
-        o.id !== exceptId &&
-        pieces(o).some(function (p) {
-          return p.key === key;
-        })
-      );
+      return o.id !== exceptId && memKeys(o).indexOf(key) !== -1;
     }).sort(function (a, b) {
       return (a.year || 9999) - (b.year || 9999);
     });
@@ -624,24 +632,23 @@
     });
     links = [];
     var deg = {};
-    var keysOf = function (m) {
-      return m.frags
-        .map(function (f) {
-          return f[2];
-        })
-        .filter(Boolean);
-    };
+    // Shared topics, details and places count double; a shared decade or theme counts once.
+    var keysOf = nodes.map(function (n) {
+      return memKeys(n.m).concat(
+        themesOf(n.m).map(function (t) {
+          return 'theme:' + t;
+        }),
+      );
+    });
     var pairs = [];
     nodes.forEach(function (n, i) {
       nodes.forEach(function (o, j) {
         if (j <= i) return;
-        var a = keysOf(n.m),
-          b = keysOf(o.m);
-        var sh = a.filter(function (k) {
-          return b.indexOf(k) !== -1;
+        var k = 0;
+        keysOf[i].forEach(function (key) {
+          if (keysOf[j].indexOf(key) !== -1) k += /^(theme:|\d{4}s$)/.test(key) ? 1 : 2;
         });
-        if (sh.length)
-          pairs.push({ i: i, j: j, k: sh.length, d: Math.hypot(n.bx - o.bx, n.by - o.by) });
+        if (k) pairs.push({ i: i, j: j, k: k, d: Math.hypot(n.bx - o.bx, n.by - o.by) });
       });
     });
     pairs.sort(function (a, b) {
@@ -1088,11 +1095,9 @@
     state.timers = [];
   }
   function contentKeys(m) {
-    var out = [];
-    m.frags.forEach(function (f) {
-      if (f[2] && out.indexOf(f[2]) === -1 && sharing(f[2], m.id).length) out.push(f[2]);
+    return memKeys(m).filter(function (k) {
+      return sharing(k, m.id).length;
     });
-    return out;
   }
   function excerpt(text) {
     var m = String(text).match(/^.*?[.!?](\s|$)/);

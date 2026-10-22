@@ -21,6 +21,22 @@
     </script>
   </head>
   <body>
+    <header class="top">
+      <div class="wrap">
+        <a class="brand" href="#top">
+          <img src="favicon.svg" width="32" height="32" alt="" />
+          <span>The Memory Archive</span>
+          <small class="brand-org">Leucent Inc.</small>
+        </a>
+        <nav class="nav" aria-label="Main">
+          <button class="navbtn" id="qmOpen">The Monthly Bloom</button>
+          <a href="#all">Browse</a>
+          <a href="#about">About</a>
+          <button class="add-btn" id="addTop">Fold in a memory</button>
+        </nav>
+      </div>
+    </header>
+
     <section class="intro" id="intro" aria-label="Introduction">
       <div class="intro-frame">
         <div class="intro-shot" data-shot>
@@ -143,23 +159,7 @@
       </div>
     </section>
 
-    <header class="top" id="archive">
-      <div class="wrap">
-        <a class="brand" href="#top">
-          <img src="favicon.svg" width="32" height="32" alt="" />
-          <span>The Memory Archive</span>
-          <small class="brand-org">Leucent Inc.</small>
-        </a>
-        <nav class="nav" aria-label="Main">
-          <button class="navbtn" id="qmOpen">The Monthly Bloom</button>
-          <a href="#all">Browse</a>
-          <a href="#about">About</a>
-          <button class="add-btn" id="addTop">Fold in a memory</button>
-        </nav>
-      </div>
-    </header>
-
-    <main>
+    <main id="archive">
       <div class="stage" id="stage">
         <section class="hero-copy" id="top">
           <h1>Every story, <em>a forget-me-not.</em></h1>

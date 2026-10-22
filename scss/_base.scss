@@ -8,6 +8,7 @@
 }
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: var(--top-h, 0px);
 }
 
 body {

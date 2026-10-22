@@ -114,9 +114,9 @@
 
   .intro-frame {
     position: sticky;
-    top: 0;
-    height: 100vh;
-    height: 100svh;
+    top: var(--top-h, 0px);
+    height: calc(100vh - var(--top-h, 0px));
+    height: calc(100svh - var(--top-h, 0px));
     padding: 0 1.5rem;
     overflow: hidden;
   }
