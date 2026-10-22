@@ -259,6 +259,13 @@ footer {
     padding: 0;
   }
 
+  .admin {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 1rem;
+  }
+
   .mark {
     display: flex;
     align-items: center;

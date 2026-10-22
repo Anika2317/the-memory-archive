@@ -85,6 +85,8 @@
   };
 
   var MEMORIES = [];
+  // Ids shown on the page; never reused, so deleting a memory can't make two share one.
+  var memSeq = 0;
   var PEOPLE = {};
   function siblings(m) {
     return m.person
@@ -192,8 +194,34 @@
   // Row ids this tab saved itself, so live updates don't add them a second time.
   var savedHere = { memories: {}, answers: {} };
   var saving = 0;
+  // Delete keys for rows added in this browser, by table and row id. The database keeps only their hash.
+  function ownKeys() {
+    try {
+      return JSON.parse(localStorage.getItem('archive-own')) || { memories: {}, answers: {} };
+    } catch (e) {
+      return { memories: {}, answers: {} };
+    }
+  }
+  function keepKey(table, rowId, key) {
+    var own = ownKeys();
+    own[table][rowId] = key;
+    try {
+      localStorage.setItem('archive-own', JSON.stringify(own));
+    } catch (e) {}
+  }
+  function newKey() {
+    var b = new Uint8Array(24);
+    crypto.getRandomValues(b);
+    return Array.prototype.map
+      .call(b, function (x) {
+        return ('0' + x.toString(16)).slice(-2);
+      })
+      .join('');
+  }
   function dbInsert(table, row) {
     saving++;
+    var key = newKey();
+    row.delete_key = key;
     return dbFetch('/rest/v1/' + table + '?select=id', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' },
@@ -204,10 +232,117 @@
       })
       .then(function (rows) {
         savedHere[table][rows[0].id] = true;
+        keepKey(table, rows[0].id, key);
+        return rows[0].id;
       })
       .finally(function () {
         saving--;
       });
+  }
+
+  // Admin sign-in (Supabase Auth). The session is only used to call the delete functions.
+  var admin = null;
+  function readSession() {
+    try {
+      return JSON.parse(localStorage.getItem('archive-admin'));
+    } catch (e) {
+      return null;
+    }
+  }
+  function storeSession(s) {
+    try {
+      if (s) localStorage.setItem('archive-admin', JSON.stringify(s));
+      else localStorage.removeItem('archive-admin');
+    } catch (e) {}
+  }
+  function authToken(grant, body) {
+    return dbFetch('/auth/v1/token?grant_type=' + grant, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+      .then(function (r) {
+        return r.json();
+      })
+      .then(function (s) {
+        var out = {
+          access: s.access_token,
+          refresh: s.refresh_token,
+          until: Date.now() + (s.expires_in - 60) * 1000,
+          email: s.user && s.user.email,
+        };
+        storeSession(out);
+        return out;
+      });
+  }
+  // A fresh access token for the signed-in admin, or null for everyone else.
+  function adminToken() {
+    var s = readSession();
+    if (!s) return Promise.resolve(null);
+    if (Date.now() < s.until) return Promise.resolve(s.access);
+    return authToken('refresh_token', { refresh_token: s.refresh }).then(
+      function (n) {
+        return n.access;
+      },
+      function () {
+        storeSession(null);
+        return null;
+      },
+    );
+  }
+  function rpc(name, args) {
+    return adminToken().then(function (token) {
+      return dbFetch('/rest/v1/rpc/' + name, {
+        method: 'POST',
+        headers: Object.assign(
+          { 'Content-Type': 'application/json' },
+          token ? { Authorization: 'Bearer ' + token } : {},
+        ),
+        body: JSON.stringify(args || {}),
+      }).then(function (r) {
+        return r.json();
+      });
+    });
+  }
+  function checkAdmin() {
+    if (!online || !readSession()) {
+      setAdmin(null);
+      return Promise.resolve();
+    }
+    return rpc('is_admin').then(
+      function (yes) {
+        setAdmin(yes ? readSession().email : null);
+        if (!yes) storeSession(null);
+      },
+      function () {
+        setAdmin(null);
+      },
+    );
+  }
+  function setAdmin(email) {
+    admin = email ? { email: email } : null;
+    $('adminState').textContent = admin ? 'Signed in as admin (' + admin.email + ')' : '';
+    $('adminBtn').textContent = admin ? 'Sign out' : 'Admin sign-in';
+    if (state.active != null) openMemory(state.active);
+    qmDetail();
+  }
+  function canDelete(table, rowId) {
+    return online && rowId != null && (!!admin || !!ownKeys()[table][rowId]);
+  }
+  function removeRow(table, rowId) {
+    var fn = table === 'memories' ? 'delete_memory' : 'delete_answer';
+    return rpc(fn, { row_id: rowId, key: ownKeys()[table][rowId] || null }).then(function (ok) {
+      if (!ok) throw new Error('not allowed');
+    });
+  }
+  function removeMedia(url) {
+    var at = url ? url.indexOf('/storage/v1/object/public/media/') : -1;
+    if (at < 0 || url.indexOf(DB.url) !== 0) return;
+    dbFetch('/storage/v1/object/media/' + url.slice(at + 32), { method: 'DELETE' }).catch(
+      function (e) {
+        console.warn('Could not remove the media file', e);
+      },
+    );
   }
   function uploadMedia(file) {
     var ext = (file.name.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -228,12 +363,20 @@
       delete data.id;
       delete data.mine;
       delete data.fresh;
-      return dbInsert('memories', { data: data });
+      delete data.rowId;
+      return dbInsert('memories', { data: data }).then(function (rowId) {
+        mem.rowId = rowId;
+      });
     });
   }
   function saveAnswer(question, a) {
     if (!online) return Promise.resolve();
-    return dbInsert('answers', { question: question, data: { s: a.s, full: a.full, by: a.by } });
+    return dbInsert('answers', {
+      question: question,
+      data: { s: a.s, full: a.full, by: a.by },
+    }).then(function (rowId) {
+      a.rowId = rowId;
+    });
   }
   function busy(form, label) {
     var btn = form.querySelector('.submit');
@@ -1024,7 +1167,11 @@
         : '') +
       '<div class="card-links"><button class="linkbtn" id="addAbout">Add another memory about ' +
       (m.person ? esc(PEOPLE[m.person]) : 'this person') +
-      '</button></div>';
+      '</button>' +
+      (canDelete('memories', m.rowId)
+        ? '<button class="linkbtn danger" id="delMem">Delete this memory</button>'
+        : '') +
+      '</div><p class="err" id="delMemErr" hidden></p>';
     $('stage').classList.add('open');
     card.scrollTop = 0;
     $('cardClose').addEventListener('click', closeMemory);
@@ -1034,6 +1181,11 @@
     $('addAbout').addEventListener('click', function () {
       openAdd(m);
     });
+    var dm = $('delMem');
+    if (dm)
+      dm.addEventListener('click', function () {
+        deleteMemory(m, dm);
+      });
     var sn = $('sibNext');
     if (sn)
       sn.addEventListener('click', function () {
@@ -1066,6 +1218,28 @@
         }, 60),
       );
     still();
+  }
+  function deleteMemory(m, btn) {
+    if (!confirm('Delete this memory from the archive for everyone? This can’t be undone.')) return;
+    btn.disabled = true;
+    removeRow('memories', m.rowId).then(
+      function () {
+        if (m.media) removeMedia(m.media.url);
+        MEMORIES.splice(MEMORIES.indexOf(m), 1);
+        closeMemory();
+        layout();
+        drawChips();
+        fillFilters();
+        drawList();
+        drawDots();
+      },
+      function (e) {
+        console.error(e);
+        btn.disabled = false;
+        $('delMemErr').textContent = 'This memory couldn’t be deleted. Try again.';
+        $('delMemErr').hidden = false;
+      },
+    );
   }
   function closeMemory() {
     clearTimers();
@@ -1833,7 +2007,7 @@
       m.fresh = false;
     });
     var mem = {
-      id: MEMORIES.length + 1,
+      id: ++memSeq,
       year: y ? +y : null,
       hood: hood,
       region: themes[0],
@@ -2172,7 +2346,29 @@
       '</span><blockquote>' +
       esc(a.full) +
       '</blockquote>' +
-      (a.mem ? '<button class="linkbtn" id="qmMem">See this memory in the archive</button>' : '');
+      (a.mem ? '<button class="linkbtn" id="qmMem">See this memory in the archive</button>' : '') +
+      (canDelete('answers', a.rowId)
+        ? '<button class="linkbtn danger" id="qmDel">Delete this answer</button><p class="err" id="qmDelErr" hidden></p>'
+        : '');
+    var del = $('qmDel');
+    if (del)
+      del.addEventListener('click', function () {
+        if (!confirm('Delete this answer for everyone? This can’t be undone.')) return;
+        del.disabled = true;
+        removeRow('answers', a.rowId).then(
+          function () {
+            Q.answers.splice(Q.answers.indexOf(a), 1);
+            qm.sel = -1;
+            qmRender();
+          },
+          function (e) {
+            console.error(e);
+            del.disabled = false;
+            $('qmDelErr').textContent = 'This answer couldn’t be deleted. Try again.';
+            $('qmDelErr').hidden = false;
+          },
+        );
+      });
     var b = $('qmMem');
     if (b)
       b.addEventListener('click', function () {
@@ -2292,7 +2488,8 @@
           lastId.memories = row.id;
           if (savedHere.memories[row.id]) return;
           var m = row.data;
-          m.id = MEMORIES.length + 1;
+          m.id = ++memSeq;
+          m.rowId = row.id;
           if (!m.xy && !m.world) m.xy = PLACES[m.hood] || null;
           if (m.person && !PEOPLE[m.person])
             PEOPLE[m.person] = m.personName || 'Someone remembered';
@@ -2306,6 +2503,7 @@
             return q.q;
           }).indexOf(row.question);
           if (qi < 0) return;
+          row.data.rowId = row.id;
           QUESTIONS[qi].answers.unshift(row.data);
           if (qi === qm.i && qm.sel >= 0) qm.sel++;
           newAns++;
@@ -2342,6 +2540,67 @@
   qmBuildStars();
   qmRender();
   pullArchive();
+  checkAdmin();
+
+  function openLogin() {
+    $('loginErr').hidden = true;
+    try {
+      $('loginDlg').showModal();
+    } catch (e) {
+      $('loginDlg').setAttribute('open', '');
+    }
+  }
+  $('adminBtn').addEventListener('click', function () {
+    if (!admin) {
+      openLogin();
+      return;
+    }
+    var s = readSession();
+    storeSession(null);
+    setAdmin(null);
+    if (s)
+      dbFetch('/auth/v1/logout', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + s.access },
+      }).catch(function () {});
+  });
+  $('loginClose').addEventListener('click', function () {
+    $('loginDlg').close();
+  });
+  $('loginDlg').addEventListener('click', function (e) {
+    if (e.target === this) this.close();
+  });
+  $('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var err = $('loginErr');
+    err.hidden = true;
+    if (!online) {
+      err.textContent = 'The archive isn’t connected to its database yet.';
+      err.hidden = false;
+      return;
+    }
+    busy($('loginForm'), 'Signing in…');
+    authToken('password', { email: $('lEmail').value.trim(), password: $('lPass').value })
+      .then(checkAdmin)
+      .then(
+        function () {
+          busy($('loginForm'));
+          if (!admin) {
+            err.textContent = 'That account isn’t an admin for this archive.';
+            err.hidden = false;
+            return;
+          }
+          $('loginForm').reset();
+          $('loginDlg').close();
+        },
+        function (e) {
+          console.error(e);
+          busy($('loginForm'));
+          err.textContent = 'That email and password didn’t work. Try again.';
+          err.hidden = false;
+        },
+      );
+  });
   var rt;
   window.addEventListener('resize', function () {
     clearTimeout(rt);

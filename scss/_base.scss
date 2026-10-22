@@ -85,6 +85,13 @@ p {
   text-decoration: underline;
   text-underline-offset: 3px;
   font-size: 0.95rem;
+
+  &.danger {
+    color: $err;
+  }
+  &:disabled {
+    opacity: 0.5;
+  }
 }
 
 @keyframes rise {

@@ -253,6 +253,10 @@
             <div>The Memory Archive · Leucent Inc · Del Norte High School</div>
           </div>
         </div>
+        <div class="admin">
+          <span id="adminState" aria-live="polite"></span>
+          <button class="linkbtn" id="adminBtn">Admin sign-in</button>
+        </div>
       </div>
     </footer>
 
@@ -454,6 +458,39 @@
           >
           <p class="err" id="aErr" hidden></p>
           <button class="submit" type="submit">Add my answer</button>
+        </form>
+      </div>
+    </dialog>
+
+    <dialog id="loginDlg" aria-labelledby="loginTitle">
+      <div class="sheet">
+        <button class="close" id="loginClose" aria-label="Close">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+        <h2 class="sheet-title" id="loginTitle">Admin sign-in</h2>
+        <p class="lede">For the archive's organizers. Admins can delete any memory or answer.</p>
+        <form class="form" id="loginForm" novalidate>
+          <div>
+            <label for="lEmail"><span class="k">EMAIL</span></label
+            ><input id="lEmail" type="email" autocomplete="username" required />
+          </div>
+          <div>
+            <label for="lPass"><span class="k">PASSWORD</span></label
+            ><input id="lPass" type="password" autocomplete="current-password" required />
+          </div>
+          <p class="err" id="loginErr" hidden></p>
+          <button class="submit" type="submit">Sign in</button>
         </form>
       </div>
     </dialog>
