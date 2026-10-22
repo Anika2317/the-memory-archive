@@ -1978,6 +1978,9 @@
   $('addTop').addEventListener('click', function () {
     openAdd(null);
   });
+  $('introAdd').addEventListener('click', function () {
+    openAdd(null);
+  });
   $('addClose').addEventListener('click', function () {
     $('addDlg').close();
   });

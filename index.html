@@ -24,52 +24,118 @@
     <section class="intro" id="intro" aria-label="Introduction">
       <div class="intro-frame">
         <div class="intro-shot" data-shot>
-          <p>Alzheimer's is usually described by what it takes.</p>
+          <p>A person is more than what they remember.</p>
         </div>
-        <div class="intro-shot fade-words" data-shot>
-          <p><span>Names.</span> <span>Faces.</span> <span>The way home.</span></p>
-        </div>
-        <div class="intro-shot" data-shot>
-          <p>But ask a family, and they'll tell you what's still there.</p>
-          <ul>
-            <li>The song she still knows every word to.</li>
-            <li>The tamales he makes every December.</li>
-            <li>The beach they drove to every summer.</li>
-          </ul>
-        </div>
-        <div class="intro-shot" data-shot>
+        <div class="intro-shot long" data-shot>
           <p>
-            By 2030, more than 115,000 San Diegans are expected to be living with Alzheimer's or a
-            related dementia.
+            Inspired by the forget-me-not, the Memory Archive is a place for families across San
+            Diego to share the stories, traditions, and moments that make a life unique.
           </p>
-          <p class="after">Every one of them has stories like these.</p>
         </div>
-        <div class="intro-shot" data-shot>
-          <p>So we started keeping them.</p>
-          <p class="after">
-            The Memory Archive was started by two students at Del Norte High School, so families
-            across San Diego have somewhere to put the stories down, one memory at a time.
+        <div class="intro-shot long" data-shot>
+          <p>
+            By preserving these memories, we hope to challenge misconceptions about Alzheimer’s,
+            honor the person beyond the diagnosis, and connect generations through the stories we
+            carry forward.
           </p>
         </div>
         <div class="intro-shot title" data-shot>
           <svg class="flower" viewBox="-100 -100 200 200" aria-hidden="true">
             <defs>
-              <path
-                id="introPetal"
-                d="M0 -20 C-22 -26 -38 -50 -32 -68 C-29 -80 -15 -86 -6 -81 L0 -77 L6 -81 C15 -86 29 -80 32 -68 C38 -50 22 -26 0 -20 Z"
-              />
+              <filter id="introGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="2.4" result="b" />
+                <feMerge>
+                  <feMergeNode in="b" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
             </defs>
-            <g class="petals">
-              <use href="#introPetal" style="--i: 0" />
-              <use href="#introPetal" style="--i: 1" transform="rotate(72)" />
-              <use href="#introPetal" style="--i: 2" transform="rotate(144)" />
-              <use href="#introPetal" style="--i: 3" transform="rotate(216)" />
-              <use href="#introPetal" style="--i: 4" transform="rotate(288)" />
+            <g transform="translate(0 5) scale(.9)">
+              <g transform="rotate(0)">
+                <g class="petal" style="--i: 0">
+                  <path
+                    d="M0 -20 C-22 -26 -38 -50 -32 -68 C-29 -80 -15 -86 -6 -81 L0 -77 L6 -81 C15 -86 29 -80 32 -68 C38 -50 22 -26 0 -20 Z"
+                  />
+                  <g class="lights" filter="url(#introGlow)">
+                    <circle cx="-12" cy="-84" r="4.6" />
+                    <circle cx="12" cy="-84" r="4.6" />
+                    <circle cx="-34" cy="-55" r="3.4" />
+                    <circle cx="34" cy="-55" r="3.4" />
+                  </g>
+                </g>
+              </g>
+              <g transform="rotate(72)">
+                <g class="petal" style="--i: 1">
+                  <path
+                    d="M0 -20 C-22 -26 -38 -50 -32 -68 C-29 -80 -15 -86 -6 -81 L0 -77 L6 -81 C15 -86 29 -80 32 -68 C38 -50 22 -26 0 -20 Z"
+                  />
+                  <g class="lights" filter="url(#introGlow)">
+                    <circle cx="-12" cy="-84" r="4.6" />
+                    <circle cx="12" cy="-84" r="4.6" />
+                    <circle cx="-34" cy="-55" r="3.4" />
+                    <circle cx="34" cy="-55" r="3.4" />
+                  </g>
+                </g>
+              </g>
+              <g transform="rotate(144)">
+                <g class="petal" style="--i: 2">
+                  <path
+                    d="M0 -20 C-22 -26 -38 -50 -32 -68 C-29 -80 -15 -86 -6 -81 L0 -77 L6 -81 C15 -86 29 -80 32 -68 C38 -50 22 -26 0 -20 Z"
+                  />
+                  <g class="lights" filter="url(#introGlow)">
+                    <circle cx="-12" cy="-84" r="4.6" />
+                    <circle cx="12" cy="-84" r="4.6" />
+                    <circle cx="-34" cy="-55" r="3.4" />
+                    <circle cx="34" cy="-55" r="3.4" />
+                  </g>
+                </g>
+              </g>
+              <g transform="rotate(216)">
+                <g class="petal" style="--i: 3">
+                  <path
+                    d="M0 -20 C-22 -26 -38 -50 -32 -68 C-29 -80 -15 -86 -6 -81 L0 -77 L6 -81 C15 -86 29 -80 32 -68 C38 -50 22 -26 0 -20 Z"
+                  />
+                  <g class="lights" filter="url(#introGlow)">
+                    <circle cx="-12" cy="-84" r="4.6" />
+                    <circle cx="12" cy="-84" r="4.6" />
+                    <circle cx="-34" cy="-55" r="3.4" />
+                    <circle cx="34" cy="-55" r="3.4" />
+                  </g>
+                </g>
+              </g>
+              <g transform="rotate(288)">
+                <g class="petal" style="--i: 4">
+                  <path
+                    d="M0 -20 C-22 -26 -38 -50 -32 -68 C-29 -80 -15 -86 -6 -81 L0 -77 L6 -81 C15 -86 29 -80 32 -68 C38 -50 22 -26 0 -20 Z"
+                  />
+                  <g class="lights" filter="url(#introGlow)">
+                    <circle cx="-12" cy="-84" r="4.6" />
+                    <circle cx="12" cy="-84" r="4.6" />
+                    <circle cx="-34" cy="-55" r="3.4" />
+                    <circle cx="34" cy="-55" r="3.4" />
+                  </g>
+                </g>
+              </g>
+              <g class="center">
+                <circle r="21" class="ring" />
+                <circle r="13" class="heart" />
+                <circle r="4.5" class="pistil" />
+                <g class="seeds">
+                  <circle cy="-8.5" r="1.9" />
+                  <circle cx="8.1" cy="-2.6" r="1.9" />
+                  <circle cx="5" cy="6.9" r="1.9" />
+                  <circle cx="-5" cy="6.9" r="1.9" />
+                  <circle cx="-8.1" cy="-2.6" r="1.9" />
+                </g>
+              </g>
             </g>
-            <circle class="eye" r="17" />
           </svg>
           <p class="name">The Memory Archive</p>
-          <p class="after">Memories from San Diego and beyond, kept by the people who love them.</p>
+          <p class="slogan">Forget Me Not</p>
+          <p class="cta">
+            <button type="button" id="introAdd">Share a memory.</button> Help us keep our stories
+            alive.
+          </p>
         </div>
         <p class="intro-cue" aria-hidden="true">Scroll</p>
         <a class="intro-skip" href="#archive">Skip to the archive</a>
