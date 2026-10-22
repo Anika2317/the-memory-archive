@@ -1884,6 +1884,7 @@
   function listen() {
     var ks = keysIn(addText()),
       el = $('listen');
+    if (!el) return;
     if (pickedThemes.length && !ks.length) {
       el.innerHTML =
         '<span class="pulse" aria-hidden="true"></span><span>It will join <strong>' +

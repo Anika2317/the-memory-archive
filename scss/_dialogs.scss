@@ -54,47 +54,64 @@
 
 .form {
   display: grid;
-  gap: 0.95rem;
-  margin-top: 1.25rem;
+  gap: 1.4rem;
+  margin-top: 1.5rem;
 
   .two {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-    gap: 0.95rem;
+    gap: 1.4rem 1.75rem;
   }
   label {
     display: block;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.2rem;
   }
   .k {
-    @include mono-small(0.65rem);
-    color: var(--lilac);
     display: block;
+    font-family: var(--display);
+    font-size: 1.15rem;
+    line-height: 1.25;
   }
   .q {
-    font-family: var(--body);
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.2;
+    display: block;
+    color: var(--faint);
+    font-size: 0.88rem;
+    margin-top: 0.1rem;
   }
 
+  // Written on lines, like a paper form.
   input[type='text'],
   input[type='number'],
+  input[type='email'],
+  input[type='password'],
   select,
   textarea {
     width: 100%;
     font: inherit;
     font-size: 1rem;
     color: var(--ink);
-    background: var(--bg-2);
-    border: 1.5px solid var(--line-2);
-    border-radius: 4px;
-    padding: 0.65rem 0.75rem;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line-2);
+    border-radius: 0;
+    padding: 0.45rem 0.1rem;
   }
 
   textarea {
-    min-height: 5rem;
+    --rule: 1.9rem;
+    line-height: var(--rule);
+    padding: 0 0.1rem;
+    min-height: calc(var(--rule) * 4);
     resize: vertical;
+    border-bottom: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--rule) - 1px),
+      var(--line-2) calc(var(--rule) - 1px),
+      var(--line-2) var(--rule)
+    );
+    background-attachment: local;
   }
   input:focus,
   select:focus,

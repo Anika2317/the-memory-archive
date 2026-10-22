@@ -14,9 +14,70 @@
       href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Petit+Formal+Script&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap"
     />
     <link rel="stylesheet" href="css/main.css" />
+    <script>
+      // Set before first paint so the intro's hidden shots never flash.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
+        document.documentElement.classList.add('intro-on');
+    </script>
   </head>
   <body>
-    <header class="top">
+    <section class="intro" id="intro" aria-label="Introduction">
+      <div class="intro-frame">
+        <div class="intro-shot" data-shot>
+          <p>Alzheimer's is usually described by what it takes.</p>
+        </div>
+        <div class="intro-shot fade-words" data-shot>
+          <p><span>Names.</span> <span>Faces.</span> <span>The way home.</span></p>
+        </div>
+        <div class="intro-shot" data-shot>
+          <p>But ask a family, and they'll tell you what's still there.</p>
+          <ul>
+            <li>The song she still knows every word to.</li>
+            <li>The tamales he makes every December.</li>
+            <li>The beach they drove to every summer.</li>
+          </ul>
+        </div>
+        <div class="intro-shot" data-shot>
+          <p>
+            By 2030, more than 115,000 San Diegans are expected to be living with Alzheimer's or a
+            related dementia.
+          </p>
+          <p class="after">Every one of them has stories like these.</p>
+        </div>
+        <div class="intro-shot" data-shot>
+          <p>So we started keeping them.</p>
+          <p class="after">
+            The Memory Archive was started by two students at Del Norte High School, so families
+            across San Diego have somewhere to put the stories down, one memory at a time.
+          </p>
+        </div>
+        <div class="intro-shot title" data-shot>
+          <svg class="flower" viewBox="-100 -100 200 200" aria-hidden="true">
+            <defs>
+              <path
+                id="introPetal"
+                d="M0 -20 C-22 -26 -38 -50 -32 -68 C-29 -80 -15 -86 -6 -81 L0 -77 L6 -81 C15 -86 29 -80 32 -68 C38 -50 22 -26 0 -20 Z"
+              />
+            </defs>
+            <g class="petals">
+              <use href="#introPetal" style="--i: 0" />
+              <use href="#introPetal" style="--i: 1" transform="rotate(72)" />
+              <use href="#introPetal" style="--i: 2" transform="rotate(144)" />
+              <use href="#introPetal" style="--i: 3" transform="rotate(216)" />
+              <use href="#introPetal" style="--i: 4" transform="rotate(288)" />
+            </g>
+            <circle class="eye" r="17" />
+          </svg>
+          <p class="name">The Memory Archive</p>
+          <p class="after">Memories from San Diego and beyond, kept by the people who love them.</p>
+        </div>
+        <p class="intro-cue" aria-hidden="true">Scroll</p>
+        <a class="intro-skip" href="#archive">Skip to the archive</a>
+        <div class="intro-progress" aria-hidden="true"><span id="introBar"></span></div>
+      </div>
+    </section>
+
+    <header class="top" id="archive">
       <div class="wrap">
         <a class="brand" href="#top">
           <img src="favicon.svg" width="32" height="32" alt="" />
@@ -286,68 +347,19 @@
           </svg>
         </button>
         <h2 class="sheet-title" id="addTitle">Add a memory</h2>
-        <p class="lede">Share as much or as little as you remember.</p>
+        <p class="lede">
+          Write as much or as little as you like. Only the memory itself is needed.
+        </p>
         <form class="form" id="addForm" novalidate>
           <div>
-            <label for="fWords"
-              ><span class="k">THE MEMORY</span
-              ><span class="q">Tell it however you like, a line or a few paragraphs</span></label
-            ><textarea id="fWords"></textarea>
-          </div>
-          <div class="two">
-            <div>
-              <label for="fYear"
-                ><span class="k">WHEN</span><span class="q">Year, if you know it</span></label
-              ><input id="fYear" type="number" inputmode="numeric" min="1900" max="2026" />
-            </div>
-            <div>
-              <label for="fPlace"
-                ><span class="k">WHERE</span
-                ><span class="q">Neighborhood, landmark, or city</span></label
-              ><input id="fPlace" type="text" list="placeList" autocomplete="off" />
-              <datalist id="placeList"></datalist>
-              <p class="hint" id="fPlaceNote" aria-live="polite"></p>
-            </div>
-          </div>
-          <div>
-            <span class="k">THEMES</span
-            ><span class="q">Where does it belong? Pick as many as fit, or none.</span>
-            <div class="theme-pick" id="fThemes" role="group" aria-label="Themes"></div>
-          </div>
-          <div class="two">
-            <div>
-              <label for="fFeel"
-                ><span class="k">FEELING</span
-                ><span class="q">What kind of memory is it?</span></label
-              ><input id="fFeel" type="text" list="feelList" maxlength="30" autocomplete="off" />
-              <datalist id="feelList"></datalist>
-            </div>
-            <div>
-              <label for="fDetails"
-                ><span class="k">DETAILS</span
-                ><span class="q">Anything tied to it, separated by commas</span></label
-              ><input id="fDetails" type="text" />
-            </div>
-          </div>
-          <div>
-            <label for="fMedia"
-              ><span class="k">MORE THAN WORDS</span
-              ><span class="q">A recording, video, photo, or drawing</span></label
-            ><input id="fMedia" type="file" accept="audio/*,video/*,image/*" />
-            <p class="hint">Optional. Only with permission from the person or their family.</p>
-            <div id="fMediaPrev"></div>
-          </div>
-          <div class="listen" id="listen">
-            <span class="pulse" aria-hidden="true"></span
-            ><span
-              >As you write, we'll show where your memory will live and what it connects to.</span
-            >
+            <label for="fWords"><span class="k">What do you remember?</span></label
+            ><textarea id="fWords" rows="5"></textarea>
           </div>
           <div class="two">
             <div>
               <label for="fPersonName"
-                ><span class="k">WHO</span
-                ><span class="q">Who is it about? A first name or nickname is enough.</span></label
+                ><span class="k">Who is it about?</span
+                ><span class="q">A first name or nickname</span></label
               ><input
                 id="fPersonName"
                 type="text"
@@ -359,8 +371,8 @@
             </div>
             <div>
               <label for="fBy"
-                ><span class="k">YOU</span
-                ><span class="q">How are you connected to them?</span></label
+                ><span class="k">How do you know them?</span
+                ><span class="q">Or say it's your own memory</span></label
               ><input id="fBy" type="text" list="relList" maxlength="40" autocomplete="off" />
               <datalist id="relList">
                 <option value="It's my own memory"></option>
@@ -372,15 +384,56 @@
               </datalist>
             </div>
           </div>
+          <div class="two">
+            <div>
+              <label for="fYear"
+                ><span class="k">Year</span><span class="q">If you know it</span></label
+              ><input id="fYear" type="number" inputmode="numeric" min="1900" max="2026" />
+            </div>
+            <div>
+              <label for="fPlace"
+                ><span class="k">Place</span
+                ><span class="q">A neighborhood, landmark, or city</span></label
+              ><input id="fPlace" type="text" list="placeList" autocomplete="off" />
+              <datalist id="placeList"></datalist>
+              <p class="hint" id="fPlaceNote" aria-live="polite"></p>
+            </div>
+          </div>
+          <div class="two">
+            <div>
+              <label for="fDetails"
+                ><span class="k">Things in it</span
+                ><span class="q">A song, a dish, a street. Use commas between them.</span></label
+              ><input id="fDetails" type="text" />
+            </div>
+            <div>
+              <label for="fFeel"
+                ><span class="k">What kind of memory is it?</span
+                ><span class="q">Happy, funny, bittersweet…</span></label
+              ><input id="fFeel" type="text" list="feelList" maxlength="30" autocomplete="off" />
+              <datalist id="feelList"></datalist>
+            </div>
+          </div>
+          <div>
+            <span class="k" id="fThemesLbl">Which parts of the archive does it belong in?</span
+            ><span class="q">Pick any that fit, or skip this.</span>
+            <div class="theme-pick" id="fThemes" role="group" aria-labelledby="fThemesLbl"></div>
+          </div>
+          <div>
+            <label for="fMedia"
+              ><span class="k">Add a photo, recording, or drawing</span
+              ><span class="q">Only with permission from the person or their family.</span></label
+            ><input id="fMedia" type="file" accept="audio/*,video/*,image/*" />
+            <div id="fMediaPrev"></div>
+          </div>
           <label class="check"
             ><input type="checkbox" id="fConsent" /><span
-              >This memory belongs to someone living with Alzheimer's. I have their or their
-              family's permission to share it, including any recording, photo, or drawing, and I
-              understand it can be removed at any time.</span
+              >This memory belongs to someone living with Alzheimer's, and I have permission from
+              them or their family to share it. I know it can be taken down at any time.</span
             ></label
           >
           <p class="err" id="fErr" hidden></p>
-          <button class="submit" type="submit">Add it to the archive</button>
+          <button class="submit" type="submit">Add to the archive</button>
         </form>
       </div>
     </dialog>
@@ -440,19 +493,19 @@
         <form class="form" id="ansForm" novalidate>
           <div>
             <label for="aShort"
-              ><span class="k">IN A FEW WORDS</span
+              ><span class="k">In a few words</span
               ><span class="q">This becomes a petal on the flower</span></label
             ><input id="aShort" type="text" maxlength="60" />
           </div>
           <div>
             <label for="aFull"
-              ><span class="k">TELL US MORE</span
+              ><span class="k">Tell us more</span
               ><span class="q">A sentence or two (optional)</span></label
             ><textarea id="aFull"></textarea>
           </div>
           <div>
             <label for="aBy"
-              ><span class="k">SHARED BY</span><span class="q">Who is answering?</span></label
+              ><span class="k">Shared by</span><span class="q">Who is answering?</span></label
             ><input id="aBy" type="text" list="relList" maxlength="40" autocomplete="off" />
           </div>
           <label class="check"
@@ -487,11 +540,11 @@
         <p class="lede">For the archive's organizers. Admins can delete any memory or answer.</p>
         <form class="form" id="loginForm" novalidate>
           <div>
-            <label for="lEmail"><span class="k">EMAIL</span></label
+            <label for="lEmail"><span class="k">Email</span></label
             ><input id="lEmail" type="email" autocomplete="username" required />
           </div>
           <div>
-            <label for="lPass"><span class="k">PASSWORD</span></label
+            <label for="lPass"><span class="k">Password</span></label
             ><input id="lPass" type="password" autocomplete="current-password" required />
           </div>
           <p class="err" id="loginErr" hidden></p>
@@ -525,7 +578,7 @@
           <p class="hint" id="rWhich"></p>
           <div>
             <label for="rDetails"
-              ><span class="k">HOW WE CAN TELL IT'S YOURS</span
+              ><span class="k">How can we tell it's yours?</span
               ><span class="q"
                 >Roughly when you added it, what it says, any file you attached, and how you're
                 connected to the person</span
@@ -534,7 +587,7 @@
           </div>
           <div>
             <label for="rContact"
-              ><span class="k">HOW TO REACH YOU</span
+              ><span class="k">How can we reach you?</span
               ><span class="q">An email or phone number, only so we can check with you</span></label
             ><input id="rContact" type="text" maxlength="200" autocomplete="email" />
           </div>
@@ -577,6 +630,7 @@
     </dialog>
 
     <script src="js/config.js"></script>
+    <script src="js/intro.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>
