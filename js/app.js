@@ -173,6 +173,76 @@
   var $ = function (id) {
     return document.getElementById(id);
   };
+
+  // Shared storage (Supabase). Without settings in js/config.js, additions stay in this tab only.
+  var DB = window.ARCHIVE_DB || {};
+  var online = !!(DB.url && DB.key);
+  if (!online) console.warn('Archive storage is not set up: fill in js/config.js.');
+  function dbFetch(path, opts) {
+    opts = opts || {};
+    opts.headers = Object.assign(
+      { apikey: DB.key, Authorization: 'Bearer ' + DB.key },
+      opts.headers,
+    );
+    return fetch(DB.url + path, opts).then(function (r) {
+      if (!r.ok) throw new Error(r.status + ' ' + r.statusText);
+      return r;
+    });
+  }
+  // Row ids this tab saved itself, so live updates don't add them a second time.
+  var savedHere = { memories: {}, answers: {} };
+  var saving = 0;
+  function dbInsert(table, row) {
+    saving++;
+    return dbFetch('/rest/v1/' + table + '?select=id', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' },
+      body: JSON.stringify(row),
+    })
+      .then(function (r) {
+        return r.json();
+      })
+      .then(function (rows) {
+        savedHere[table][rows[0].id] = true;
+      })
+      .finally(function () {
+        saving--;
+      });
+  }
+  function uploadMedia(file) {
+    var ext = (file.name.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '');
+    var path = Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.' + ext;
+    return dbFetch('/storage/v1/object/media/' + path, {
+      method: 'POST',
+      headers: { 'Content-Type': file.type || 'application/octet-stream' },
+      body: file,
+    }).then(function () {
+      return DB.url + '/storage/v1/object/public/media/' + path;
+    });
+  }
+  function saveMemory(mem, file) {
+    if (!online) return Promise.resolve();
+    return (file ? uploadMedia(file) : Promise.resolve(null)).then(function (url) {
+      if (url) mem.media.url = url;
+      var data = Object.assign({}, mem);
+      delete data.id;
+      delete data.mine;
+      delete data.fresh;
+      return dbInsert('memories', { data: data });
+    });
+  }
+  function saveAnswer(question, a) {
+    if (!online) return Promise.resolve();
+    return dbInsert('answers', { question: question, data: { s: a.s, full: a.full, by: a.by } });
+  }
+  function busy(form, label) {
+    var btn = form.querySelector('.submit');
+    btn.disabled = !!label;
+    if (label) {
+      btn.dataset.label = btn.textContent;
+      btn.textContent = label;
+    } else btn.textContent = btn.dataset.label;
+  }
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
@@ -1796,6 +1866,22 @@
       mem.person = pid;
       if (addFor && !addFor.person) addFor.person = pid;
     }
+    if (mem.person) mem.personName = PEOPLE[mem.person];
+    busy($('addForm'), 'Saving…');
+    saveMemory(mem, mType && file).then(
+      function () {
+        busy($('addForm'));
+        showAdded(mem);
+      },
+      function (e) {
+        console.error(e);
+        busy($('addForm'));
+        err.textContent = 'Your memory couldn’t be saved. Check your connection and try again.';
+        err.hidden = false;
+      },
+    );
+  }
+  function showAdded(mem) {
     MEMORIES.push(mem);
     $('addForm').reset();
     $('fMediaPrev').innerHTML = '';
@@ -1820,9 +1906,7 @@
       reduce ? 0 : 900,
     );
   }
-  var QUESTIONS = [
-    { month: 'October 2026', q: 'What’s a memory worth keeping?', answers: [] },
-  ];
+  var QUESTIONS = [{ month: 'October 2026', q: 'What’s a memory worth keeping?', answers: [] }];
   var qm = { i: 0, sel: -1 };
   function qmBuildStars() {
     var sky = $('sky'),
@@ -2133,17 +2217,30 @@
       return;
     }
     var rel = $('aBy').value,
-      Q = QUESTIONS[qm.i];
-    Q.answers.unshift({
-      s: sh,
-      full: full || sh,
-      by: byLine(rel),
-      mine: true,
-    });
-    $('ansForm').reset();
-    $('ansDlg').close();
-    qm.sel = 0;
-    qmRender();
+      Q = QUESTIONS[qm.i],
+      a = {
+        s: sh,
+        full: full || sh,
+        by: byLine(rel),
+        mine: true,
+      };
+    busy($('ansForm'), 'Saving…');
+    saveAnswer(Q.q, a).then(
+      function () {
+        busy($('ansForm'));
+        Q.answers.unshift(a);
+        $('ansForm').reset();
+        $('ansDlg').close();
+        qm.sel = 0;
+        qmRender();
+      },
+      function (e) {
+        console.error(e);
+        busy($('ansForm'));
+        err.textContent = 'Your answer couldn’t be saved. Check your connection and try again.';
+        err.hidden = false;
+      },
+    );
   });
   $('qmOpen').addEventListener('click', function () {
     try {
@@ -2175,8 +2272,66 @@
       qmLines(false);
     }, 120);
   });
-  MEMORIES.forEach(function (m) {
-    m.xy = PLACES[m.hood];
+  // Loads everything on first call, then only rows newer than what this tab has seen.
+  var lastId = { memories: 0, answers: 0 };
+  var pulling = false;
+  function pullArchive() {
+    if (!online || pulling || saving) return;
+    pulling = true;
+    Promise.all([
+      dbFetch('/rest/v1/memories?select=id,data&order=id.asc&id=gt.' + lastId.memories),
+      dbFetch('/rest/v1/answers?select=id,question,data&order=id.asc&id=gt.' + lastId.answers),
+    ])
+      .then(function (res) {
+        return Promise.all([res[0].json(), res[1].json()]);
+      })
+      .then(function (rows) {
+        var newMems = 0,
+          newAns = 0;
+        rows[0].forEach(function (row) {
+          lastId.memories = row.id;
+          if (savedHere.memories[row.id]) return;
+          var m = row.data;
+          m.id = MEMORIES.length + 1;
+          if (!m.xy && !m.world) m.xy = PLACES[m.hood] || null;
+          if (m.person && !PEOPLE[m.person])
+            PEOPLE[m.person] = m.personName || 'Someone remembered';
+          MEMORIES.push(m);
+          newMems++;
+        });
+        rows[1].forEach(function (row) {
+          lastId.answers = row.id;
+          if (savedHere.answers[row.id]) return;
+          var qi = QUESTIONS.map(function (q) {
+            return q.q;
+          }).indexOf(row.question);
+          if (qi < 0) return;
+          QUESTIONS[qi].answers.unshift(row.data);
+          if (qi === qm.i && qm.sel >= 0) qm.sel++;
+          newAns++;
+        });
+        if (newMems) {
+          layout();
+          drawChips();
+          fillFilters();
+          drawList();
+          drawDots();
+        }
+        if (newAns) qmRender();
+      })
+      .catch(function (e) {
+        console.error('Could not load the archive', e);
+      })
+      .then(function () {
+        pulling = false;
+      });
+  }
+  // Live updates: check for new memories and answers while the page is open.
+  setInterval(function () {
+    if (!document.hidden) pullArchive();
+  }, 15000);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) pullArchive();
   });
   buildDust();
   layout();
@@ -2186,6 +2341,7 @@
   drawDots();
   qmBuildStars();
   qmRender();
+  pullArchive();
   var rt;
   window.addEventListener('resize', function () {
     clearTimeout(rt);
