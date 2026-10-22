@@ -290,18 +290,22 @@
       },
     );
   }
-  function rpc(name, args) {
+  // Like dbFetch, but as the signed-in admin when there is one.
+  function asAdmin(path, opts) {
     return adminToken().then(function (token) {
-      return dbFetch('/rest/v1/rpc/' + name, {
-        method: 'POST',
-        headers: Object.assign(
-          { 'Content-Type': 'application/json' },
-          token ? { Authorization: 'Bearer ' + token } : {},
-        ),
-        body: JSON.stringify(args || {}),
-      }).then(function (r) {
-        return r.json();
-      });
+      opts = opts || {};
+      if (token)
+        opts.headers = Object.assign({}, opts.headers, { Authorization: 'Bearer ' + token });
+      return dbFetch(path, opts);
+    });
+  }
+  function rpc(name, args) {
+    return asAdmin('/rest/v1/rpc/' + name, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(args || {}),
+    }).then(function (r) {
+      return r.json();
     });
   }
   function checkAdmin() {
@@ -323,6 +327,7 @@
     admin = email ? { email: email } : null;
     $('adminState').textContent = admin ? 'Signed in as admin (' + admin.email + ')' : '';
     $('adminBtn').textContent = admin ? 'Sign out' : 'Admin sign-in';
+    $('reqBtn').hidden = !admin;
     if (state.active != null) openMemory(state.active);
     qmDetail();
   }
@@ -334,6 +339,21 @@
     return rpc(fn, { row_id: rowId, key: ownKeys()[table][rowId] || null }).then(function (ok) {
       if (!ok) throw new Error('not allowed');
     });
+  }
+  // The private link holds the memory's delete key, so whoever has it can delete that memory.
+  function privateLink(m) {
+    var key = ownKeys().memories[m.rowId];
+    return key ? location.origin + location.pathname + '#manage=' + m.rowId + '.' + key : null;
+  }
+  function copyText(input, btn) {
+    var done = function () {
+      btn.textContent = 'Copied';
+      setTimeout(function () {
+        btn.textContent = 'Copy link';
+      }, 2000);
+    };
+    input.select();
+    if (navigator.clipboard) navigator.clipboard.writeText(input.value).then(done, function () {});
   }
   function removeMedia(url) {
     var at = url ? url.indexOf('/storage/v1/object/public/media/') : -1;
@@ -1101,11 +1121,14 @@
       });
     });
     var nLinked = Object.keys(linked).length;
+    var link = online && m.rowId != null ? privateLink(m) : null;
     var card = $('card');
     card.innerHTML =
       '<button class="close" id="cardClose" aria-label="Close this memory"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
       (banner
-        ? '<span class="archived-tag">Your memory joined the network · preview only</span>'
+        ? '<span class="archived-tag">Your memory joined the network' +
+          (online ? '' : ' · preview only') +
+          '</span>'
         : '') +
       '<span class="mono region">' +
       esc(themeNames(m)) +
@@ -1168,10 +1191,20 @@
       '<div class="card-links"><button class="linkbtn" id="addAbout">Add another memory about ' +
       (m.person ? esc(PEOPLE[m.person]) : 'this person') +
       '</button>' +
+      (link && !banner ? '<button class="linkbtn" id="showLink">Your private link</button>' : '') +
       (canDelete('memories', m.rowId)
         ? '<button class="linkbtn danger" id="delMem">Delete this memory</button>'
-        : '') +
-      '</div><p class="err" id="delMemErr" hidden></p>';
+        : online && m.rowId != null
+          ? '<button class="linkbtn" id="askRemove">Ask us to remove this memory</button>'
+          : '') +
+      '</div><p class="err" id="delMemErr" hidden></p>' +
+      (link
+        ? '<div class="private-link" id="linkBox"' +
+          (banner ? '' : ' hidden') +
+          '><span class="mono">Your private link</span><p>Save or bookmark this link to delete your memory later, from any device. Anyone with this link can delete this memory, so keep it to yourself.</p><div class="copy-row"><input id="linkIn" readonly aria-label="Your private link" value="' +
+          esc(link) +
+          '"><button class="btn-line" id="linkCopy">Copy link</button></div><p class="hint">Lost it? You can still ask us to remove the memory.</p></div>'
+        : '');
     $('stage').classList.add('open');
     card.scrollTop = 0;
     $('cardClose').addEventListener('click', closeMemory);
@@ -1185,6 +1218,20 @@
     if (dm)
       dm.addEventListener('click', function () {
         deleteMemory(m, dm);
+      });
+    var ar = $('askRemove');
+    if (ar)
+      ar.addEventListener('click', function () {
+        openRemoval(m);
+      });
+    var sl = $('showLink');
+    if (sl)
+      sl.addEventListener('click', function () {
+        $('linkBox').hidden = !$('linkBox').hidden;
+      });
+    if ($('linkCopy'))
+      $('linkCopy').addEventListener('click', function () {
+        copyText($('linkIn'), this);
       });
     var sn = $('sibNext');
     if (sn)
@@ -2472,9 +2519,9 @@
   var lastId = { memories: 0, answers: 0 };
   var pulling = false;
   function pullArchive() {
-    if (!online || pulling || saving) return;
+    if (!online || pulling || saving) return Promise.resolve();
     pulling = true;
-    Promise.all([
+    return Promise.all([
       dbFetch('/rest/v1/memories?select=id,data&order=id.asc&id=gt.' + lastId.memories),
       dbFetch('/rest/v1/answers?select=id,question,data&order=id.asc&id=gt.' + lastId.answers),
     ])
@@ -2539,8 +2586,174 @@
   drawDots();
   qmBuildStars();
   qmRender();
-  pullArchive();
+  // A private link (#manage=<row id>.<key>) hands this browser the key, then opens that memory.
+  var manage = /^#manage=(\d+)\.([0-9a-f]+)$/.exec(location.hash);
+  if (manage) {
+    keepKey('memories', +manage[1], manage[2]);
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+  pullArchive().then(function () {
+    if (!manage) return;
+    var m = MEMORIES.filter(function (x) {
+      return x.rowId === +manage[1];
+    })[0];
+    if (!m) {
+      alert('That memory isn’t in the archive anymore.');
+      return;
+    }
+    $('stage').scrollIntoView({ block: 'start' });
+    openMemory(m.id);
+  });
   checkAdmin();
+
+  // Removal requests, for people who no longer have their private link.
+  var removalFor = null;
+  function openRemoval(m) {
+    removalFor = m || null;
+    $('rWhich').textContent = m
+      ? 'Memory #' + m.rowId + ': ' + m.hood + ', ' + yr(m) + ' · “' + excerpt(m.text) + '”'
+      : 'Tell us which memory below.';
+    $('rErr').hidden = true;
+    $('rDone').hidden = true;
+    $('removeForm').hidden = false;
+    try {
+      $('removeDlg').showModal();
+    } catch (e) {
+      $('removeDlg').setAttribute('open', '');
+    }
+  }
+  $('askRemoveAbout').addEventListener('click', function () {
+    openRemoval(null);
+  });
+  $('removeClose').addEventListener('click', function () {
+    $('removeDlg').close();
+  });
+  $('removeDlg').addEventListener('click', function (e) {
+    if (e.target === this) this.close();
+  });
+  $('removeForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var err = $('rErr'),
+      details = $('rDetails').value.trim(),
+      contact = $('rContact').value.trim();
+    err.hidden = true;
+    if (!details || !contact) {
+      err.textContent = 'Fill in both boxes so we can find the memory and check with you.';
+      err.hidden = false;
+      return;
+    }
+    if (!online) {
+      err.textContent = 'The archive isn’t connected right now. Email us instead.';
+      err.hidden = false;
+      return;
+    }
+    busy($('removeForm'), 'Sending…');
+    dbFetch('/rest/v1/removal_requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+      body: JSON.stringify({
+        memory_id: removalFor ? removalFor.rowId : null,
+        details: details.slice(0, 4000),
+        contact: contact.slice(0, 200),
+      }),
+    }).then(
+      function () {
+        busy($('removeForm'));
+        $('removeForm').reset();
+        $('removeForm').hidden = true;
+        $('rDone').hidden = false;
+      },
+      function (e) {
+        console.error(e);
+        busy($('removeForm'));
+        err.textContent = 'Your request couldn’t be sent. Try again, or email us.';
+        err.hidden = false;
+      },
+    );
+  });
+
+  // For admins: the list of removal requests waiting to be checked.
+  function loadRequests() {
+    var list = $('reqList');
+    list.innerHTML = '<p class="hint">Loading…</p>';
+    asAdmin('/rest/v1/removal_requests?select=*&order=created_at.asc')
+      .then(function (r) {
+        return r.json();
+      })
+      .then(function (rows) {
+        if (!rows.length) {
+          list.innerHTML = '<p>No removal requests right now.</p>';
+          return;
+        }
+        list.innerHTML = rows
+          .map(function (q) {
+            var m = MEMORIES.filter(function (x) {
+              return x.rowId === q.memory_id;
+            })[0];
+            return (
+              '<div class="req" data-req="' +
+              q.id +
+              '"><span class="mono">' +
+              esc(new Date(q.created_at).toLocaleString()) +
+              ' · ' +
+              (q.memory_id == null
+                ? 'Memory not named'
+                : m
+                  ? 'Memory #' + q.memory_id + ': ' + esc(m.hood) + ', ' + esc(yr(m))
+                  : 'Memory #' + q.memory_id + ' (already gone)') +
+              '</span><p>' +
+              esc(q.details) +
+              '</p><p class="contact">Contact: ' +
+              esc(q.contact) +
+              '</p><div class="card-links">' +
+              (m
+                ? '<button class="linkbtn" data-open="' + m.id + '">Open the memory</button>'
+                : '') +
+              '<button class="linkbtn" data-done="' +
+              q.id +
+              '">Mark as handled</button></div></div>'
+            );
+          })
+          .join('');
+      })
+      .catch(function (e) {
+        console.error(e);
+        list.innerHTML =
+          '<p class="err">The requests couldn’t be loaded. Try signing in again.</p>';
+      });
+  }
+  $('reqBtn').addEventListener('click', function () {
+    try {
+      $('reqDlg').showModal();
+    } catch (e) {
+      $('reqDlg').setAttribute('open', '');
+    }
+    loadRequests();
+  });
+  $('reqClose').addEventListener('click', function () {
+    $('reqDlg').close();
+  });
+  $('reqDlg').addEventListener('click', function (e) {
+    if (e.target === this) this.close();
+  });
+  $('reqList').addEventListener('click', function (e) {
+    var open = e.target.closest('[data-open]'),
+      done = e.target.closest('[data-done]');
+    if (open) {
+      $('reqDlg').close();
+      $('stage').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      openMemory(+open.getAttribute('data-open'));
+    }
+    if (done) {
+      done.disabled = true;
+      asAdmin('/rest/v1/removal_requests?id=eq.' + done.getAttribute('data-done'), {
+        method: 'DELETE',
+      }).then(loadRequests, function (e) {
+        console.error(e);
+        done.disabled = false;
+      });
+    }
+  });
 
   function openLogin() {
     $('loginErr').hidden = true;

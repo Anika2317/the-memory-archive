@@ -217,6 +217,42 @@
   margin-top: 1rem;
 }
 
+.private-link {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  background: var(--paper-2);
+
+  .mono {
+    color: var(--plum);
+  }
+  p {
+    margin-top: 0.35rem;
+    font-size: 0.9rem;
+  }
+  .copy-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+  }
+  input {
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--bg-2);
+    color: var(--ink);
+  }
+  .btn-line {
+    flex: none;
+    padding: 0.45rem 0.9rem;
+  }
+}
+
 .read .sibs {
   display: flex;
   flex-wrap: wrap;

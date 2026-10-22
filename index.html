@@ -230,6 +230,10 @@
             addresses, or medical details. Families can ask us to remove theirs at any time.
           </p>
           <p>
+            When you add a memory, you get a private link to delete it yourself.
+            <button class="linkbtn" id="askRemoveAbout">Lost it? Ask us to remove a memory.</button>
+          </p>
+          <p>
             Founded by Anika Seksaria and Maleesha Weerakkody, Del Norte High School, San Diego.
           </p>
           <p>
@@ -255,6 +259,7 @@
         </div>
         <div class="admin">
           <span id="adminState" aria-live="polite"></span>
+          <button class="linkbtn" id="reqBtn" hidden>Removal requests</button>
           <button class="linkbtn" id="adminBtn">Admin sign-in</button>
         </div>
       </div>
@@ -492,6 +497,82 @@
           <p class="err" id="loginErr" hidden></p>
           <button class="submit" type="submit">Sign in</button>
         </form>
+      </div>
+    </dialog>
+
+    <dialog id="removeDlg" aria-labelledby="removeTitle">
+      <div class="sheet">
+        <button class="close" id="removeClose" aria-label="Close">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+        <h2 class="sheet-title" id="removeTitle">Ask us to remove a memory</h2>
+        <p class="lede">
+          If you saved your private link, open it to delete the memory yourself. Otherwise, tell us
+          about it here.
+        </p>
+        <form class="form" id="removeForm" novalidate>
+          <p class="hint" id="rWhich"></p>
+          <div>
+            <label for="rDetails"
+              ><span class="k">HOW WE CAN TELL IT'S YOURS</span
+              ><span class="q"
+                >Roughly when you added it, what it says, any file you attached, and how you're
+                connected to the person</span
+              ></label
+            ><textarea id="rDetails" maxlength="4000"></textarea>
+          </div>
+          <div>
+            <label for="rContact"
+              ><span class="k">HOW TO REACH YOU</span
+              ><span class="q">An email or phone number, only so we can check with you</span></label
+            ><input id="rContact" type="text" maxlength="200" autocomplete="email" />
+          </div>
+          <p class="hint">
+            We check every request with you before removing anything, so no one can take down
+            someone else's memory. Only the archive team sees this.
+          </p>
+          <p class="err" id="rErr" hidden></p>
+          <button class="submit" type="submit">Send request</button>
+        </form>
+        <p class="done" id="rDone" hidden>
+          Thank you. We'll contact you to confirm the details, then remove the memory.
+        </p>
+      </div>
+    </dialog>
+
+    <dialog id="reqDlg" aria-labelledby="reqTitle">
+      <div class="sheet">
+        <button class="close" id="reqClose" aria-label="Close">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+        <h2 class="sheet-title" id="reqTitle">Removal requests</h2>
+        <p class="lede">
+          Before deleting, contact the person and make sure their answers match the memory: when it
+          was added, what it says, and any attached file. If you can't confirm it, don't delete it.
+        </p>
+        <div class="req-list" id="reqList"></div>
       </div>
     </dialog>
 

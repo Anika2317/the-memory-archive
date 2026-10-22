@@ -3,7 +3,9 @@
 #addDlg,
 #ansDlg,
 #qmDlg,
-#loginDlg {
+#loginDlg,
+#removeDlg,
+#reqDlg {
   border: 0;
   padding: 0;
   background: transparent;
@@ -172,5 +174,33 @@
   .fchip {
     min-height: 2.3rem;
     font-size: 0.88rem;
+  }
+}
+
+.done {
+  margin-top: 1.25rem;
+  font-weight: 600;
+}
+
+.req-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+
+  .req {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1rem;
+    background: var(--bg-2);
+  }
+  .mono {
+    color: var(--faint);
+  }
+  p {
+    margin-top: 0.4rem;
+    white-space: pre-wrap;
+  }
+  .contact {
+    color: var(--muted);
   }
 }
