@@ -1742,7 +1742,36 @@
     $('stageHint').textContent = MEMORIES.length
       ? 'Choose a bright cell to open its memory.'
       : 'The archive is just getting started. Add the first memory.';
+    drawLatest();
   }
+  // The newest few memories, for the hub's Latest panel.
+  function drawLatest() {
+    var recent = MEMORIES.slice(-5).reverse();
+    $('latest').innerHTML = recent.length
+      ? recent
+          .map(function (m) {
+            var f = m.frags[0];
+            return (
+              '<li><button data-id="' +
+              m.id +
+              '"><span class="meta">' +
+              esc(yr(m)) +
+              ' · ' +
+              esc(m.hood) +
+              '</span><span class="first">' +
+              esc(excerpt(m.text || (f ? f[1] : ''))) +
+              '</span></button></li>'
+            );
+          })
+          .join('')
+      : '<li class="empty">No memories yet. Be the first to add one.</li>';
+  }
+  $('latest').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-id]');
+    if (!b) return;
+    $('stage').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    openMemory(+b.getAttribute('data-id'));
+  });
   function options(list) {
     return list
       .map(function (v) {
@@ -1984,6 +2013,9 @@
     openAdd(null);
   });
   $('introAdd').addEventListener('click', function () {
+    openAdd(null);
+  });
+  $('hubAdd').addEventListener('click', function () {
     openAdd(null);
   });
   $('addClose').addEventListener('click', function () {
@@ -2241,7 +2273,20 @@
     requestAnimationFrame(function () {
       qmLines(true);
     });
+    var now = QUESTIONS[0];
+    $('hubMonth').textContent = now.month;
+    $('hubQ').textContent = now.q;
+    $('hubAnswers').textContent = now.answers.length
+      ? now.answers.length + (now.answers.length === 1 ? ' answer so far' : ' answers so far')
+      : 'No answers yet. Be the first.';
   }
+  $('hubAnswer').addEventListener('click', function () {
+    qm.i = 0;
+    openAnswer();
+  });
+  $('hubBloom').addEventListener('click', function () {
+    $('qmOpen').click();
+  });
   function qmHover(v, on) {
     var p = $('skyLines').querySelector('.petal[data-p="' + v + '"]');
     if (p) p.classList.toggle('hov', on);

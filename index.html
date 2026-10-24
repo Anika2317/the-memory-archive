@@ -159,219 +159,385 @@
       </div>
     </section>
 
-    <main id="archive">
-      <div class="stage" id="stage">
-        <section class="hero-copy" id="top">
-          <h1>Every story, <em>a forget-me-not.</em></h1>
-          <p>Each one a memory, Together they reveal what Alzheimer's cannot erase.</p>
-          <p class="hero-count">
-            <span id="heroCount">0</span> memories · <span id="heroLinks">0</span> connections
-          </p>
-        </section>
-        <canvas
-          id="net"
-          aria-label="A network of memories grouped by theme. Use the Browse section below to open memories with a keyboard."
-        ></canvas>
-        <div class="tip" id="tip"></div>
-        <div class="region-note" id="regionNote" hidden></div>
-        <p class="stage-hint" id="stageHint"></p>
-        <aside class="card" id="card" aria-live="polite"></aside>
-      </div>
-
+    <main id="archive" class="hub">
       <div class="wrap">
-        <div class="under">
-          <div class="chips" id="regionChips" role="group" aria-label="Light up a theme"></div>
-          <div class="right">
-            <button class="linkbtn" id="fireRandom">Open a memory</button>
-            <a class="linkbtn" href="#all">Browse every memory</a>
+        <section class="welcome" id="top">
+          <div>
+            <h1>Every story, <em>a forget-me-not.</em></h1>
+            <p>Each one a memory, Together they reveal what Alzheimer's cannot erase.</p>
           </div>
-        </div>
-
-        <section class="section" id="all">
-          <span class="mono eyebrow">Every memory</span>
-          <h2 class="h2">Browse the whole archive.</h2>
-          <div class="allbar">
-            <label class="search" for="q">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                aria-hidden="true"
-              >
-                <circle cx="11" cy="11" r="7" />
-                <path d="M20 20l-3.5-3.5" />
-              </svg>
-              <input id="q" type="search" aria-label="Search memories" />
-            </label>
-            <select id="fTheme" aria-label="Filter by theme"></select>
-            <select id="fPiece" aria-label="Filter by what the memory holds">
-              <option value="">Songs, movies, books, food</option>
-              <option value="songs">Songs and music</option>
-              <option value="movies">Movies</option>
-              <option value="books">Books</option>
-              <option value="food">Food</option>
-            </select>
-            <select id="fKind" aria-label="Filter by kind of memory">
-              <option value="">Every kind of memory</option>
-            </select>
-            <select id="fWho" aria-label="Filter by person"></select>
-          </div>
-          <div class="decades" id="decTabs" role="group" aria-label="Browse by decade"></div>
-          <div
-            class="chips years"
-            id="yearTabs"
-            role="group"
-            aria-label="Browse by year"
-            hidden
-          ></div>
-          <p class="count" id="allCount" aria-live="polite"></p>
-          <div class="grid" id="allGrid"></div>
-          <div class="more" id="allMoreWrap" hidden>
-            <button class="btn-line" id="allMore">Show more memories</button>
+          <div class="welcome-stats">
+            <p><strong id="heroCount">0</strong> memories</p>
+            <p><strong id="heroLinks">0</strong> connections</p>
           </div>
         </section>
 
-        <section class="section where" id="where">
-          <div class="txt">
-            <span class="mono eyebrow">Where these memories live</span>
-            <h2 class="h2">Rooted in San Diego, shared from everywhere.</h2>
-            <p class="lede">
-              The archive started here, but memories travel. Each one is placed by neighborhood or
+        <div class="hub-grid">
+          <section class="panel panel-net">
+            <header class="panel-head">
+              <span class="ico-badge" aria-hidden="true"
+                ><svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="6" cy="6" r="2.5" />
+                  <circle cx="18" cy="8" r="2.5" />
+                  <circle cx="10" cy="18" r="2.5" />
+                  <path d="M8 7l7.6 1M7.2 8.2l2 7.4M16.4 10l-4.6 6.2" /></svg
+              ></span>
+              <h2>Memory network</h2>
+              <div class="panel-actions">
+                <button class="linkbtn" id="fireRandom">Open a memory</button
+                ><a class="linkbtn" href="#all">Browse every memory</a>
+              </div>
+            </header>
+            <div class="stage" id="stage">
+              <canvas
+                id="net"
+                aria-label="A network of memories grouped by theme. Use the Browse section below to open memories with a keyboard."
+              ></canvas>
+              <div class="tip" id="tip"></div>
+              <div class="region-note" id="regionNote" hidden></div>
+              <p class="stage-hint" id="stageHint"></p>
+              <aside class="card" id="card" aria-live="polite"></aside>
+            </div>
+            <div class="under">
+              <div class="chips" id="regionChips" role="group" aria-label="Light up a theme"></div>
+            </div>
+          </section>
+
+          <div class="hub-side">
+            <section class="panel panel-bloom">
+              <header class="panel-head">
+                <span class="ico-badge" aria-hidden="true"
+                  ><svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="2.5" />
+                    <path
+                      d="M12 9.5C10 6 10.5 3 12 3s2 3 0 6.5M14.4 11.2c3.3-2.3 6.3-2 6.5-.5s-2.8 2.8-6.5 1.7M13.5 14.2c1.6 3.7 1 6.6-.5 6.8s-2.4-3-1.4-6.8M10.4 14.1c-3 2.7-6 2.8-6.4 1.3s2.4-3.1 6.2-2.5M9.6 11.3C5.6 10.5 3.5 8.3 4.2 7s3.9-.5 5.6 2.9"
+                    /></svg
+                ></span>
+                <h2>The Monthly Bloom</h2>
+              </header>
+              <p class="hub-month" id="hubMonth"></p>
+              <p class="hub-q" id="hubQ"></p>
+              <p class="hub-note" id="hubAnswers"></p>
+              <div class="panel-buttons">
+                <button class="add-btn" id="hubAnswer">Answer this question</button>
+                <button class="btn-line" id="hubBloom">See the answers</button>
+              </div>
+            </section>
+            <section class="panel panel-add">
+              <header class="panel-head">
+                <span class="ico-badge" aria-hidden="true"
+                  ><svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 5v14M5 12h14" /></svg
+                ></span>
+                <h2>Share a memory</h2>
+              </header>
+              <p>
+                A song, a recipe, a place, a Sunday. A sentence is enough, and you can add a photo
+                or a recording.
+              </p>
+              <div class="panel-buttons">
+                <button class="add-btn" id="hubAdd">Add a memory</button>
+              </div>
+              <p class="hub-note">
+                You'll get a private link to delete it later.
+                <button class="linkbtn" id="askRemoveAbout">
+                  Lost it? Ask us to remove a memory.
+                </button>
+              </p>
+            </section>
+          </div>
+
+          <section class="panel panel-latest">
+            <header class="panel-head">
+              <span class="ico-badge" aria-hidden="true"
+                ><svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="8.5" />
+                  <path d="M12 7.5V12l3 2" /></svg
+              ></span>
+              <h2>Latest memories</h2>
+            </header>
+            <ul class="latest" id="latest"></ul>
+          </section>
+
+          <section class="panel panel-map" id="where">
+            <header class="panel-head">
+              <span class="ico-badge" aria-hidden="true"
+                ><svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z" />
+                  <circle cx="12" cy="10" r="2.3" /></svg
+              ></span>
+              <h2>Where these memories live</h2>
+            </header>
+            <p class="panel-sub">
+              Rooted in San Diego, shared from everywhere. Each one is placed by neighborhood or
               city, never by address. Choose a light to open its memory.
             </p>
-          </div>
-          <div class="where-map">
-            <div class="map sd-map">
-              <svg viewBox="0 0 600 800" preserveAspectRatio="none" aria-hidden="true">
-                <path
-                  fill="#EDE3D3"
-                  stroke="#B9A5D6"
-                  stroke-width="1.5"
-                  stroke-linejoin="round"
-                  d="M43 0 L55 68 L77 136 L62 200 L46 255 L31 272 L52 296 L72 323 L74 345 L81 391 L77 412 L81 425 L77 477 L86 525 L101 570 L111 528 L129 477 L146 460 L171 451 L200 470 L223 485 L266 519 L300 548 L326 579 L334 630 L326 690 L300 704 L291 723 L296 760 L300 800 L600 800 L600 0 Z"
-                />
-                <path
-                  fill="#E6DCF3"
-                  stroke="#B9A5D6"
-                  stroke-width="1.2"
-                  d="M79 409 C92 386 118 372 142 374 C162 377 168 395 158 410 C146 424 118 425 96 419 Z"
-                />
-                <path
-                  fill="#EDE3D3"
-                  stroke="#B9A5D6"
-                  stroke-width="1.5"
-                  stroke-linejoin="round"
-                  d="M162 506 C178 496 200 496 214 508 C222 522 226 545 236 568 L262 628 L292 700 L284 712 L272 708 L244 640 L216 580 L198 556 C184 546 168 530 162 506 Z"
-                />
-                <g
-                  fill="#6F6482"
-                  font-family="Inter, system-ui, sans-serif"
-                  font-size="14"
-                  letter-spacing="1"
-                >
-                  <text x="92" y="48">DEL MAR</text>
-                  <text x="74" y="246">LA JOLLA</text>
-                  <text x="100" y="340">PACIFIC BEACH</text>
-                  <text x="100" y="452">OCEAN BEACH</text>
-                  <text x="232" y="478">DOWNTOWN</text>
-                  <text x="300" y="420">NORTH PARK</text>
-                  <text x="380" y="630">CHULA VISTA</text>
-                  <text x="22" y="730" font-size="12" letter-spacing="4">PACIFIC</text>
-                  <text x="22" y="752" font-size="12" letter-spacing="4">OCEAN</text>
-                </g>
-              </svg>
-              <div id="dots"></div>
-              <div class="world-card">
-                <div class="world-plot">
-                  <img src="img/world-dots.svg" alt="" />
-                  <svg
-                    class="trips"
-                    id="trips"
-                    viewBox="0 0 360 140"
-                    preserveAspectRatio="none"
-                    aria-hidden="true"
-                  ></svg>
-                  <span class="sd-pin" aria-hidden="true"></span>
-                  <div class="world-dots" id="worldDots"></div>
+            <div class="where-map">
+              <div class="map sd-map">
+                <svg viewBox="0 0 600 800" preserveAspectRatio="none" aria-hidden="true">
+                  <path
+                    fill="#EDE3D3"
+                    stroke="#B9A5D6"
+                    stroke-width="1.5"
+                    stroke-linejoin="round"
+                    d="M43 0 L55 68 L77 136 L62 200 L46 255 L31 272 L52 296 L72 323 L74 345 L81 391 L77 412 L81 425 L77 477 L86 525 L101 570 L111 528 L129 477 L146 460 L171 451 L200 470 L223 485 L266 519 L300 548 L326 579 L334 630 L326 690 L300 704 L291 723 L296 760 L300 800 L600 800 L600 0 Z"
+                  />
+                  <path
+                    fill="#E6DCF3"
+                    stroke="#B9A5D6"
+                    stroke-width="1.2"
+                    d="M79 409 C92 386 118 372 142 374 C162 377 168 395 158 410 C146 424 118 425 96 419 Z"
+                  />
+                  <path
+                    fill="#EDE3D3"
+                    stroke="#B9A5D6"
+                    stroke-width="1.5"
+                    stroke-linejoin="round"
+                    d="M162 506 C178 496 200 496 214 508 C222 522 226 545 236 568 L262 628 L292 700 L284 712 L272 708 L244 640 L216 580 L198 556 C184 546 168 530 162 506 Z"
+                  />
+                  <g
+                    fill="#6F6482"
+                    font-family="Inter, system-ui, sans-serif"
+                    font-size="14"
+                    letter-spacing="1"
+                  >
+                    <text x="92" y="48">DEL MAR</text>
+                    <text x="74" y="246">LA JOLLA</text>
+                    <text x="100" y="340">PACIFIC BEACH</text>
+                    <text x="100" y="452">OCEAN BEACH</text>
+                    <text x="232" y="478">DOWNTOWN</text>
+                    <text x="300" y="420">NORTH PARK</text>
+                    <text x="380" y="630">CHULA VISTA</text>
+                    <text x="22" y="730" font-size="12" letter-spacing="4">PACIFIC</text>
+                    <text x="22" y="752" font-size="12" letter-spacing="4">OCEAN</text>
+                  </g>
+                </svg>
+                <div id="dots"></div>
+                <div class="world-card">
+                  <div class="world-plot">
+                    <img src="img/world-dots.svg" alt="" />
+                    <svg
+                      class="trips"
+                      id="trips"
+                      viewBox="0 0 360 140"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    ></svg>
+                    <span class="sd-pin" aria-hidden="true"></span>
+                    <div class="world-dots" id="worldDots"></div>
+                  </div>
+                  <span class="mono world-label">Beyond San Diego</span>
                 </div>
-                <span class="mono world-label">Beyond San Diego</span>
+              </div>
+              <p class="map-caption" id="worldCaption"></p>
+            </div>
+          </section>
+
+          <section class="panel panel-stats">
+            <header class="panel-head">
+              <span class="ico-badge" aria-hidden="true"
+                ><svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 20V11M12 20V5M19 20v-6" /></svg
+              ></span>
+              <h2>By the numbers</h2>
+            </header>
+            <div class="facts">
+              <div class="fact">
+                <div class="big">7.4 million</div>
+                <p>Americans age 65 and older are living with Alzheimer's.</p>
+                <div class="src">Alzheimer's Association, 2026 Facts and Figures</div>
+              </div>
+              <div class="fact">
+                <div class="big">115,000+</div>
+                <p>
+                  San Diegans age 55 and older projected to live with Alzheimer's or a related
+                  dementia by 2030.
+                </p>
+                <div class="src">San Diego County Alzheimer's Project</div>
+              </div>
+              <div class="fact">
+                <div class="big" id="memCount">0</div>
+                <p>memories in the archive so far, and every one belongs to a whole person.</p>
+                <div class="src">Grows with every contribution</div>
               </div>
             </div>
-            <p class="map-caption" id="worldCaption"></p>
-          </div>
-        </section>
+          </section>
 
-        <section class="section">
-          <div class="facts">
-            <div class="fact">
-              <div class="big">7.4 million</div>
-              <p>Americans age 65 and older are living with Alzheimer's.</p>
-              <div class="src">Alzheimer's Association, 2026 Facts and Figures</div>
+          <section class="panel panel-all" id="all">
+            <header class="panel-head">
+              <span class="ico-badge" aria-hidden="true"
+                ><svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="4" y="4" width="7" height="7" rx="1.5" />
+                  <rect x="13" y="4" width="7" height="7" rx="1.5" />
+                  <rect x="4" y="13" width="7" height="7" rx="1.5" />
+                  <rect x="13" y="13" width="7" height="7" rx="1.5" /></svg
+              ></span>
+              <h2>Browse the whole archive</h2>
+            </header>
+            <div class="allbar">
+              <label class="search" for="q">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M20 20l-3.5-3.5" />
+                </svg>
+                <input id="q" type="search" aria-label="Search memories" />
+              </label>
+              <select id="fTheme" aria-label="Filter by theme"></select>
+              <select id="fPiece" aria-label="Filter by what the memory holds">
+                <option value="">Songs, movies, books, food</option>
+                <option value="songs">Songs and music</option>
+                <option value="movies">Movies</option>
+                <option value="books">Books</option>
+                <option value="food">Food</option>
+              </select>
+              <select id="fKind" aria-label="Filter by kind of memory">
+                <option value="">Every kind of memory</option>
+              </select>
+              <select id="fWho" aria-label="Filter by person"></select>
             </div>
-            <div class="fact">
-              <div class="big">115,000+</div>
-              <p>
-                San Diegans age 55 and older projected to live with Alzheimer's or a related
-                dementia by 2030.
-              </p>
-              <div class="src">San Diego County Alzheimer's Project</div>
+            <div class="decades" id="decTabs" role="group" aria-label="Browse by decade"></div>
+            <div
+              class="chips years"
+              id="yearTabs"
+              role="group"
+              aria-label="Browse by year"
+              hidden
+            ></div>
+            <p class="count" id="allCount" aria-live="polite"></p>
+            <div class="grid" id="allGrid"></div>
+            <div class="more" id="allMoreWrap" hidden>
+              <button class="btn-line" id="allMore">Show more memories</button>
             </div>
-            <div class="fact">
-              <div class="big" id="memCount">0</div>
-              <p>memories in the archive so far, and every one belongs to a whole person.</p>
-              <div class="src">Grows with every contribution</div>
-            </div>
-          </div>
-        </section>
+          </section>
 
-        <section class="section about" id="about">
-          <span class="mono eyebrow">About</span>
-          <h2 class="h2">Alzheimer's changes memory. Not who someone is.</h2>
-          <p>
-            The forget-me-not has long stood for remembrance. The Memory Archive carries that
-            meaning forward: a community campaign that preserves stories, challenges misconceptions
-            about Alzheimer's, and connects generations through memory.
-          </p>
-          <p>
-            Alzheimer's can affect memory, but it does not erase a person's identity, relationships,
-            or history. Like the petals of a single flower, each shared memory, whether a song, a
-            recipe, or a place, is one part of a whole person. Together, the petals reveal the
-            person behind the diagnosis.
-          </p>
-          <p>Within the archive:</p>
-          <ul>
-            <li>A network of memories, connected by the songs, places, and moments they share</li>
-            <li>A monthly question answered by families across San Diego</li>
-            <li>A collection organized by theme, decade, and year</li>
-          </ul>
-          <p>
-            Joyful, difficult, and unexpected moments are held alike, reflecting the full reality of
-            living with Alzheimer's.
-          </p>
-          <p>
-            Every memory needs consent from the person or their family. We never publish names,
-            addresses, or medical details. Families can ask us to remove theirs at any time.
-          </p>
-          <p>
-            When you add a memory, you get a private link to delete it yourself.
-            <button class="linkbtn" id="askRemoveAbout">Lost it? Ask us to remove a memory.</button>
-          </p>
-          <p>
-            Founded by Anika Seksaria and Maleesha Weerakkody, Del Norte High School, San Diego.
-          </p>
-          <p>
-            Contact:
-            <a href="mailto:thememoryarchive.sd@gmail.com">thememoryarchive.sd@gmail.com</a> ·
-            Instagram
-            <a href="https://www.instagram.com/memoryarchive.the/" target="_blank" rel="noopener"
-              >@memoryarchive.the</a
-            >
-          </p>
-        </section>
+          <section class="panel panel-about about" id="about">
+            <header class="panel-head">
+              <span class="ico-badge" aria-hidden="true"
+                ><svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="8.5" />
+                  <path d="M12 11v5M12 8h.01" /></svg
+              ></span>
+              <h2>About: Alzheimer's changes memory. Not who someone is.</h2>
+            </header>
+            <p>
+              The forget-me-not has long stood for remembrance. The Memory Archive carries that
+              meaning forward: a community campaign that preserves stories, challenges
+              misconceptions about Alzheimer's, and connects generations through memory.
+            </p>
+            <p>
+              Alzheimer's can affect memory, but it does not erase a person's identity,
+              relationships, or history. Like the petals of a single flower, each shared memory,
+              whether a song, a recipe, or a place, is one part of a whole person. Together, the
+              petals reveal the person behind the diagnosis.
+            </p>
+            <p>Within the archive:</p>
+            <ul>
+              <li>A network of memories, connected by the songs, places, and moments they share</li>
+              <li>A monthly question answered by families across San Diego</li>
+              <li>A collection organized by theme, decade, and year</li>
+            </ul>
+            <p>
+              Joyful, difficult, and unexpected moments are held alike, reflecting the full reality
+              of living with Alzheimer's.
+            </p>
+            <p>
+              Every memory needs consent from the person or their family. We never publish names,
+              addresses, or medical details. Families can ask us to remove theirs at any time.
+            </p>
+            <p>
+              Founded by Anika Seksaria and Maleesha Weerakkody, Del Norte High School, San Diego.
+            </p>
+            <p>
+              Contact:
+              <a href="mailto:thememoryarchive.sd@gmail.com">thememoryarchive.sd@gmail.com</a> ·
+              Instagram
+              <a href="https://www.instagram.com/memoryarchive.the/" target="_blank" rel="noopener"
+                >@memoryarchive.the</a
+              >
+            </p>
+          </section>
+        </div>
       </div>
     </main>
 

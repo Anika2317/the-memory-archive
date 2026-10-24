@@ -39,8 +39,8 @@ h1,
 h2,
 h3 {
   font-family: var(--display);
-  font-weight: 400;
-  letter-spacing: -0.015em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   margin: 0;
   text-wrap: balance;
   line-height: 1.12;
@@ -56,10 +56,11 @@ p {
   padding-inline: 1.25rem;
 }
 .mono {
-  font-family: var(--mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-size: 0.72rem;
+  font-family: var(--body);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
 }
 .eyebrow {
   color: var(--lilac);

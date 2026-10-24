@@ -1,6 +1,6 @@
 $lilac: #7a50c2;
 $ink-deep: #2b1d40;
-$paper-bg: #fffefb;
+$paper-bg: #ffffff;
 $night: rgb(60, 35, 100);
 $mist: #8c7aa6;
 $mist-2: #7e6c99;
@@ -14,9 +14,9 @@ $bp-stage: 52rem;
 }
 
 :root {
-  --bg: #fcf9f4;
+  --bg: #f4f2f9;
   --bg-2: #{$paper-bg};
-  --ink: #{$ink-deep};
+  --ink: #1f1633;
   --muted: #5d5070;
   --faint: #6f6482;
   --lilac: #{$lilac};
@@ -26,14 +26,15 @@ $bp-stage: 52rem;
   --paper-2: #efe7f8;
   --paper-ink: #ffffff;
   --water: #e6dcf3;
-  --line: rgba(74, 48, 120, 0.14);
+  --line: rgba(40, 20, 80, 0.1);
   --line-2: #{glow(0.35)};
 
   --script: 'Cormorant Garamond', 'Newsreader', Georgia, serif;
   --bloom: 'Petit Formal Script', 'Newsreader', Georgia, serif;
-  --display: 'Newsreader', Georgia, serif;
+  --display: 'Inter', system-ui, -apple-system, sans-serif;
+  --serif: 'Newsreader', Georgia, serif;
   --body: 'Inter', system-ui, -apple-system, sans-serif;
-  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --mono: 'Inter', system-ui, -apple-system, sans-serif;
   --ease: cubic-bezier(0.2, 0.75, 0.2, 1);
   color-scheme: light;
 }
@@ -58,7 +59,8 @@ $bp-stage: 52rem;
 }
 
 @mixin mono-small($size) {
-  font-family: var(--mono);
-  font-size: $size;
-  letter-spacing: 0.05em;
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: calc($size + 0.08rem);
+  letter-spacing: 0.01em;
 }
