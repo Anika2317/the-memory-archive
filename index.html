@@ -166,6 +166,10 @@
             <h1>Every story, <em>a forget-me-not.</em></h1>
             <p>Each one a memory, Together they reveal what Alzheimer's cannot erase.</p>
           </div>
+          <figure class="pressed" aria-hidden="true">
+            <img src="favicon.svg" alt="" width="72" height="72" />
+            <figcaption>forget me not</figcaption>
+          </figure>
           <div class="welcome-stats">
             <p><strong id="heroCount">0</strong> memories</p>
             <p><strong id="heroLinks">0</strong> connections</p>
@@ -197,6 +201,7 @@
                 ><a class="linkbtn" href="#all">Browse every memory</a>
               </div>
             </header>
+            <p class="scribble scribble-net" aria-hidden="true">every light is someone's memory</p>
             <div class="stage" id="stage">
               <canvas
                 id="net"
@@ -241,7 +246,7 @@
                 <button class="btn-line" id="hubBloom">See the answers</button>
               </div>
             </section>
-            <section class="panel panel-add">
+            <section class="panel panel-add clipped">
               <header class="panel-head">
                 <span class="ico-badge" aria-hidden="true"
                   ><svg
@@ -317,6 +322,9 @@
               Rooted in San Diego, shared from everywhere. Each one is placed by neighborhood or
               city, never by address. Choose a light to open its memory.
             </p>
+            <p class="scribble scribble-map" aria-hidden="true">
+              never an address, just the neighborhood
+            </p>
             <div class="where-map">
               <div class="map sd-map">
                 <svg viewBox="0 0 600 800" preserveAspectRatio="none" aria-hidden="true">
@@ -378,7 +386,7 @@
             </div>
           </section>
 
-          <section class="panel panel-stats">
+          <section class="panel panel-stats clipped">
             <header class="panel-head">
               <span class="ico-badge" aria-hidden="true"
                 ><svg
@@ -483,6 +491,16 @@
           </section>
 
           <section class="panel panel-about about" id="about">
+            <svg class="stamp" viewBox="0 0 120 120" aria-hidden="true">
+              <defs>
+                <path id="stampRing" d="M60 60 m-44 0 a44 44 0 1 1 88 0 a44 44 0 1 1 -88 0" />
+              </defs>
+              <circle cx="60" cy="60" r="56" />
+              <circle cx="60" cy="60" r="33" />
+              <text><textPath href="#stampRing">THE MEMORY ARCHIVE · SAN DIEGO ·</textPath></text>
+              <text x="60" y="57" text-anchor="middle" class="mid">FORGET</text>
+              <text x="60" y="71" text-anchor="middle" class="mid">ME NOT</text>
+            </svg>
             <header class="panel-head">
               <span class="ico-badge" aria-hidden="true"
                 ><svg

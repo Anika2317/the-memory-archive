@@ -496,3 +496,161 @@ $tape: rgba(222, 200, 160, 0.72);
     padding: 0.45rem 0.9rem;
   }
 }
+
+// Scrapbook bits: purely decorative.
+
+// The welcome label's bottom edge is torn.
+.welcome {
+  border-bottom: 0;
+  padding-bottom: 2.4rem;
+  -webkit-mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - 10px) no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='10' viewBox='0 0 60 10'%3E%3Cpath d='M0 0h60v4l-4 3-5-4-6 5-5-3-4 4-6-5-5 4-4-2-6 4-5-5-5 3-5-3z'/%3E%3C/svg%3E")
+      bottom / 60px 10px repeat-x;
+  mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - 10px) no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='10' viewBox='0 0 60 10'%3E%3Cpath d='M0 0h60v4l-4 3-5-4-6 5-5-3-4 4-6-5-5 4-4-2-6 4-5-5-5 3-5-3z'/%3E%3C/svg%3E")
+      bottom / 60px 10px repeat-x;
+
+  &::before {
+    bottom: 1.1rem;
+  }
+}
+
+// The logo flower, pressed and kept in a little instant photo.
+.pressed {
+  position: relative;
+  margin: 0 0 0 auto;
+  padding: 0.45rem 0.45rem 0.2rem;
+  background: #fffdf6;
+  box-shadow: 0 8px 16px -10px rgba(70, 45, 20, 0.6);
+  rotate: 4deg;
+  text-align: center;
+
+  &::before {
+    @include tape(3.6rem, -8deg);
+    top: -0.65rem;
+    left: calc(50% - 1.8rem);
+  }
+  img {
+    display: block;
+    border-radius: 2px;
+  }
+  figcaption {
+    font-family: var(--hand);
+    font-size: 1.05rem;
+    color: var(--plum);
+    line-height: 1.4;
+  }
+}
+
+// Paper clip over the top edge of a folder.
+.clipped::after {
+  content: '';
+  position: absolute;
+  top: -0.9rem;
+  right: 1.4rem;
+  width: 1.1rem;
+  height: 3.2rem;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 64' fill='none' stroke='%23948a99' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M15 22V52a5 5 0 0 1-10 0V12a8 8 0 0 1 16 0v38'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  rotate: 8deg;
+  z-index: 3;
+}
+
+// Handwritten notes in the margins.
+.scribble {
+  font-family: var(--hand);
+  font-size: 1.35rem;
+  line-height: 1.1;
+  color: var(--plum);
+  rotate: -2deg;
+
+  &::after {
+    content: ' \2198';
+    font-family: var(--body);
+    font-size: 1rem;
+  }
+}
+.scribble-net {
+  position: absolute;
+  top: 1.3rem;
+  left: 1.5rem;
+}
+.scribble-map {
+  margin-top: 0.6rem;
+  text-align: right;
+  rotate: 1.5deg;
+
+  &::after {
+    content: ' \2199';
+  }
+}
+
+// A rubber stamp on the founders' letter.
+.stamp {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.5rem;
+  width: 7.5rem;
+  rotate: -12deg;
+  opacity: 0.75;
+  fill: none;
+  stroke: var(--plum);
+
+  circle:first-of-type {
+    stroke-width: 2.5;
+  }
+  circle + circle {
+    stroke-width: 1.2;
+  }
+  text {
+    fill: var(--plum);
+    stroke: none;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 10.5px;
+    letter-spacing: 1.4px;
+  }
+  .mid {
+    font-size: 10px;
+  }
+}
+
+// Washi tape on some index cards.
+.panel-all .mcard {
+  position: relative;
+
+  &:nth-child(4n + 1)::before {
+    @include tape(3.5rem, -6deg);
+    top: -0.6rem;
+    left: 1rem;
+    background: rgba(201, 179, 236, 0.7);
+  }
+  &:nth-child(4n + 3)::before {
+    @include tape(3.5rem, 5deg);
+    top: -0.6rem;
+    right: 1rem;
+  }
+}
+.latest li:first-child button {
+  position: relative;
+
+  &::before {
+    @include tape(3.2rem, 4deg);
+    top: -0.55rem;
+    right: 1.2rem;
+    background: rgba(201, 179, 236, 0.7);
+  }
+}
+
+@media (max-width: 40rem) {
+  .pressed,
+  .stamp {
+    display: none;
+  }
+  .scribble-net {
+    position: static;
+    margin-bottom: 0.4rem;
+  }
+}
