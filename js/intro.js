@@ -12,6 +12,7 @@
   var intro = document.getElementById('intro');
   if (!intro || !document.documentElement.classList.contains('intro-on')) return;
   var shots = [].slice.call(intro.querySelectorAll('[data-shot]'));
+  var flowers = [].slice.call(intro.querySelectorAll('[data-from]'));
   var bar = document.getElementById('introBar');
   var at = -1;
 
@@ -28,6 +29,10 @@
     shots.forEach(function (s, k) {
       s.classList.toggle('on', k === i);
       s.classList.toggle('gone', k < i);
+    });
+    // Pressed flowers are laid down shot by shot and stay on the page.
+    flowers.forEach(function (f) {
+      f.classList.toggle('shown', +f.getAttribute('data-from') <= i);
     });
     at = i;
   }

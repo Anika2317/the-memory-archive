@@ -39,21 +39,148 @@
 
     <section class="intro" id="intro" aria-label="Introduction">
       <div class="intro-frame">
+        <svg class="pf-defs" aria-hidden="true">
+          <symbol id="pfSprig" viewBox="0 0 120 170">
+            <path
+              class="pf-stem"
+              d="M62 168 C58 130 66 96 56 30 M60 112 C70 92 80 74 87 56 M58 132 C46 112 40 96 34 76"
+            />
+            <path class="pf-leaf" d="M60 150 C40 146 30 134 28 122 C44 124 56 134 60 150 Z" />
+            <path class="pf-leaf" d="M63 120 C82 118 92 106 95 94 C80 96 68 106 63 120 Z" />
+            <g class="pf-head">
+              <circle cx="56.0" cy="19.0" r="6.6" />
+              <circle cx="62.7" cy="23.8" r="6.6" />
+              <circle cx="60.1" cy="31.7" r="6.6" />
+              <circle cx="51.9" cy="31.7" r="6.6" />
+              <circle cx="49.3" cy="23.8" r="6.6" />
+              <circle class="pf-eye" cx="56" cy="26" r="3.1" />
+            </g>
+            <g class="pf-head">
+              <circle cx="88.0" cy="46.0" r="5.7" />
+              <circle cx="93.7" cy="50.1" r="5.7" />
+              <circle cx="91.5" cy="56.9" r="5.7" />
+              <circle cx="84.5" cy="56.9" r="5.7" />
+              <circle cx="82.3" cy="50.1" r="5.7" />
+              <circle class="pf-eye" cx="88" cy="52" r="2.7" />
+            </g>
+            <g class="pf-head">
+              <circle cx="33.0" cy="65.5" r="6.2" />
+              <circle cx="39.2" cy="70.0" r="6.2" />
+              <circle cx="36.8" cy="77.3" r="6.2" />
+              <circle cx="29.2" cy="77.3" r="6.2" />
+              <circle cx="26.8" cy="70.0" r="6.2" />
+              <circle class="pf-eye" cx="33" cy="72" r="2.9" />
+            </g>
+            <circle class="pf-bud" cx="70" cy="38" r="3" />
+            <circle class="pf-bud" cx="44" cy="52" r="2.6" />
+          </symbol>
+          <symbol id="pfBloom" viewBox="-40 -40 80 80">
+            <g class="pf-head">
+              <circle cx="0.0" cy="-14.0" r="13.3" />
+              <circle cx="13.3" cy="-4.3" r="13.3" />
+              <circle cx="8.2" cy="11.3" r="13.3" />
+              <circle cx="-8.2" cy="11.3" r="13.3" />
+              <circle cx="-13.3" cy="-4.3" r="13.3" />
+            </g>
+            <path
+              class="pf-vein"
+              d="M0 -8 V-24 M7.6 -2.5 L22.8 -7.4 M4.7 6.5 L14.1 19.4 M-4.7 6.5 L-14.1 19.4 M-7.6 -2.5 L-22.8 -7.4"
+            />
+            <circle class="pf-eye" r="6" />
+            <circle class="pf-ring" r="3" />
+          </symbol>
+        </svg>
+        <div class="pf-layer" aria-hidden="true">
+          <svg
+            class="pf pf-blue"
+            data-from="0"
+            style="--x: 6%; --y: 8%; --w: 8rem; --r: -18deg; --d: 0s"
+          >
+            <use href="#pfSprig" />
+          </svg>
+          <svg
+            class="pf pf-lilac"
+            data-from="0"
+            style="--x: 82%; --y: 70%; --w: 5rem; --r: 12deg; --d: 0.25s"
+          >
+            <use href="#pfBloom" />
+          </svg>
+          <svg
+            class="pf pf-blue"
+            data-from="1"
+            style="--x: 14%; --y: 70%; --w: 4.2rem; --r: -8deg; --d: 0.5s"
+          >
+            <use href="#pfBloom" />
+          </svg>
+          <svg
+            class="pf pf-lilac"
+            data-from="1"
+            style="--x: 80%; --y: 6%; --w: 7rem; --r: 24deg; --d: 0s"
+          >
+            <use href="#pfSprig" />
+          </svg>
+          <svg
+            class="pf pf-lilac"
+            data-from="1"
+            style="--x: 4%; --y: 42%; --w: 3.2rem; --r: 30deg; --d: 0.25s"
+          >
+            <use href="#pfBloom" />
+          </svg>
+          <svg
+            class="pf pf-blue"
+            data-from="2"
+            style="--x: 86%; --y: 40%; --w: 7.5rem; --r: -12deg; --d: 0.5s"
+          >
+            <use href="#pfSprig" />
+          </svg>
+          <svg
+            class="pf pf-blue"
+            data-from="2"
+            style="--x: 30%; --y: 6%; --w: 3.6rem; --r: 18deg; --d: 0s"
+          >
+            <use href="#pfBloom" />
+          </svg>
+          <svg
+            class="pf pf-lilac"
+            data-from="2"
+            style="--x: 62%; --y: 84%; --w: 4.4rem; --r: -20deg; --d: 0.25s"
+          >
+            <use href="#pfBloom" />
+          </svg>
+          <svg
+            class="pf pf-lilac"
+            data-from="3"
+            style="--x: 2%; --y: 64%; --w: 7rem; --r: 10deg; --d: 0.5s"
+          >
+            <use href="#pfSprig" />
+          </svg>
+          <svg
+            class="pf pf-blue"
+            data-from="3"
+            style="--x: 90%; --y: 14%; --w: 3.4rem; --r: -26deg; --d: 0s"
+          >
+            <use href="#pfBloom" />
+          </svg>
+        </div>
         <div class="intro-shot" data-shot>
-          <p>A person is more than what they remember.</p>
+          <div class="slip">
+            <p>A person is more than what they remember.</p>
+          </div>
         </div>
-        <div class="intro-shot long" data-shot>
-          <p>
-            Inspired by the forget-me-not, the Memory Archive is a place for families across San
-            Diego to share the stories, traditions, and moments that make a life unique.
-          </p>
+        <div class="intro-shot" data-shot>
+          <p class="hand">inspired by the forget-me-not</p>
+          <ul class="labels">
+            <li>stories</li>
+            <li>traditions</li>
+            <li>moments</li>
+          </ul>
+          <p class="hand small">the things that make a life unique</p>
         </div>
-        <div class="intro-shot long" data-shot>
-          <p>
-            By preserving these memories, we hope to challenge misconceptions about Alzheimer’s,
-            honor the person beyond the diagnosis, and connect generations through the stories we
-            carry forward.
-          </p>
+        <div class="intro-shot" data-shot>
+          <p class="hand big">honor the person beyond the diagnosis</p>
+          <div class="slip small">
+            <p>connecting generations through the stories we carry forward</p>
+          </div>
         </div>
         <div class="intro-shot title" data-shot>
           <svg class="flower" viewBox="-100 -100 200 200" aria-hidden="true">
@@ -322,9 +449,7 @@
               Rooted in San Diego, shared from everywhere. Each one is placed by neighborhood or
               city, never by address. Choose a light to open its memory.
             </p>
-            <p class="scribble scribble-map" aria-hidden="true">
-              never an address, just the neighborhood
-            </p>
+            <p class="scribble scribble-map" aria-hidden="true"></p>
             <div class="where-map">
               <div class="map sd-map">
                 <svg viewBox="0 0 600 800" preserveAspectRatio="none" aria-hidden="true">
@@ -540,8 +665,8 @@
               of living with Alzheimer's.
             </p>
             <p>
-              Every memory needs consent from the person or their family. We never publish names,
-              addresses, or medical details. Families can ask us to remove theirs at any time.
+              Every memory needs consent from the person or their family. Families can ask us to
+              remove theirs at any time.
             </p>
             <p>
               Founded by Anika Seksaria and Maleesha Weerakkody, Del Norte High School, San Diego.
