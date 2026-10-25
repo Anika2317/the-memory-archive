@@ -12,8 +12,17 @@
   var intro = document.getElementById('intro');
   if (!intro || !document.documentElement.classList.contains('intro-on')) return;
   var shots = [].slice.call(intro.querySelectorAll('[data-shot]'));
-  var flowers = [].slice.call(intro.querySelectorAll('[data-from]'));
   var bar = document.getElementById('introBar');
+  // The sprig drawings grow in from the stem as you scroll, the second one a little later.
+  var sprigs = [].map.call(intro.querySelectorAll('.sprig'), function (el, k) {
+    return { el: el, late: k * 0.2 };
+  });
+  function draw(p) {
+    sprigs.forEach(function (s) {
+      var t = Math.min(1, Math.max(0, 0.4 + (p - s.late) * 1.6));
+      s.el.style.clipPath = 'inset(' + ((1 - t) * 100).toFixed(1) + '% 0 0 0)';
+    });
+  }
   var at = -1;
 
   function update() {
@@ -24,15 +33,12 @@
     // The last shot holds for a while before the archive scrolls in.
     var i = Math.min(shots.length - 1, Math.floor(p * (shots.length + 0.6)));
     bar.style.transform = 'scaleX(' + p + ')';
+    draw(p);
     intro.classList.toggle('moved', p > 0.01);
     if (i === at) return;
     shots.forEach(function (s, k) {
       s.classList.toggle('on', k === i);
       s.classList.toggle('gone', k < i);
-    });
-    // Pressed flowers are laid down shot by shot and stay on the page.
-    flowers.forEach(function (f) {
-      f.classList.toggle('shown', +f.getAttribute('data-from') <= i);
     });
     at = i;
   }
