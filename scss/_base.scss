@@ -11,9 +11,11 @@ html {
   scroll-padding-top: var(--top-h, 0px);
 }
 
+// Warm paper, with a faint grain so it reads as a physical page.
 body {
   margin: 0;
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .15 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   color: var(--ink);
   font-family: var(--body);
   font-weight: 400;
@@ -39,8 +41,8 @@ h1,
 h2,
 h3 {
   font-family: var(--display);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   margin: 0;
   text-wrap: balance;
   line-height: 1.12;
@@ -56,11 +58,11 @@ p {
   padding-inline: 1.25rem;
 }
 .mono {
-  font-family: var(--body);
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  font-size: 0.8rem;
-  font-variant-numeric: tabular-nums;
+  font-family: var(--mono);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
 }
 .eyebrow {
   color: var(--lilac);

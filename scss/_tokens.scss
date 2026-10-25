@@ -1,6 +1,6 @@
 $lilac: #7a50c2;
 $ink-deep: #2b1d40;
-$paper-bg: #ffffff;
+$paper-bg: #fbf6ec;
 $night: rgb(60, 35, 100);
 $mist: #8c7aa6;
 $mist-2: #7e6c99;
@@ -14,10 +14,10 @@ $bp-stage: 52rem;
 }
 
 :root {
-  --bg: #f4f2f9;
+  --bg: #efe6d6;
   --bg-2: #{$paper-bg};
-  --ink: #1f1633;
-  --muted: #5d5070;
+  --ink: #2a2030;
+  --muted: #5e5160;
   --faint: #6f6482;
   --lilac: #{$lilac};
   --plum: #5a3596;
@@ -26,15 +26,18 @@ $bp-stage: 52rem;
   --paper-2: #efe7f8;
   --paper-ink: #ffffff;
   --water: #e6dcf3;
-  --line: rgba(40, 20, 80, 0.1);
+  --line: rgba(90, 60, 30, 0.16);
   --line-2: #{glow(0.35)};
 
   --script: 'Cormorant Garamond', 'Newsreader', Georgia, serif;
   --bloom: 'Petit Formal Script', 'Newsreader', Georgia, serif;
-  --display: 'Inter', system-ui, -apple-system, sans-serif;
+  --display: 'Fraunces', 'Newsreader', Georgia, serif;
   --serif: 'Newsreader', Georgia, serif;
   --body: 'Inter', system-ui, -apple-system, sans-serif;
-  --mono: 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: 'Courier Prime', 'Courier New', monospace;
+  --hand: 'Caveat', 'Bradley Hand', cursive;
+  --kraft: #e3d2b4;
+  --folder: #f7efdf;
   --ease: cubic-bezier(0.2, 0.75, 0.2, 1);
   color-scheme: light;
 }
@@ -59,8 +62,9 @@ $bp-stage: 52rem;
 }
 
 @mixin mono-small($size) {
-  font-family: var(--body);
-  font-weight: 600;
+  font-family: var(--mono);
+  font-weight: 700;
   font-size: calc($size + 0.08rem);
-  letter-spacing: 0.01em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
