@@ -6,7 +6,7 @@
 .intro {
   position: relative;
   color: var(--ink);
-  background: radial-gradient(ellipse 75% 65% at 50% 45%, rgba(255, 252, 244, 0.9), transparent 72%),
+  background: radial-gradient(ellipse 75% 65% at 50% 45%, rgba(252, 248, 251, 0.9), transparent 72%),
     var(--bg);
 }
 
@@ -21,7 +21,7 @@
   content: '';
   position: absolute;
   inset: 1.1rem;
-  border: 1px solid rgba(90, 60, 30, 0.18);
+  border: 1px solid rgba(70, 45, 95, 0.2);
   pointer-events: none;
 }
 

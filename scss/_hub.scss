@@ -1,202 +1,151 @@
 @use 'tokens' as *;
 
-// The home page as a warm archive: a label card, then folders laid out on the table.
-$tape: rgba(222, 200, 160, 0.72);
-
-@mixin tape($w: 5.5rem, $rot: -3deg) {
-  content: '';
-  position: absolute;
-  width: $w;
-  height: 1.5rem;
-  background: $tape;
-  box-shadow: 0 1px 2px rgba(70, 45, 20, 0.12);
-  rotate: $rot;
-  z-index: 2;
-  pointer-events: none;
-}
-
-@mixin ruled($gap: 1.6rem) {
-  background-color: #fffdf6;
-  background-image: linear-gradient(
-      to bottom,
-      transparent 2.1rem,
-      rgba(122, 80, 194, 0.35) 2.1rem,
-      rgba(122, 80, 194, 0.35) calc(2.1rem + 1px),
-      transparent calc(2.1rem + 1px)
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent calc($gap - 1px),
-      rgba(90, 120, 170, 0.13) calc($gap - 1px),
-      rgba(90, 120, 170, 0.13) $gap
-    );
-}
-
+// The home page as a collection: a title record, then sections set out like a museum's catalog.
 .hub {
-  padding-block: 1.75rem 0;
+  padding-block: 2.5rem 0;
 }
 
-// Like the label on the front of an archive box.
+// The collection's title record.
 .welcome {
-  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 1rem 2rem;
-  padding: 1.75rem 2rem;
-  background: var(--folder);
-  border: 1px solid #d8c4a2;
-  border-radius: 4px;
-  box-shadow: 0 12px 26px -20px rgba(70, 45, 20, 0.5);
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0.45rem;
-    border: 1px dashed rgba(90, 60, 30, 0.25);
-    border-radius: 2px;
-    pointer-events: none;
-  }
+  gap: 1.25rem 2rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--line-2);
 
   h1 {
-    font-size: clamp(1.9rem, 3.6vw, 2.8rem);
-    font-weight: 600;
+    font-size: clamp(1.9rem, 3.6vw, 2.7rem);
+    font-weight: 400;
     color: var(--ink);
 
     em {
-      font-family: var(--bloom);
-      font-style: normal;
-      font-weight: 400;
+      font-style: italic;
       color: var(--plum);
-      margin-left: 0.15em;
+      font-weight: 400;
     }
   }
   p {
-    margin-top: 0.45rem;
+    margin-top: 0.5rem;
     color: var(--muted);
   }
 }
 
-// Little tags tied on with string.
 .welcome-stats {
   display: flex;
-  gap: 0.6rem;
+  background: var(--cream);
+  border: 1px solid var(--cream-line);
+  border-radius: 6px;
 
   p {
-    position: relative;
     margin: 0;
-    background: #fffdf6;
-    border: 1px solid #d8c4a2;
-    border-radius: 3px 10px 10px 3px;
-    padding: 0.5rem 0.95rem 0.5rem 1.4rem;
+    padding: 0.6rem 1.3rem;
     font-family: var(--mono);
-    font-size: 0.78rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     color: var(--muted);
-
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0.5rem;
-      top: 50%;
-      width: 0.4rem;
-      height: 0.4rem;
-      margin-top: -0.2rem;
-      border-radius: 50%;
-      border: 1px solid #b89a6c;
-    }
+  }
+  p + p {
+    border-left: 1px solid var(--cream-line);
   }
   strong {
     display: block;
     font-family: var(--display);
-    font-size: 1.5rem;
-    line-height: 1.1;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.15;
     letter-spacing: 0;
-    text-transform: none;
-    color: var(--plum);
+    color: var(--ink);
   }
 }
 
 .hub-grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 2.6rem 1.5rem;
-  margin-top: 2.9rem;
+  gap: 1.5rem;
+  align-items: start;
+  margin-top: 2rem;
 }
 
-// Each section is a manila folder; its title is typed on the tab.
 .panel {
   position: relative;
-  background: var(--folder);
-  border: 1px solid #d8c4a2;
-  border-radius: 0 10px 10px 10px;
-  padding: 1.35rem;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-    0 14px 28px -22px rgba(70, 45, 20, 0.55);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1.4rem 1.5rem 1.5rem;
+  box-shadow: 0 1px 2px rgba(45, 20, 80, 0.05);
   min-width: 0;
-  scroll-margin-top: 2.5rem;
+  scroll-margin-top: 2rem;
 }
 
+// A section title with a short purple rule, like a gallery label.
 .panel-head {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  align-items: center;
+  gap: 0.4rem 0.7rem;
+  margin-bottom: 1.1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--line);
 
   h2 {
-    position: absolute;
-    left: -1px;
-    bottom: 100%;
-    max-width: calc(100% - 1rem);
-    background: var(--kraft);
-    border: 1px solid #d8c4a2;
-    border-bottom: 0;
-    border-radius: 9px 9px 0 0;
-    padding: 0.4rem 1.1rem 0.3rem;
-    font-family: var(--mono);
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: #4a3626;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    position: relative;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--ink);
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: calc(-0.8rem - 1px);
+      width: 2.5rem;
+      height: 2px;
+      background: var(--lilac);
+    }
   }
 }
 
+// A small forget-me-not blue-violet seal beside each section title.
 .ico-badge {
-  display: none;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: var(--paper-2);
+  color: var(--plum);
+  box-shadow: inset 0 0 0 1px var(--line-2);
 }
 
 .panel-actions {
+  margin-left: auto;
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem 1.1rem;
-  margin-bottom: 0.9rem;
+  font-size: 0.9rem;
 }
 
 .panel-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 1rem;
+  margin-top: 1.1rem;
 
   .btn-line {
-    padding: 0.6rem 1.1rem;
-    font-weight: 600;
-    font-size: 0.92rem;
-    background: #fffdf6;
+    padding: 0.55rem 1.05rem;
+    font-size: 0.9rem;
+    background: #fff;
   }
 }
 
 .panel-sub,
 .hub-note {
   color: var(--muted);
-  font-size: 0.93rem;
+  font-size: 0.92rem;
 }
 .hub-note {
   margin-top: 0.9rem;
@@ -213,183 +162,115 @@ $tape: rgba(222, 200, 160, 0.72);
 .hub-side {
   grid-column: span 4;
   display: grid;
-  gap: 2.6rem;
+  gap: 1.5rem;
   align-content: start;
 }
 
-// A handwritten note on lilac paper, taped down.
+// This month's question, set apart in a soft lilac with a purple edge.
 .panel.panel-bloom {
-  background: #efe5f8;
-  border: 0;
-  border-radius: 2px;
-  rotate: -0.8deg;
-  padding-top: 1.8rem;
-  box-shadow: 0 16px 26px -20px rgba(60, 35, 100, 0.55);
+  background: linear-gradient(180deg, var(--paper-2), #fff 85%);
+  border-color: var(--line-2);
+  border-top: 3px solid var(--lilac);
 
-  &::before {
-    @include tape(6rem, -4deg);
-    top: -0.7rem;
-    left: calc(50% - 3rem);
+  .ico-badge {
+    background: #fff;
   }
-  .panel-head h2 {
-    position: static;
-    background: none;
-    border: 0;
-    padding: 0;
-    font-family: var(--hand);
-    font-size: 1.8rem;
-    font-weight: 700;
-    letter-spacing: 0;
-    text-transform: none;
-    color: var(--plum);
-    white-space: normal;
-  }
-  .panel-head {
-    justify-content: flex-start;
-  }
+
   .hub-month {
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    @include mono-small(0.68rem);
     color: var(--muted);
-    margin-top: 0.3rem;
   }
   .hub-q {
     font-family: var(--display);
-    font-size: 1.45rem;
-    font-weight: 600;
-    line-height: 1.25;
-    margin-top: 0.3rem;
+    font-style: italic;
+    font-size: 1.35rem;
+    line-height: 1.3;
+    margin-top: 0.4rem;
   }
   .hub-note {
-    font-family: var(--hand);
-    font-size: 1.25rem;
-    color: var(--plum);
-    margin-top: 0.4rem;
+    margin-top: 0.5rem;
   }
 }
 
-.panel-add {
-  p {
-    color: var(--muted);
-  }
-  .hub-note {
-    font-size: 0.88rem;
-  }
+.panel-add p {
+  color: var(--muted);
 }
 
 .panel-latest {
   grid-column: span 7;
 }
 
-// Index cards, the newest on top.
+// Newest first, each one an accession record.
 .latest {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  gap: 0.75rem;
 
+  li + li {
+    border-top: 1px solid var(--line);
+  }
   button {
     width: 100%;
     display: grid;
-    gap: 0.35rem;
+    gap: 0.25rem;
     text-align: left;
-    border: 1px solid #e1d3ba;
-    border-radius: 3px;
-    padding: 0.65rem 1rem 0.8rem;
-    @include ruled;
-    box-shadow: 0 2px 0 #eadfca;
+    background: none;
+    border: 0;
+    border-left: 2px solid transparent;
+    padding: 0.75rem;
     transition:
-      translate 0.2s var(--ease),
-      box-shadow 0.2s;
+      background 0.2s,
+      border-color 0.2s;
 
     &:hover {
-      translate: 0 -2px;
-      box-shadow: 0 6px 14px -8px rgba(70, 45, 20, 0.45);
+      background: var(--cream);
+      border-left-color: var(--lilac);
     }
   }
-  li:nth-child(odd) button {
-    rotate: -0.35deg;
-  }
-  li:nth-child(even) button {
-    rotate: 0.3deg;
-  }
   .meta {
-    font-family: var(--mono);
-    font-size: 0.76rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--plum);
+    @include mono-small(0.66rem);
+    color: var(--muted);
   }
   .first {
     font-family: var(--display);
     font-size: 1.05rem;
-    line-height: 1.6rem;
+    line-height: 1.45;
     color: var(--ink);
   }
   .empty {
-    font-family: var(--hand);
-    font-size: 1.35rem;
     color: var(--muted);
     padding: 0.5rem 0;
   }
 }
 
-// The map is a photo taped into the folder.
 .panel-map {
   grid-column: span 5;
 
   .where-map {
-    position: relative;
     max-width: none;
     margin-top: 1.1rem;
-
-    &::before {
-      @include tape(4.5rem, -35deg);
-      top: 0.4rem;
-      left: -1.3rem;
-    }
-    &::after {
-      @include tape(4.5rem, 35deg);
-      top: 0.4rem;
-      right: -1.3rem;
-    }
-  }
-  .map {
-    border: 0.45rem solid #fffdf6;
-    border-radius: 2px;
-    box-shadow: 0 10px 20px -14px rgba(70, 45, 20, 0.6);
   }
 }
 
-// Catalog cards.
 .panel-stats {
   grid-column: span 12;
 
   .facts {
     margin-top: 0;
-    gap: 1rem;
+    gap: 1.5rem;
   }
   .fact {
-    @include ruled(1.5rem);
-    background-image: none;
-    border: 1px solid #e1d3ba;
-    border-top: 3px solid var(--plum);
-    border-radius: 3px;
-    padding: 1.1rem 1.2rem;
+    border-top: 2px solid var(--lilac);
+    padding-top: 1rem;
 
     .big {
       font-family: var(--display);
-      font-weight: 600;
-      font-size: 2.1rem;
+      font-size: 2.2rem;
       color: var(--plum);
     }
     .src {
       font-family: var(--mono);
-      font-size: 0.74rem;
+      font-size: 0.72rem;
     }
   }
 }
@@ -398,65 +279,55 @@ $tape: rgba(222, 200, 160, 0.72);
 .panel.panel-about {
   grid-column: span 12;
 }
-.panel-all {
-  .allbar select,
-  .search {
-    background: #fffdf6;
-    border-color: #d8c4a2;
-  }
 
-  // Browse results as index cards.
-  .mcard {
-    @include ruled(1.5rem);
-    border: 1px solid #e1d3ba;
-    border-radius: 3px;
-    padding-top: 0.6rem;
-    box-shadow: 0 2px 0 #eadfca;
-    gap: 0.5rem;
-
-    &:nth-child(3n + 1) {
-      rotate: -0.4deg;
-    }
-    &:nth-child(3n + 2) {
-      rotate: 0.35deg;
-    }
-    &:hover {
-      rotate: 0deg;
-      border-color: var(--lilac);
-    }
-    .mono {
-      color: var(--plum);
-      line-height: 1.5rem;
-    }
-    .first {
-      font-size: 1.08rem;
-      line-height: 1.5rem;
-      color: var(--ink);
-    }
-  }
+.panel-all .mcard {
+  background: #fff;
+  border-radius: 6px;
 }
 
 // A letter from the founders.
 .panel.panel-about {
   max-width: none;
-  padding: 1.75rem clamp(1.35rem, 4vw, 3rem);
+  padding: 1.75rem clamp(1.5rem, 4vw, 3rem) 2rem;
+
+  .panel-head {
+    padding-right: 8rem;
+  }
 
   > p,
   > ul {
     max-width: 46rem;
-    color: #4a3f4c;
     font-size: 1.02rem;
   }
 }
 
-.fchip {
-  background: #fffdf6;
-  border-color: #d8c4a2;
-}
+// The collection's seal on the founders' letter.
+.stamp {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.5rem;
+  width: 6.5rem;
+  opacity: 0.55;
+  fill: none;
+  stroke: var(--plum);
 
-.top {
-  background: var(--bg);
-  border-bottom: 1px solid #d8c4a2;
+  circle:first-of-type {
+    stroke-width: 2;
+  }
+  circle + circle {
+    stroke-width: 1;
+  }
+  text {
+    fill: var(--plum);
+    stroke: none;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 1.4px;
+  }
+  .mid {
+    font-size: 10px;
+  }
 }
 
 @media (max-width: 64rem) {
@@ -472,21 +343,19 @@ $tape: rgba(222, 200, 160, 0.72);
 }
 
 @media (max-width: 40rem) {
-  .welcome {
-    padding: 1.4rem;
-  }
   .panel {
     padding: 1.1rem;
-  }
-  .panel.panel-bloom {
-    rotate: 0deg;
   }
   .top .wrap {
     padding-block: 0.55rem;
     gap: 0.4rem 1rem;
   }
-  .brand-org {
+  .brand-org,
+  .stamp {
     display: none;
+  }
+  .panel.panel-about .panel-head {
+    padding-right: 0;
   }
   .nav {
     gap: 0.4rem 1rem;
@@ -494,163 +363,5 @@ $tape: rgba(222, 200, 160, 0.72);
   }
   .add-btn {
     padding: 0.45rem 0.9rem;
-  }
-}
-
-// Scrapbook bits: purely decorative.
-
-// The welcome label's bottom edge is torn.
-.welcome {
-  border-bottom: 0;
-  padding-bottom: 2.4rem;
-  -webkit-mask:
-    linear-gradient(#000 0 0) top / 100% calc(100% - 10px) no-repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='10' viewBox='0 0 60 10'%3E%3Cpath d='M0 0h60v4l-4 3-5-4-6 5-5-3-4 4-6-5-5 4-4-2-6 4-5-5-5 3-5-3z'/%3E%3C/svg%3E")
-      bottom / 60px 10px repeat-x;
-  mask:
-    linear-gradient(#000 0 0) top / 100% calc(100% - 10px) no-repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='10' viewBox='0 0 60 10'%3E%3Cpath d='M0 0h60v4l-4 3-5-4-6 5-5-3-4 4-6-5-5 4-4-2-6 4-5-5-5 3-5-3z'/%3E%3C/svg%3E")
-      bottom / 60px 10px repeat-x;
-
-  &::before {
-    bottom: 1.1rem;
-  }
-}
-
-// The logo flower, pressed and kept in a little instant photo.
-.pressed {
-  position: relative;
-  margin: 0 0 0 auto;
-  padding: 0.45rem 0.45rem 0.2rem;
-  background: #fffdf6;
-  box-shadow: 0 8px 16px -10px rgba(70, 45, 20, 0.6);
-  rotate: 4deg;
-  text-align: center;
-
-  &::before {
-    @include tape(3.6rem, -8deg);
-    top: -0.65rem;
-    left: calc(50% - 1.8rem);
-  }
-  img {
-    display: block;
-    border-radius: 2px;
-  }
-  figcaption {
-    font-family: var(--hand);
-    font-size: 1.05rem;
-    color: var(--plum);
-    line-height: 1.4;
-  }
-}
-
-// Paper clip over the top edge of a folder.
-.clipped::after {
-  content: '';
-  position: absolute;
-  top: -0.9rem;
-  right: 1.4rem;
-  width: 1.1rem;
-  height: 3.2rem;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 64' fill='none' stroke='%23948a99' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M15 22V52a5 5 0 0 1-10 0V12a8 8 0 0 1 16 0v38'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-  rotate: 8deg;
-  z-index: 3;
-}
-
-// Handwritten notes in the margins.
-.scribble {
-  font-family: var(--hand);
-  font-size: 1.35rem;
-  line-height: 1.1;
-  color: var(--plum);
-  rotate: -2deg;
-
-  &::after {
-    content: ' \2198';
-    font-family: var(--body);
-    font-size: 1rem;
-  }
-}
-.scribble-net {
-  position: absolute;
-  top: 1.3rem;
-  left: 1.5rem;
-}
-.scribble-map {
-  margin-top: 0.6rem;
-  text-align: right;
-  rotate: 1.5deg;
-
-  &::after {
-    content: ' \2199';
-  }
-}
-
-// A rubber stamp on the founders' letter.
-.stamp {
-  position: absolute;
-  top: 1.2rem;
-  right: 1.5rem;
-  width: 7.5rem;
-  rotate: -12deg;
-  opacity: 0.75;
-  fill: none;
-  stroke: var(--plum);
-
-  circle:first-of-type {
-    stroke-width: 2.5;
-  }
-  circle + circle {
-    stroke-width: 1.2;
-  }
-  text {
-    fill: var(--plum);
-    stroke: none;
-    font-family: var(--mono);
-    font-weight: 700;
-    font-size: 10.5px;
-    letter-spacing: 1.4px;
-  }
-  .mid {
-    font-size: 10px;
-  }
-}
-
-// Washi tape on some index cards.
-.panel-all .mcard {
-  position: relative;
-
-  &:nth-child(4n + 1)::before {
-    @include tape(3.5rem, -6deg);
-    top: -0.6rem;
-    left: 1rem;
-    background: rgba(201, 179, 236, 0.7);
-  }
-  &:nth-child(4n + 3)::before {
-    @include tape(3.5rem, 5deg);
-    top: -0.6rem;
-    right: 1rem;
-  }
-}
-.latest li:first-child button {
-  position: relative;
-
-  &::before {
-    @include tape(3.2rem, 4deg);
-    top: -0.55rem;
-    right: 1.2rem;
-    background: rgba(201, 179, 236, 0.7);
-  }
-}
-
-@media (max-width: 40rem) {
-  .pressed,
-  .stamp {
-    display: none;
-  }
-  .scribble-net {
-    position: static;
-    margin-bottom: 0.4rem;
   }
 }

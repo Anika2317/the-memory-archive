@@ -59,9 +59,9 @@ $petal-gap: #faf7f4;
   margin-top: 1.25rem;
   height: clamp(32rem, 44vw, 36rem);
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: 6px;
   overflow: hidden;
-  background: radial-gradient(ellipse 48% 52% at 50% 50%, #f7f3f8 0%, #faf7f5 55%, #fcf9f4 100%);
+  background: radial-gradient(ellipse 48% 52% at 50% 50%, #f5f4f7 0%, #fafafa 55%, #fcfcfc 100%);
 }
 
 .sky-lines {
@@ -172,9 +172,9 @@ $petal-gap: #faf7f4;
     transform: translate(-50%, -50%);
     z-index: -1;
     border-radius: 50%;
-    background: radial-gradient(circle, $paper-bg 0 70%, #fbf4e2 100%);
+    background: radial-gradient(circle, $paper-bg 0 70%, #f3f2f5 100%);
     box-shadow:
-      0 0 0 1px rgba(201, 170, 90, 0.28),
+      0 0 0 1px rgba(122, 80, 194, 0.25),
       0 14px 34px -18px rgba($night, 0.35);
   }
 

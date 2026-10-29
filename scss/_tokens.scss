@@ -1,6 +1,6 @@
 $lilac: #7a50c2;
 $ink-deep: #2b1d40;
-$paper-bg: #fbf6ec;
+$paper-bg: #ffffff;
 $night: rgb(60, 35, 100);
 $mist: #8c7aa6;
 $mist-2: #7e6c99;
@@ -14,30 +14,31 @@ $bp-stage: 52rem;
 }
 
 :root {
-  --bg: #efe6d6;
+  --bg: #f4f0fa;
   --bg-2: #{$paper-bg};
-  --ink: #2a2030;
-  --muted: #5e5160;
-  --faint: #6f6482;
+  --ink: #1f1d22;
+  --muted: #57535c;
+  --faint: #6b6670;
   --lilac: #{$lilac};
   --plum: #5a3596;
-  --silver: #3a2d4f;
+  --silver: #37343b;
   --paper: #6b43b5;
-  --paper-2: #efe7f8;
+  --paper-2: #f1ebf9;
   --paper-ink: #ffffff;
-  --water: #e6dcf3;
-  --line: rgba(90, 60, 30, 0.16);
-  --line-2: #{glow(0.35)};
+  --water: #e7e3f0;
+  --line: #e4e2e7;
+  --line-2: #d0cdd5;
+  --night: #2d1450;
+  // Warm paper, only as a small touch: the stats tag and a hovered record.
+  --cream: #fcf9f3;
+  --cream-line: #ece3d2;
 
-  --script: 'Cormorant Garamond', 'Newsreader', Georgia, serif;
-  --bloom: 'Petit Formal Script', 'Newsreader', Georgia, serif;
-  --display: 'Fraunces', 'Newsreader', Georgia, serif;
-  --serif: 'Newsreader', Georgia, serif;
-  --body: 'Inter', system-ui, -apple-system, sans-serif;
-  --mono: 'Courier Prime', 'Courier New', monospace;
-  --hand: 'Caveat', 'Bradley Hand', cursive;
-  --kraft: #e3d2b4;
-  --folder: #f7efdf;
+  --script: 'Libre Caslon Text', Georgia, serif;
+  --bloom: 'Libre Caslon Text', Georgia, serif;
+  --display: 'Libre Caslon Text', Georgia, serif;
+  --serif: 'Libre Caslon Text', Georgia, serif;
+  --body: 'Public Sans', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
   --ease: cubic-bezier(0.2, 0.75, 0.2, 1);
   color-scheme: light;
 }
@@ -46,15 +47,19 @@ $bp-stage: 52rem;
   background: var(--paper);
   color: var(--paper-ink);
   border: 0;
-  border-radius: 999px;
+  border-radius: 4px;
+
+  &:hover {
+    background: var(--plum);
+  }
 }
 
 @mixin pill-line {
   background: transparent;
   color: var(--ink);
-  border: 1.5px solid var(--line-2);
-  border-radius: 999px;
-  font-weight: 700;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  font-weight: 600;
 
   &:hover {
     border-color: var(--lilac);
@@ -63,8 +68,8 @@ $bp-stage: 52rem;
 
 @mixin mono-small($size) {
   font-family: var(--mono);
-  font-weight: 700;
-  font-size: calc($size + 0.08rem);
-  letter-spacing: 0.06em;
+  font-weight: 500;
+  font-size: calc($size + 0.04rem);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }

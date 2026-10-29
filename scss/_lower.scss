@@ -238,10 +238,16 @@
 }
 
 footer {
-  border-top: 1px solid var(--line);
-  color: var(--faint);
+  background: var(--night);
+  border-top: 3px solid var(--lilac);
+  color: #cfc2e4;
   font-size: 0.9rem;
-  margin-top: 5rem;
+  margin-top: 4rem;
+
+  a,
+  .linkbtn {
+    color: #e4daf3;
+  }
 
   .wrap {
     padding-block: 2.5rem;
@@ -254,7 +260,7 @@ footer {
     font-family: var(--script);
     font-style: italic;
     font-size: 1.15rem;
-    color: var(--lilac);
+    color: #fff;
     border: 0;
     padding: 0;
   }
@@ -272,7 +278,7 @@ footer {
     gap: 0.8rem;
 
     img {
-      border-radius: 10px;
+      border-radius: 8px;
       flex: none;
     }
   }

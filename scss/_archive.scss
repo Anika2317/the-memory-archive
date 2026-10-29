@@ -31,7 +31,7 @@
 .fchip {
   background: transparent;
   border: 1px solid var(--line-2);
-  border-radius: 999px;
+  border-radius: 4px;
   padding: 0.4rem 0.9rem;
   font-size: 0.92rem;
   color: var(--silver);
@@ -66,7 +66,7 @@
     background: var(--bg-2);
     color: var(--ink);
     border: 1px solid var(--line-2);
-    border-radius: 999px;
+    border-radius: 4px;
     padding: 0.6rem 1rem;
     font: inherit;
     font-size: 0.95rem;
@@ -80,7 +80,7 @@
   gap: 0.5rem;
   background: var(--bg-2);
   border: 1px solid var(--line-2);
-  border-radius: 999px;
+  border-radius: 4px;
   padding: 0 1rem;
   min-height: 2.8rem;
   flex: 1 1 18rem;
@@ -118,7 +118,6 @@
 }
 
 .mcard {
-  animation: rise 0.6s var(--ease) both;
   background: var(--bg-2);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -156,7 +155,7 @@
   font-size: 0.78rem;
   color: var(--muted);
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 4px;
   padding: 0.1rem 0.55rem;
 
   &.who {
@@ -264,7 +263,7 @@
     background: transparent;
     color: var(--ink);
     border: 1px solid var(--line-2);
-    border-radius: 999px;
+    border-radius: 4px;
     padding: 0.45rem 0.9rem;
     font-size: 0.9rem;
   }

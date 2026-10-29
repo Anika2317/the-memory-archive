@@ -753,7 +753,7 @@
         ctx.textAlign = 'center';
         ctx.font =
           Math.max(11, Math.round(13 * Math.min(1.25, s * 1.2))) +
-          'px Inter, system-ui, sans-serif';
+          'px "IBM Plex Mono", "Courier New", monospace';
         ctx.fillStyle = 'rgba(74,48,120,' + a + ')';
         ctx.fillText(r.name.toUpperCase(), c[0], c[1] - 112 * s);
       }
@@ -2878,62 +2878,4 @@
   });
   draw(0);
   if (!reduce) requestAnimationFrame(frame);
-
-  function countUp(el) {
-    var text = el.textContent;
-    var match = text.match(/[\d.,]+/);
-    if (!match) return;
-    var target = parseFloat(match[0].replace(/,/g, ''));
-    var decimals = (match[0].split('.')[1] || '').length;
-    var start = null;
-    function step(t) {
-      if (start === null) start = t;
-      var p = Math.min(1, (t - start) / 1400);
-      var v = target * (1 - Math.pow(1 - p, 3));
-      var shown = decimals ? v.toFixed(decimals) : Math.round(v).toLocaleString('en-US');
-      el.textContent = text.replace(match[0], shown);
-      if (p < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-
-  if (!reduce && 'IntersectionObserver' in window) {
-    var revealSel = [
-      '.under',
-      '.section .eyebrow',
-      '.section .h2',
-      '.section .lede',
-      '.allbar',
-      '.decades',
-      '.where-map',
-      '.fact',
-      '.about > p',
-      '.about > ul',
-      'footer .wrap',
-    ];
-    var groups = {};
-    document.querySelectorAll(revealSel.join(',')).forEach(function (el) {
-      var parent = el.parentNode;
-      var key =
-        parent.dataset.revealId || (parent.dataset.revealId = String(Object.keys(groups).length));
-      groups[key] = (groups[key] || 0) + 1;
-      el.classList.add('reveal');
-      el.style.setProperty('--delay', Math.min(groups[key] - 1, 6) * 90 + 'ms');
-    });
-    var io = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (e) {
-          if (!e.isIntersecting) return;
-          e.target.classList.add('in');
-          var big = e.target.querySelector('.big');
-          if (big) countUp(big);
-          io.unobserve(e.target);
-        });
-      },
-      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' },
-    );
-    document.querySelectorAll('.reveal').forEach(function (el) {
-      io.observe(el);
-    });
-  }
 })();

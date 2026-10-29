@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Petit+Formal+Script&family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
     />
     <link rel="stylesheet" href="css/main.css" />
     <script>
@@ -238,10 +238,6 @@
             <h1>Every story, <em>a forget-me-not.</em></h1>
             <p>Each one a memory, Together they reveal what Alzheimer's cannot erase.</p>
           </div>
-          <figure class="pressed" aria-hidden="true">
-            <img src="favicon.svg" alt="" width="72" height="72" />
-            <figcaption>forget me not</figcaption>
-          </figure>
           <div class="welcome-stats">
             <p><strong id="heroCount">0</strong> memories</p>
             <p><strong id="heroLinks">0</strong> connections</p>
@@ -273,7 +269,6 @@
                 ><a class="linkbtn" href="#all">Browse every memory</a>
               </div>
             </header>
-            <p class="scribble scribble-net" aria-hidden="true">every light is someone's memory</p>
             <div class="stage" id="stage">
               <canvas
                 id="net"
@@ -318,7 +313,7 @@
                 <button class="btn-line" id="hubBloom">See the answers</button>
               </div>
             </section>
-            <section class="panel panel-add clipped">
+            <section class="panel panel-add">
               <header class="panel-head">
                 <span class="ico-badge" aria-hidden="true"
                   ><svg
@@ -336,8 +331,8 @@
                 <h2>Share a memory</h2>
               </header>
               <p>
-                A song, a recipe, a place, a Sunday. A sentence is enough, and you can add a photo
-                or a recording.
+                Share a story about someone you love, in your own words. You can add a photo or a
+                recording too.
               </p>
               <div class="panel-buttons">
                 <button class="add-btn" id="hubAdd">Add a memory</button>
@@ -392,35 +387,34 @@
             </header>
             <p class="panel-sub">
               Rooted in San Diego, shared from everywhere. Each one is placed by neighborhood or
-              city, never by address. Choose a light to open its memory.
+              city. Choose a light to open its memory.
             </p>
-            <p class="scribble scribble-map" aria-hidden="true"></p>
             <div class="where-map">
               <div class="map sd-map">
                 <svg viewBox="0 0 600 800" preserveAspectRatio="none" aria-hidden="true">
                   <path
-                    fill="#EDE3D3"
-                    stroke="#B9A5D6"
+                    fill="#FBFBFA"
+                    stroke="#B9BDC6"
                     stroke-width="1.5"
                     stroke-linejoin="round"
                     d="M43 0 L55 68 L77 136 L62 200 L46 255 L31 272 L52 296 L72 323 L74 345 L81 391 L77 412 L81 425 L77 477 L86 525 L101 570 L111 528 L129 477 L146 460 L171 451 L200 470 L223 485 L266 519 L300 548 L326 579 L334 630 L326 690 L300 704 L291 723 L296 760 L300 800 L600 800 L600 0 Z"
                   />
                   <path
-                    fill="#E6DCF3"
-                    stroke="#B9A5D6"
+                    fill="#E4E9F0"
+                    stroke="#B9BDC6"
                     stroke-width="1.2"
                     d="M79 409 C92 386 118 372 142 374 C162 377 168 395 158 410 C146 424 118 425 96 419 Z"
                   />
                   <path
-                    fill="#EDE3D3"
-                    stroke="#B9A5D6"
+                    fill="#FBFBFA"
+                    stroke="#B9BDC6"
                     stroke-width="1.5"
                     stroke-linejoin="round"
                     d="M162 506 C178 496 200 496 214 508 C222 522 226 545 236 568 L262 628 L292 700 L284 712 L272 708 L244 640 L216 580 L198 556 C184 546 168 530 162 506 Z"
                   />
                   <g
-                    fill="#6F6482"
-                    font-family="Inter, system-ui, sans-serif"
+                    fill="#6B6670"
+                    font-family="IBM Plex Mono, Courier New, monospace"
                     font-size="14"
                     letter-spacing="1"
                   >
@@ -456,7 +450,7 @@
             </div>
           </section>
 
-          <section class="panel panel-stats clipped">
+          <section class="panel panel-stats">
             <header class="panel-head">
               <span class="ico-badge" aria-hidden="true"
                 ><svg
