@@ -34,7 +34,7 @@
     line-height: 1.2;
   }
   img {
-    border-radius: 6px;
+    border-radius: var(--r-s);
     flex: none;
   }
 }

@@ -32,7 +32,7 @@
 .sheet {
   background: var(--bg);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--r-m);
   padding: 1.75rem;
   position: relative;
   overflow: auto;
@@ -140,7 +140,7 @@
 
 .listen {
   border: 1px dashed var(--line-2);
-  border-radius: 4px;
+  border-radius: var(--r-s);
   padding: 0.7rem 0.85rem;
   font-size: 0.9rem;
   color: var(--muted);
@@ -195,6 +195,65 @@
   }
 }
 
+// Soft boxes rather than ruled lines, so adding a memory doesn't feel like filling in a form.
+#addForm {
+  input[type='text'],
+  input[type='number'],
+  textarea {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-s);
+    padding: 0.7rem 0.85rem;
+    margin-top: 0.35rem;
+  }
+  textarea {
+    line-height: 1.6;
+    min-height: 7.5rem;
+  }
+  ::placeholder {
+    color: var(--faint);
+    opacity: 1;
+  }
+}
+
+.ask-pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+}
+
+// The plus turns into a cross once the question is open.
+.ask {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+
+  &::before {
+    content: '';
+    flex: none;
+    width: 0.65rem;
+    height: 0.65rem;
+    background:
+      linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat,
+      linear-gradient(currentColor, currentColor) center / 1.5px 100% no-repeat;
+    transition: transform 0.2s var(--ease);
+  }
+  &[aria-pressed='true']::before {
+    transform: rotate(45deg);
+  }
+}
+
+.ask-q {
+  animation: ask-in 0.25s var(--ease);
+}
+@keyframes ask-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.3rem);
+  }
+}
+
 .done {
   margin-top: 1.25rem;
   font-weight: 600;
@@ -207,7 +266,7 @@
 
   .req {
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: var(--r-m);
     padding: 1rem;
     background: var(--bg-2);
   }

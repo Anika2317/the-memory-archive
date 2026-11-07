@@ -1990,6 +1990,29 @@
     }
     pv.innerHTML = '<p class="hint">' + mediaIcon(t) + ' ' + esc(f.name) + ' is attached.</p>';
   });
+  // The extra questions stay out of the way until someone opens them from these chips.
+  var askChips = [].slice.call($('askPick').querySelectorAll('.ask'));
+  function setAsk(chip, open) {
+    chip.setAttribute('aria-pressed', open);
+    $(chip.getAttribute('aria-controls')).hidden = !open;
+  }
+  // Closing a question drops its answer, so nothing hidden gets saved with the memory.
+  function clearAsk(box) {
+    box.querySelectorAll('input').forEach(function (i) {
+      i.value = '';
+    });
+    if (box.id === 'askMedia') $('fMediaPrev').innerHTML = '';
+    listen();
+  }
+  askChips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var box = $(chip.getAttribute('aria-controls')),
+        open = box.hidden;
+      setAsk(chip, open);
+      if (open) box.querySelector('input').focus();
+      else clearAsk(box);
+    });
+  });
   var addFor = null;
   function personFor(m) {
     return m && m.person ? PEOPLE[m.person] : '';
@@ -2002,6 +2025,7 @@
       }),
     );
     $('fPersonName').value = personFor(addFor);
+    if (addFor && personFor(addFor)) setAsk(askChips[0], true);
     $('fErr').hidden = true;
     try {
       $('addDlg').showModal();
@@ -2152,6 +2176,9 @@
     placeLookup = null;
     pickedThemes = [];
     drawThemePick();
+    askChips.forEach(function (chip) {
+      setAsk(chip, false);
+    });
     listen();
     $('addDlg').close();
     if (state.active != null) closeMemory();
@@ -2168,7 +2195,7 @@
       reduce ? 0 : 900,
     );
   }
-  var QUESTIONS = [{ month: 'October 2026', q: 'What’s a memory worth keeping?', answers: [] }];
+  var QUESTIONS = [{ month: 'November 2026', q: 'What’s a memory worth keeping?', answers: [] }];
   var qm = { i: 0, sel: -1 };
   function qmBuildStars() {
     var sky = $('sky'),

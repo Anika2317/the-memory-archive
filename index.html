@@ -580,7 +580,7 @@
                   <circle cx="12" cy="12" r="8.5" />
                   <path d="M12 11v5M12 8h.01" /></svg
               ></span>
-              <h2>About: Alzheimer's changes memory. Not who someone is.</h2>
+              <h2>Alzheimer's changes what someone remembers, not who they are</h2>
             </header>
             <p>
               The forget-me-not has long stood for remembrance. The Memory Archive carries that
@@ -608,9 +608,6 @@
               remove theirs at any time.
             </p>
             <p>
-              Founded by Anika Seksaria and Maleesha Weerakkody, Del Norte High School, San Diego.
-            </p>
-            <p>
               Contact:
               <a href="mailto:thememoryarchive.sd@gmail.com">thememoryarchive.sd@gmail.com</a> ·
               Instagram
@@ -629,7 +626,7 @@
           <img src="favicon.svg" width="40" height="40" alt="" />
           <div>
             <div class="tag">Forget Me Not</div>
-            <div>The Memory Archive · Leucent Inc · Del Norte High School</div>
+            <div>The Memory Archive · Leucent Inc</div>
           </div>
         </div>
         <div class="admin">
@@ -661,79 +658,117 @@
           </svg>
         </button>
         <h2 class="sheet-title" id="addTitle">Add a memory</h2>
-        <p class="lede">
-          Write as much or as little as you like. Only the memory itself is needed.
-        </p>
+        <p class="lede">Start with what you remember. Everything else is up to you.</p>
         <form class="form" id="addForm" novalidate>
           <div>
             <label for="fWords"><span class="k">What do you remember?</span></label
-            ><textarea id="fWords" rows="5"></textarea>
+            ><textarea
+              id="fWords"
+              rows="5"
+              placeholder="Anything at all. A few words is plenty."
+            ></textarea>
           </div>
           <div class="two">
             <div>
-              <label for="fPersonName"
-                ><span class="k">Who is it about?</span
-                ><span class="q">A first name or nickname</span></label
+              <label for="fYear"><span class="k">When was it?</span></label
               ><input
-                id="fPersonName"
-                type="text"
-                list="peopleList"
-                maxlength="30"
-                autocomplete="off"
+                id="fYear"
+                type="number"
+                inputmode="numeric"
+                min="1900"
+                max="2026"
+                placeholder="A year, if you know it"
               />
-              <datalist id="peopleList"></datalist>
             </div>
             <div>
-              <label for="fBy"
-                ><span class="k">How do you know them?</span
-                ><span class="q">Or say it's your own memory</span></label
-              ><input id="fBy" type="text" list="relList" maxlength="40" autocomplete="off" />
-              <datalist id="relList">
-                <option value="It's my own memory"></option>
-                <option value="I'm their child"></option>
-                <option value="I'm their grandchild"></option>
-                <option value="I'm their spouse or partner"></option>
-                <option value="I'm their sibling"></option>
-                <option value="I'm a friend or caregiver"></option>
-              </datalist>
-            </div>
-          </div>
-          <div class="two">
-            <div>
-              <label for="fYear"
-                ><span class="k">Year</span><span class="q">If you know it</span></label
-              ><input id="fYear" type="number" inputmode="numeric" min="1900" max="2026" />
-            </div>
-            <div>
-              <label for="fPlace"
-                ><span class="k">Place</span
-                ><span class="q">A neighborhood, landmark, or city</span></label
-              ><input id="fPlace" type="text" list="placeList" autocomplete="off" />
+              <label for="fPlace"><span class="k">Where was it?</span></label
+              ><input
+                id="fPlace"
+                type="text"
+                list="placeList"
+                autocomplete="off"
+                placeholder="A neighborhood or city"
+              />
               <datalist id="placeList"></datalist>
               <p class="hint" id="fPlaceNote" aria-live="polite"></p>
             </div>
           </div>
-          <div class="two">
-            <div>
-              <label for="fDetails"
-                ><span class="k">Things in it</span
-                ><span class="q">A song, a dish, a street. Use commas between them.</span></label
-              ><input id="fDetails" type="text" />
-            </div>
-            <div>
-              <label for="fFeel"
-                ><span class="k">What kind of memory is it?</span
-                ><span class="q">Happy, funny, bittersweet…</span></label
-              ><input id="fFeel" type="text" list="feelList" maxlength="30" autocomplete="off" />
-              <datalist id="feelList"></datalist>
-            </div>
-          </div>
           <div>
-            <span class="k" id="fThemesLbl">Which parts of the archive does it belong in?</span
-            ><span class="q">Pick any that fit, or skip this.</span>
+            <span class="k" id="fThemesLbl">What is it about?</span>
             <div class="theme-pick" id="fThemes" role="group" aria-labelledby="fThemesLbl"></div>
           </div>
           <div>
+            <span class="k" id="askLbl">Want to add anything else?</span
+            ><span class="q">Pick any that feel right, or none at all.</span>
+            <div class="ask-pick" id="askPick" role="group" aria-labelledby="askLbl">
+              <button
+                type="button"
+                class="fchip ask"
+                aria-pressed="false"
+                aria-controls="askPerson"
+              >
+                Who it's about
+              </button>
+              <button type="button" class="fchip ask" aria-pressed="false" aria-controls="askBy">
+                How you know them
+              </button>
+              <button
+                type="button"
+                class="fchip ask"
+                aria-pressed="false"
+                aria-controls="askDetails"
+              >
+                Things in it
+              </button>
+              <button type="button" class="fchip ask" aria-pressed="false" aria-controls="askFeel">
+                The kind of memory
+              </button>
+              <button type="button" class="fchip ask" aria-pressed="false" aria-controls="askMedia">
+                A photo or recording
+              </button>
+            </div>
+          </div>
+          <div class="ask-q" id="askPerson" hidden>
+            <label for="fPersonName"
+              ><span class="k">Who is it about?</span
+              ><span class="q">A first name or nickname</span></label
+            ><input
+              id="fPersonName"
+              type="text"
+              list="peopleList"
+              maxlength="30"
+              autocomplete="off"
+            />
+            <datalist id="peopleList"></datalist>
+          </div>
+          <div class="ask-q" id="askBy" hidden>
+            <label for="fBy"
+              ><span class="k">How do you know them?</span
+              ><span class="q">Or say it's your own memory</span></label
+            ><input id="fBy" type="text" list="relList" maxlength="40" autocomplete="off" />
+            <datalist id="relList">
+              <option value="It's my own memory"></option>
+              <option value="I'm their child"></option>
+              <option value="I'm their grandchild"></option>
+              <option value="I'm their spouse or partner"></option>
+              <option value="I'm their sibling"></option>
+              <option value="I'm a friend or caregiver"></option>
+            </datalist>
+          </div>
+          <div class="ask-q" id="askDetails" hidden>
+            <label for="fDetails"
+              ><span class="k">Things in it</span
+              ><span class="q">A song, a dish, a street. Use commas between them.</span></label
+            ><input id="fDetails" type="text" />
+          </div>
+          <div class="ask-q" id="askFeel" hidden>
+            <label for="fFeel"
+              ><span class="k">What kind of memory is it?</span
+              ><span class="q">Happy, funny, bittersweet…</span></label
+            ><input id="fFeel" type="text" list="feelList" maxlength="30" autocomplete="off" />
+            <datalist id="feelList"></datalist>
+          </div>
+          <div class="ask-q" id="askMedia" hidden>
             <label for="fMedia"
               ><span class="k">Add a photo, recording, or drawing</span
               ><span class="q">Only with permission from the person or their family.</span></label

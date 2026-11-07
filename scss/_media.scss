@@ -7,7 +7,7 @@
   text-transform: uppercase;
   color: var(--silver);
   border: 1px solid var(--line-2);
-  border-radius: 4px;
+  border-radius: var(--r-s);
   padding: 0.12rem 0.5rem;
   vertical-align: 1px;
 }
@@ -30,7 +30,7 @@
 
 .media {
   border: 1px solid var(--line-2);
-  border-radius: 10px;
+  border-radius: var(--r-m);
   overflow: hidden;
   background: var(--bg-2);
 
@@ -84,7 +84,7 @@
     align-items: center;
     gap: 0.45rem;
     border: 1px solid var(--line-2);
-    border-radius: 4px;
+    border-radius: var(--r-s);
     padding: 0.45rem 0.9rem;
     font-size: 0.95rem;
     color: var(--silver);

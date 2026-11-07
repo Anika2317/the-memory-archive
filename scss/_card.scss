@@ -9,7 +9,7 @@
   overflow: auto;
   background: rgba($paper-bg, 0.96);
   border: 1px solid var(--line-2);
-  border-radius: 10px;
+  border-radius: var(--r-m);
   padding: 1.5rem;
   backdrop-filter: blur(6px);
   box-shadow: 0 30px 70px -30px rgba($night, 0.35);
@@ -64,7 +64,7 @@
   background: var(--paper-2);
   color: var(--ink);
   border: 0;
-  border-radius: 3px;
+  border-radius: var(--r-s);
   padding: 0.4rem 0.65rem;
   display: grid;
   text-align: left;
@@ -190,6 +190,6 @@
   color: var(--paper-ink);
   @include mono-small(0.65rem);
   padding: 0.25rem 0.5rem;
-  border-radius: 2px;
+  border-radius: var(--r-s);
   margin-bottom: 0.7rem;
 }

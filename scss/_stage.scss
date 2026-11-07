@@ -38,7 +38,7 @@
 
 .stage {
   position: relative;
-  border-radius: 6px;
+  border-radius: var(--r-m);
   background: radial-gradient(ellipse 70% 80% at 50% 50%, #f1eff4 0%, #fafafa 75%);
   box-shadow: inset 0 0 0 1px var(--line);
   overflow: hidden;
@@ -62,7 +62,7 @@
   color: var(--paper-ink);
   @include mono-small(0.71rem);
   padding: 0.2rem 0.5rem;
-  border-radius: 3px;
+  border-radius: var(--r-s);
   transform: translate(-50%, calc(-100% - 12px));
   white-space: nowrap;
   opacity: 0;
@@ -95,7 +95,7 @@
   max-width: 22rem;
   background: rgba($paper-bg, 0.92);
   border: 1px solid var(--line-2);
-  border-radius: 8px;
+  border-radius: var(--r-m);
   padding: 1rem 1.1rem;
   backdrop-filter: blur(4px);
   animation: rise 0.5s var(--ease);
