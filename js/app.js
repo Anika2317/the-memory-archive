@@ -379,14 +379,23 @@
     if (!online) return Promise.resolve();
     return (file ? uploadMedia(file) : Promise.resolve(null)).then(function (url) {
       if (url) mem.media.url = url;
-      var data = Object.assign({}, mem);
-      delete data.id;
-      delete data.mine;
-      delete data.fresh;
-      delete data.rowId;
-      return dbInsert('memories', { data: data }).then(function (rowId) {
+      return dbInsert('memories', { data: memData(mem) }).then(function (rowId) {
         mem.rowId = rowId;
       });
+    });
+  }
+  // What gets stored for a memory: everything except what only this page uses.
+  function memData(m) {
+    var data = Object.assign({}, m);
+    delete data.id;
+    delete data.mine;
+    delete data.fresh;
+    delete data.rowId;
+    return data;
+  }
+  function updateMemory(m, data) {
+    return rpc('update_memory', { row_id: m.rowId, new_data: data }).then(function (ok) {
+      if (ok !== true) throw new Error('not allowed');
     });
   }
   function saveAnswer(question, a) {
@@ -417,8 +426,40 @@
       return c.toUpperCase();
     });
   }
-  function yr(m) {
-    return m.year ? String(m.year) : 'Undated';
+  // Only what's known about a memory is shown. A missing year or place is left out, never named.
+  function where(m) {
+    return m.hood && !/^somewhere/i.test(m.hood) ? m.hood : '';
+  }
+  function meta(m, sep) {
+    return [m.year ? String(m.year) : '', where(m)].filter(Boolean).join(sep || ' · ');
+  }
+  function who(pid) {
+    var n = PEOPLE[pid];
+    return n && n !== 'Someone remembered' ? n : '';
+  }
+  // A memory with no particular place gets its own spot near an inland neighborhood,
+  // worked out from its words so it lands in the same place on every visit.
+  var INLAND = Object.keys(PLACES).filter(function (h) {
+    return REGION_OF_HOOD[h] !== 'coast' && !/^somewhere/i.test(h);
+  });
+  function scatter(m) {
+    var seed = 7,
+      str = (m.text || '') + '|' + (m.year || '');
+    for (var i = 0; i < str.length; i++) seed = (Math.imul(seed, 31) + str.charCodeAt(i)) | 0;
+    var r = rng(seed),
+      p = PLACES[INLAND[Math.floor(r() * INLAND.length)]];
+    return [p[0] + r() * 36 - 18, p[1] + r() * 36 - 18];
+  }
+  // Admins can join two memories by hand (links) or cut a connection the archive made (cuts).
+  // The choice can sit on either memory, as the other one's row id.
+  function has(list, o) {
+    return !!list && o.rowId != null && list.indexOf(o.rowId) !== -1;
+  }
+  function handLinked(a, b) {
+    return has(a.links, b) || has(b.links, a);
+  }
+  function cutOff(a, b) {
+    return has(a.cuts, b) || has(b.cuts, a);
   }
   function byId(id) {
     return MEMORIES.filter(function (m) {
@@ -440,6 +481,7 @@
   function keyName(k) {
     if (/^\d{4}s$/.test(k)) return 'the ' + k;
     if (/^(d|place):/.test(k)) return k.slice(k.indexOf(':') + 1);
+    if (k === 'hand') return 'linked memories';
     return KEYNAME[k] || k;
   }
   function plain(s) {
@@ -470,8 +512,11 @@
   }
   function sharing(key, exceptId) {
     if (!key) return [];
+    var self = byId(exceptId);
     return MEMORIES.filter(function (o) {
-      return o.id !== exceptId && memKeys(o).indexOf(key) !== -1;
+      if (o.id === exceptId) return false;
+      if (key === 'hand') return !!self && handLinked(self, o);
+      return memKeys(o).indexOf(key) !== -1 && !(self && cutOff(self, o));
     }).sort(function (a, b) {
       return (a.year || 9999) - (b.year || 9999);
     });
@@ -643,19 +688,21 @@
     var pairs = [];
     nodes.forEach(function (n, i) {
       nodes.forEach(function (o, j) {
-        if (j <= i) return;
-        var k = 0;
+        if (j <= i || cutOff(n.m, o.m)) return;
+        var hand = handLinked(n.m, o.m),
+          k = hand ? 100 : 0;
         keysOf[i].forEach(function (key) {
           if (keysOf[j].indexOf(key) !== -1) k += /^(theme:|\d{4}s$)/.test(key) ? 1 : 2;
         });
-        if (k) pairs.push({ i: i, j: j, k: k, d: Math.hypot(n.bx - o.bx, n.by - o.by) });
+        if (k)
+          pairs.push({ i: i, j: j, k: k, hand: hand, d: Math.hypot(n.bx - o.bx, n.by - o.by) });
       });
     });
     pairs.sort(function (a, b) {
       return b.k - a.k || a.d - b.d;
     });
     pairs.forEach(function (p) {
-      if ((deg[p.i] || 0) >= 4 || (deg[p.j] || 0) >= 4) return;
+      if (!p.hand && ((deg[p.i] || 0) >= 4 || (deg[p.j] || 0) >= 4)) return;
       deg[p.i] = (deg[p.i] || 0) + 1;
       deg[p.j] = (deg[p.j] || 0) + 1;
       links.push({ a: p.i, b: p.j, bend: (rng(p.i * 31 + p.j)() - 0.5) * 0.5 });
@@ -753,7 +800,7 @@
         ctx.textAlign = 'center';
         ctx.font =
           Math.max(11, Math.round(13 * Math.min(1.25, s * 1.2))) +
-          'px "IBM Plex Mono", "Courier New", monospace';
+          'px "Atkinson Hyperlegible Mono", "Courier New", monospace';
         ctx.fillStyle = 'rgba(74,48,120,' + a + ')';
         ctx.fillText(r.name.toUpperCase(), c[0], c[1] - 112 * s);
       }
@@ -1034,7 +1081,7 @@
     if (i >= 0 && nodes[i].m.id !== state.active) {
       var p = lastP[i],
         m = nodes[i].m;
-      tip.textContent = yr(m) + ' · ' + m.hood;
+      tip.textContent = meta(m) || 'A memory';
       tip.style.left = p[0] + 'px';
       tip.style.top = p[1] + 'px';
       tip.classList.add('on');
@@ -1095,9 +1142,11 @@
     state.timers = [];
   }
   function contentKeys(m) {
-    return memKeys(m).filter(function (k) {
-      return sharing(k, m.id).length;
-    });
+    return memKeys(m)
+      .concat('hand')
+      .filter(function (k) {
+        return sharing(k, m.id).length;
+      });
   }
   function excerpt(text) {
     var m = String(text).match(/^.*?[.!?](\s|$)/);
@@ -1140,17 +1189,15 @@
       (m.kind ? '<span class="kind-tag">' + esc(m.kind) + '</span>' : '') +
       '</span>' +
       '<h2>' +
-      esc(m.hood) +
-      ', ' +
-      esc(yr(m)) +
+      esc([where(m), m.year].filter(Boolean).join(', ') || 'A memory') +
       '</h2>' +
       (sibs.length > 1
         ? '<p class="person">One of ' +
           sibs.length +
           ' memories about <strong>' +
-          esc(PEOPLE[m.person]) +
-          '</strong><button class="linkbtn" id="sibNext">Next memory about ' +
-          esc(PEOPLE[m.person]) +
+          esc(who(m.person) || 'the same person') +
+          '</strong><button class="linkbtn" id="sibNext">Next memory' +
+          (who(m.person) ? ' about ' + esc(who(m.person)) : '') +
           ' \u2192</button></p>'
         : '') +
       '<p class="pieces-line">' +
@@ -1194,8 +1241,11 @@
           '</div><p class="hint">Choose one to light those memories up.</p></div>'
         : '') +
       '<div class="card-links"><button class="linkbtn" id="addAbout">Add another memory about ' +
-      (m.person ? esc(PEOPLE[m.person]) : 'this person') +
+      esc(who(m.person) || 'this person') +
       '</button>' +
+      (admin && online && m.rowId != null
+        ? '<button class="linkbtn" id="editMem">Edit this memory</button>'
+        : '') +
       (link && !banner ? '<button class="linkbtn" id="showLink">Your private link</button>' : '') +
       (canDelete('memories', m.rowId)
         ? '<button class="linkbtn danger" id="delMem">Delete this memory</button>'
@@ -1219,6 +1269,10 @@
     $('addAbout').addEventListener('click', function () {
       openAdd(m);
     });
+    if ($('editMem'))
+      $('editMem').addEventListener('click', function () {
+        openEdit(m);
+      });
     var dm = $('delMem');
     if (dm)
       dm.addEventListener('click', function () {
@@ -1279,11 +1333,7 @@
         if (m.media) removeMedia(m.media.url);
         MEMORIES.splice(MEMORIES.indexOf(m), 1);
         closeMemory();
-        layout();
-        drawChips();
-        fillFilters();
-        drawList();
-        drawDots();
+        redrawArchive();
       },
       function (e) {
         console.error(e);
@@ -1292,6 +1342,13 @@
         $('delMemErr').hidden = false;
       },
     );
+  }
+  function redrawArchive() {
+    layout();
+    drawChips();
+    fillFilters();
+    drawList();
+    drawDots();
   }
   function closeMemory() {
     clearTimers();
@@ -1309,9 +1366,7 @@
   function openReader(m) {
     $('readIn').innerHTML =
       '<span class="mono" id="readMeta">' +
-      esc(yr(m)) +
-      ' · ' +
-      esc(m.hood) +
+      esc(meta(m) || 'A memory') +
       '</span>' +
       (m.kind ? '<span class="kind-tag">' + esc(m.kind) + '</span>' : '') +
       '<blockquote>“' +
@@ -1330,7 +1385,7 @@
       '</p>' +
       (siblings(m).length > 1
         ? '<div class="sibs"><span>Also about ' +
-          esc(PEOPLE[m.person]) +
+          esc(who(m.person) || 'the same person') +
           ':</span>' +
           siblings(m)
             .filter(function (x) {
@@ -1338,7 +1393,7 @@
             })
             .map(function (x) {
               return (
-                '<button data-sib="' + x.id + '">' + esc(yr(x)) + ' · ' + esc(x.hood) + '</button>'
+                '<button data-sib="' + x.id + '">' + esc(meta(x) || 'Another memory') + '</button>'
               );
             })
             .join('') +
@@ -1442,25 +1497,22 @@
             '"' +
             (all.who === p ? ' selected' : '') +
             '>Memories about ' +
-            esc(PEOPLE[p]) +
+            esc(who(p) || 'someone') +
             '</option>'
           );
         })
         .join('');
   }
   function drawDecades() {
-    var ds = [],
-      undated = 0;
+    var ds = [];
     MEMORIES.forEach(function (m) {
       var d = decade(m);
-      if (!d) undated++;
-      else if (ds.indexOf(d) === -1) ds.push(d);
+      if (d && ds.indexOf(d) === -1) ds.push(d);
     });
     ds.sort();
-    if (undated) ds.push('Undated');
     var cnt = function (d) {
       return MEMORIES.filter(function (m) {
-        return (decade(m) || 'Undated') === d;
+        return decade(m) === d;
       }).length;
     };
     $('decTabs').innerHTML =
@@ -1494,7 +1546,7 @@
         });
       });
     var yt = $('yearTabs');
-    if (!all.decade || all.decade === 'Undated') {
+    if (!all.decade) {
       yt.hidden = true;
       yt.innerHTML = '';
       return;
@@ -1548,7 +1600,7 @@
   function drawList() {
     var ms = MEMORIES.filter(function (m) {
       if (all.theme && !inTheme(m, all.theme)) return false;
-      if (all.decade && (decade(m) || 'Undated') !== all.decade) return false;
+      if (all.decade && decade(m) !== all.decade) return false;
       if (all.year && String(m.year) !== all.year) return false;
       if (all.piece && !holds(m, all.piece)) return false;
       if (all.kind === 'media' && !m.media) return false;
@@ -1556,9 +1608,7 @@
       if (all.who && m.person !== all.who) return false;
       if (all.q) {
         var hay = (
-          yr(m) +
-          ' ' +
-          m.hood +
+          meta(m, ' ') +
           ' ' +
           m.text +
           ' ' +
@@ -1594,11 +1644,9 @@
             return (
               '<button class="mcard" data-id="' +
               m.id +
-              '"><span class="mono">' +
-              esc(yr(m)) +
-              ' \u00b7 ' +
-              esc(m.hood) +
-              '</span><span class="first">' +
+              '">' +
+              (meta(m) ? '<span class="mono">' + esc(meta(m)) + '</span>' : '') +
+              '<span class="first">' +
               esc(f ? f[1] : '') +
               '</span><span class="tags">' +
               themesOf(m)
@@ -1606,7 +1654,7 @@
                   return '<span class="tag">' + esc((REG[id] || REG.family).name) + '</span>';
                 })
                 .join('') +
-              (m.person ? '<span class="tag who">' + esc(PEOPLE[m.person]) + '</span>' : '') +
+              (who(m.person) ? '<span class="tag who">' + esc(who(m.person)) + '</span>' : '') +
               (m.kind ? '<span class="tag">' + esc(m.kind) + '</span>' : '') +
               (m.media
                 ? '<span class="tag">' +
@@ -1696,8 +1744,11 @@
         b.style.left = (m.xy[0] / 600) * 100 + '%';
         b.style.top = (m.xy[1] / 800) * 100 + '%';
       }
-      b.setAttribute('aria-label', 'Open the memory from ' + m.hood + ', ' + yr(m));
-      b.title = yr(m) + ' · ' + m.hood;
+      b.setAttribute(
+        'aria-label',
+        meta(m, ', ') ? 'Open the memory from ' + meta(m, ', ') : 'Open this memory',
+      );
+      b.title = meta(m) || 'A memory';
       b.innerHTML = '<span class="core"></span>';
       b.addEventListener('click', function () {
         $('stage').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
@@ -1754,11 +1805,9 @@
             return (
               '<li><button data-id="' +
               m.id +
-              '"><span class="meta">' +
-              esc(yr(m)) +
-              ' · ' +
-              esc(m.hood) +
-              '</span><span class="first">' +
+              '">' +
+              (meta(m) ? '<span class="meta">' + esc(meta(m)) + '</span>' : '') +
+              '<span class="first">' +
               esc(excerpt(m.text || (f ? f[1] : ''))) +
               '</span></button></li>'
             );
@@ -1836,6 +1885,27 @@
   var placeFound = null;
   var placeLookup = null;
   var placeTimer = null;
+  // Finds a typed place: a known San Diego neighborhood, somewhere else in San Diego, or
+  // anywhere in the world. Resolves to null when the place can't be found.
+  function lookupPlace(text) {
+    var known = Object.keys(PLACES).filter(function (h) {
+      return h.toLowerCase() === text.toLowerCase();
+    })[0];
+    if (known) return Promise.resolve({ name: known, xy: PLACES[known], known: true });
+    return Promise.all([geocode(text, true), geocode(text, false)]).then(function (both) {
+      var near = both[0][0],
+        far = both[1][0];
+      // a street that happens to share a city's name shouldn't win over the city
+      var hit = near && (near['class'] !== 'highway' || !far) ? near : far;
+      if (!hit) return null;
+      var lng = +hit.lon,
+        lat = +hit.lat,
+        local = inSanDiego(lng, lat),
+        found = { name: placeName(hit, local), lng: lng, lat: lat };
+      if (local) found.xy = toMap(lng, lat);
+      return found;
+    });
+  }
   function findPlace() {
     placeTimer = null;
     var text = $('fPlace').value.trim();
@@ -1845,39 +1915,21 @@
       note.textContent = '';
       return (placeLookup = Promise.resolve());
     }
-    var known = Object.keys(PLACES).filter(function (h) {
-      return h.toLowerCase() === text.toLowerCase();
-    })[0];
-    if (known) {
-      placeFound = { name: known, xy: PLACES[known] };
-      note.textContent = 'On the San Diego map at ' + known + '.';
-      return (placeLookup = Promise.resolve());
-    }
     note.textContent = 'Looking for it…';
-    placeLookup = Promise.all([geocode(text, true), geocode(text, false)])
-      .then(function (both) {
-        var near = both[0][0],
-          far = both[1][0];
-        // a street that happens to share a city's name shouldn't win over the city
-        if (near && (near['class'] !== 'highway' || !far)) return [near];
-        return far ? [far] : [];
-      })
-      .then(function (res) {
+    placeLookup = lookupPlace(text)
+      .then(function (found) {
         if (text !== $('fPlace').value.trim()) return;
-        if (!res.length) {
+        if (!found) {
           note.textContent =
             'We couldn’t find that on a map, so it will be pinned to San Diego as “' + text + '.”';
           return;
         }
-        var lng = +res[0].lon,
-          lat = +res[0].lat,
-          local = inSanDiego(lng, lat);
-        placeFound = { name: placeName(res[0], local), lng: lng, lat: lat };
-        if (local) placeFound.xy = toMap(lng, lat);
-        note.textContent =
-          'Found it: ' +
-          placeFound.name +
-          (local ? ', on the San Diego map.' : ', on the world map.');
+        placeFound = { name: found.name, xy: found.xy, lng: found.lng, lat: found.lat };
+        note.textContent = found.known
+          ? 'On the San Diego map at ' + found.name + '.'
+          : 'Found it: ' +
+            found.name +
+            (found.xy ? ', on the San Diego map.' : ', on the world map.');
       })
       .catch(function () {
         note.textContent = 'We couldn’t look that up right now. It will be pinned to San Diego.';
@@ -2110,7 +2162,6 @@
       base = placeFound.xy;
     } else {
       hood = placeText || 'Somewhere in San Diego';
-      base = PLACES['Somewhere else in San Diego'];
     }
     var jit = function () {
       return Math.random() * 16 - 8;
@@ -2138,6 +2189,7 @@
       fresh: true,
     };
     if (world) mem.world = world;
+    if (!placeFound) mem.xy = scatter(mem);
     if (kind) mem.kind = kind;
     if (mType)
       mem.media = { type: mType, label: file.name, dur: '', url: URL.createObjectURL(file) };
@@ -2195,6 +2247,323 @@
       reduce ? 0 : 900,
     );
   }
+  // For admins: change a memory's words and details, and which memories it connects to.
+  var editing = null,
+    editThemes = [];
+  function detailList(text) {
+    return text
+      .split(',')
+      .map(function (d) {
+        return d.trim();
+      })
+      .filter(Boolean);
+  }
+  function drawEditThemes() {
+    $('eThemes').innerHTML = REGIONS.map(function (r) {
+      return (
+        '<button type="button" class="fchip" data-t="' +
+        r.id +
+        '" aria-pressed="' +
+        (editThemes.indexOf(r.id) !== -1) +
+        '">' +
+        esc(r.name) +
+        '</button>'
+      );
+    }).join('');
+  }
+  $('eThemes').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-t]');
+    if (!b) return;
+    var id = b.getAttribute('data-t'),
+      at = editThemes.indexOf(id);
+    if (at === -1) editThemes.push(id);
+    else editThemes.splice(at, 1);
+    drawEditThemes();
+  });
+  function shortLabel(o) {
+    var t = plain(o.text || (o.frags[0] || [])[1] || '');
+    if (t.length > 60) t = t.slice(0, 57) + '…';
+    return (meta(o) ? meta(o) + ' · ' : '') + '“' + t + '”';
+  }
+  function drawEditConn() {
+    var m = editing,
+      ai = idxOf(m.id),
+      onNet = ai >= 0 ? connected(ai) : [],
+      mine = memKeys(m);
+    var rows = MEMORIES.filter(function (o) {
+      return o !== m && o.rowId != null;
+    })
+      .map(function (o) {
+        var shared = memKeys(o).filter(function (k) {
+          return mine.indexOf(k) !== -1;
+        });
+        var how = cutOff(m, o)
+          ? 'cut'
+          : handLinked(m, o)
+            ? 'hand'
+            : shared.length || onNet.indexOf(idxOf(o.id)) !== -1
+              ? 'auto'
+              : null;
+        return { o: o, how: how, shared: shared };
+      })
+      .filter(function (r) {
+        return r.how;
+      });
+    $('eConn').innerHTML = rows.length
+      ? rows
+          .map(function (r) {
+            var why =
+              r.how === 'cut'
+                ? 'Disconnected'
+                : r.how === 'hand'
+                  ? 'Linked by hand'
+                  : r.shared.length
+                    ? 'Shares ' +
+                      r.shared
+                        .slice(0, 3)
+                        .map(function (k) {
+                          return keyName(k);
+                        })
+                        .join(', ')
+                    : 'In the same part of the archive';
+            return (
+              '<li><span class="conn-what">' +
+              esc(shortLabel(r.o)) +
+              '</span><span class="conn-why">' +
+              esc(why) +
+              '</span><button type="button" class="linkbtn' +
+              (r.how === 'cut' ? '' : ' danger') +
+              '" data-pair="' +
+              r.o.id +
+              '" data-to="' +
+              (r.how === 'cut' ? 'auto' : 'cut') +
+              '">' +
+              (r.how === 'cut' ? 'Reconnect' : 'Disconnect') +
+              '</button></li>'
+            );
+          })
+          .join('')
+      : '<li class="empty">Not connected to any other memories yet.</li>';
+    $('eConnPick').innerHTML =
+      '<option value="">Choose a memory…</option>' +
+      MEMORIES.filter(function (o) {
+        return o !== m && o.rowId != null && !handLinked(m, o);
+      })
+        .map(function (o) {
+          return '<option value="' + o.id + '">' + esc(shortLabel(o)) + '</option>';
+        })
+        .join('');
+  }
+  // Changes one pair's connection and saves every memory that holds part of the choice.
+  function setPair(a, b, mode) {
+    var before = [a, b].map(function (x) {
+        return { x: x, links: x.links, cuts: x.cuts };
+      }),
+      touched = [];
+    [
+      [a, b],
+      [b, a],
+    ].forEach(function (p) {
+      ['links', 'cuts'].forEach(function (f) {
+        if (!has(p[0][f], p[1])) return;
+        p[0][f] = p[0][f].filter(function (id) {
+          return id !== p[1].rowId;
+        });
+        if (!p[0][f].length) delete p[0][f];
+        touched.push(p[0]);
+      });
+    });
+    if (mode !== 'auto') {
+      var f = mode === 'link' ? 'links' : 'cuts';
+      a[f] = (a[f] || []).concat(b.rowId);
+      touched.push(a);
+    }
+    touched = touched.filter(function (x, i) {
+      return touched.indexOf(x) === i;
+    });
+    return Promise.all(
+      touched.map(function (x) {
+        return updateMemory(x, memData(x));
+      }),
+    ).catch(function (e) {
+      before.forEach(function (s) {
+        ['links', 'cuts'].forEach(function (f) {
+          if (s[f]) s.x[f] = s[f];
+          else delete s.x[f];
+        });
+      });
+      throw e;
+    });
+  }
+  function pairChange(o, mode, btn) {
+    btn.disabled = true;
+    $('eConnErr').hidden = true;
+    setPair(editing, o, mode).then(
+      function () {
+        btn.disabled = false;
+        redrawArchive();
+        drawEditConn();
+      },
+      function (e) {
+        console.error(e);
+        btn.disabled = false;
+        $('eConnErr').textContent = 'That change couldn’t be saved. Try signing in again.';
+        $('eConnErr').hidden = false;
+      },
+    );
+  }
+  $('eConn').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pair]');
+    if (b) pairChange(byId(+b.getAttribute('data-pair')), b.getAttribute('data-to'), b);
+  });
+  $('eConnAdd').addEventListener('click', function () {
+    var o = byId(+$('eConnPick').value);
+    if (o) pairChange(o, 'link', this);
+  });
+  function openEdit(m) {
+    editing = m;
+    $('eWords').value = m.text || '';
+    $('eYear').value = m.year || '';
+    $('ePlace').value = where(m);
+    $('ePerson').value = who(m.person);
+    $('eBy').value = m.by || '';
+    $('eDetails').value = m.frags
+      .map(function (f) {
+        return plain(f[1]);
+      })
+      .join(', ');
+    $('eFeel').value = m.kind || '';
+    editThemes = themesOf(m).slice();
+    drawEditThemes();
+    $('eErr').hidden = true;
+    $('eConnErr').hidden = true;
+    drawEditConn();
+    try {
+      $('editDlg').showModal();
+    } catch (e) {
+      $('editDlg').setAttribute('open', '');
+    }
+  }
+  $('editClose').addEventListener('click', function () {
+    $('editDlg').close();
+  });
+  $('editDlg').addEventListener('click', function (e) {
+    if (e.target === this) this.close();
+  });
+  $('editDlg').addEventListener('close', function () {
+    if (state.active != null && byId(state.active)) openMemory(state.active);
+  });
+  $('editForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var m = editing,
+      err = $('eErr');
+    err.hidden = true;
+    var y = $('eYear').value.trim(),
+      words = $('eWords').value.trim(),
+      placeText = $('ePlace').value.trim(),
+      details = detailList($('eDetails').value);
+    if (y && !(/^\d{4}$/.test(y) && +y >= 1900 && +y <= 2026)) {
+      err.textContent = 'Enter a four-digit year between 1900 and 2026, or leave it blank.';
+      err.hidden = false;
+      return;
+    }
+    if (!words && !details.length && !m.media) {
+      err.textContent = 'A memory needs its words, a detail, or its attached file.';
+      err.hidden = false;
+      return;
+    }
+    if (!editThemes.length) {
+      err.textContent = 'Pick at least one part of the archive.';
+      err.hidden = false;
+      return;
+    }
+    busy($('editForm'), 'Saving…');
+    // undefined: the place wasn't changed. null: it was cleared, or couldn't be found.
+    var placeStep =
+      placeText === where(m)
+        ? Promise.resolve(undefined)
+        : placeText
+          ? lookupPlace(placeText).catch(function () {
+              return null;
+            })
+          : Promise.resolve(null);
+    placeStep
+      .then(function (found) {
+        var d = Object.assign({}, m);
+        var oldDetails = m.frags.map(function (f) {
+          return plain(f[1]);
+        });
+        if (details.join(', ') !== oldDetails.join(', ')) {
+          d.frags = details.slice(0, 6).map(function (x) {
+            return ['Detail', x, keysIn(x)[0] || null];
+          });
+          if (!d.frags.length && words)
+            d.frags.push([
+              'Detail',
+              words.length > 60 ? words.slice(0, 57) + '…' : words,
+              keysIn(words)[0] || null,
+            ]);
+          if (!d.frags.length && m.media)
+            d.frags.push(['Detail', 'A ' + MEDIA_NAME[m.media.type].toLowerCase(), null]);
+        }
+        d.text =
+          words ||
+          d.frags
+            .map(function (f) {
+              return plain(f[1]);
+            })
+            .join('. ') + '.';
+        d.year = y ? +y : null;
+        if (found !== undefined) {
+          delete d.world;
+          if (found && !found.xy) {
+            d.hood = found.name;
+            d.world = [found.lng, found.lat];
+            d.xy = null;
+          } else if (found) {
+            d.hood = found.name;
+            d.xy = [found.xy[0] + Math.random() * 16 - 8, found.xy[1] + Math.random() * 16 - 8];
+          } else d.hood = placeText || 'Somewhere in San Diego';
+        }
+        if (!d.world && (found === null || /^somewhere/i.test(d.hood))) d.xy = scatter(d);
+        var name = $('ePerson').value.trim().slice(0, 30);
+        delete d.person;
+        delete d.personName;
+        if (name) {
+          d.person =
+            Object.keys(PEOPLE).filter(function (p) {
+              return PEOPLE[p].toLowerCase() === name.toLowerCase();
+            })[0] || 'p' + Date.now();
+          PEOPLE[d.person] = PEOPLE[d.person] || name;
+          d.personName = PEOPLE[d.person];
+        }
+        d.by = $('eBy').value.trim() || byLine('');
+        var kind = $('eFeel').value.trim();
+        if (kind) d.kind = kind.charAt(0).toUpperCase() + kind.slice(1);
+        else delete d.kind;
+        d.themes = editThemes.slice();
+        d.region = d.themes[0];
+        return updateMemory(m, memData(d)).then(function () {
+          Object.keys(m).forEach(function (k) {
+            if (!(k in d)) delete m[k];
+          });
+          Object.assign(m, d);
+        });
+      })
+      .then(
+        function () {
+          busy($('editForm'));
+          redrawArchive();
+          $('editDlg').close();
+        },
+        function (e) {
+          console.error(e);
+          busy($('editForm'));
+          err.textContent = 'The changes couldn’t be saved. Try signing in again.';
+          err.hidden = false;
+        },
+      );
+  });
   var QUESTIONS = [{ month: 'November 2026', q: 'What’s a memory worth keeping?', answers: [] }];
   var qm = { i: 0, sel: -1 };
   function qmBuildStars() {
@@ -2618,7 +2987,8 @@
           var m = row.data;
           m.id = ++memSeq;
           m.rowId = row.id;
-          if (!m.xy && !m.world) m.xy = PLACES[m.hood] || null;
+          if (!m.world && /^somewhere/i.test(m.hood || '')) m.xy = scatter(m);
+          else if (!m.xy && !m.world) m.xy = PLACES[m.hood] || scatter(m);
           if (m.person && !PEOPLE[m.person])
             PEOPLE[m.person] = m.personName || 'Someone remembered';
           MEMORIES.push(m);
@@ -2692,7 +3062,12 @@
   function openRemoval(m) {
     removalFor = m || null;
     $('rWhich').textContent = m
-      ? 'Memory #' + m.rowId + ': ' + m.hood + ', ' + yr(m) + ' · “' + excerpt(m.text) + '”'
+      ? 'Memory #' +
+        m.rowId +
+        (meta(m, ', ') ? ': ' + meta(m, ', ') : '') +
+        ' · “' +
+        excerpt(m.text) +
+        '”'
       : 'Tell us which memory below.';
     $('rErr').hidden = true;
     $('rDone').hidden = true;
@@ -2780,7 +3155,7 @@
               (q.memory_id == null
                 ? 'Memory not named'
                 : m
-                  ? 'Memory #' + q.memory_id + ': ' + esc(m.hood) + ', ' + esc(yr(m))
+                  ? 'Memory #' + q.memory_id + (meta(m, ', ') ? ': ' + esc(meta(m, ', ')) : '')
                   : 'Memory #' + q.memory_id + ' (already gone)') +
               '</span><p>' +
               esc(q.details) +

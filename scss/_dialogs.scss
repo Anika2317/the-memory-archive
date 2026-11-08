@@ -1,6 +1,7 @@
 @use 'tokens' as *;
 
 #addDlg,
+#editDlg,
 #ansDlg,
 #qmDlg,
 #loginDlg,
@@ -196,7 +197,8 @@
 }
 
 // Soft boxes rather than ruled lines, so adding a memory doesn't feel like filling in a form.
-#addForm {
+#addForm,
+#editForm {
   input[type='text'],
   input[type='number'],
   textarea {
@@ -251,6 +253,75 @@
   from {
     opacity: 0;
     transform: translateY(-0.3rem);
+  }
+}
+
+// The admin's list of what a memory connects to.
+.edit-conn {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+
+  h3 {
+    font-size: 1.15rem;
+  }
+  .q {
+    color: var(--faint);
+    font-size: 0.88rem;
+    margin-top: 0.15rem;
+  }
+}
+.conn-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: grid;
+  gap: 0.5rem;
+
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem 0.9rem;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r-s);
+    background: var(--bg-2);
+  }
+  .empty {
+    color: var(--faint);
+  }
+  .conn-what {
+    flex: 1 1 15rem;
+    min-width: 0;
+  }
+  .conn-why {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+}
+.conn-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+
+  label {
+    flex-basis: 100%;
+    font-weight: 600;
+  }
+  select {
+    flex: 1 1 14rem;
+    min-width: 0;
+    font: inherit;
+    color: var(--ink);
+    background: var(--bg-2);
+    border: 1px solid var(--line-2);
+    border-radius: var(--r-s);
+    padding: 0.55rem 0.7rem;
+  }
+  .btn-line {
+    padding: 0.55rem 1.1rem;
   }
 }
 

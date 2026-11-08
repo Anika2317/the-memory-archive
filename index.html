@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Atkinson+Hyperlegible+Next:ital,wght@0,400..700;1,400..700&family=Atkinson+Hyperlegible+Mono:wght@400..600&display=swap"
     />
     <link rel="stylesheet" href="css/main.css" />
     <script>
@@ -414,7 +414,7 @@
                   />
                   <g
                     fill="#6B6670"
-                    font-family="IBM Plex Mono, Courier New, monospace"
+                    font-family="Atkinson Hyperlegible Mono, Courier New, monospace"
                     font-size="14"
                     letter-spacing="1"
                   >
@@ -784,6 +784,88 @@
           <p class="err" id="fErr" hidden></p>
           <button class="submit" type="submit">Add to the archive</button>
         </form>
+      </div>
+    </dialog>
+
+    <dialog id="editDlg" aria-labelledby="editTitle">
+      <div class="sheet">
+        <button class="close" id="editClose" aria-label="Close">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+        <span class="mono sheet-eyebrow">For admins</span>
+        <h2 class="sheet-title" id="editTitle">Edit this memory</h2>
+        <form class="form" id="editForm" novalidate>
+          <div>
+            <label for="eWords"><span class="k">The memory</span></label
+            ><textarea id="eWords" rows="5"></textarea>
+          </div>
+          <div class="two">
+            <div>
+              <label for="eYear"><span class="k">Year</span></label
+              ><input id="eYear" type="number" inputmode="numeric" min="1900" max="2026" />
+            </div>
+            <div>
+              <label for="ePlace"><span class="k">Place</span></label
+              ><input id="ePlace" type="text" list="placeList" autocomplete="off" />
+            </div>
+          </div>
+          <div class="two">
+            <div>
+              <label for="ePerson"><span class="k">Who it's about</span></label
+              ><input
+                id="ePerson"
+                type="text"
+                list="peopleList"
+                maxlength="30"
+                autocomplete="off"
+              />
+            </div>
+            <div>
+              <label for="eBy"><span class="k">Shared by</span></label
+              ><input id="eBy" type="text" maxlength="60" />
+            </div>
+          </div>
+          <div class="two">
+            <div>
+              <label for="eDetails"
+                ><span class="k">Things in it</span
+                ><span class="q">Use commas between them</span></label
+              ><input id="eDetails" type="text" />
+            </div>
+            <div>
+              <label for="eFeel"><span class="k">Kind of memory</span></label
+              ><input id="eFeel" type="text" list="feelList" maxlength="30" autocomplete="off" />
+            </div>
+          </div>
+          <div>
+            <span class="k" id="eThemesLbl">Parts of the archive</span>
+            <div class="theme-pick" id="eThemes" role="group" aria-labelledby="eThemesLbl"></div>
+          </div>
+          <p class="err" id="eErr" hidden></p>
+          <button class="submit" type="submit">Save changes</button>
+        </form>
+        <section class="edit-conn" aria-labelledby="eConnLbl">
+          <h3 id="eConnLbl">Connections</h3>
+          <p class="q">Changes here save right away.</p>
+          <ul class="conn-list" id="eConn"></ul>
+          <div class="conn-add">
+            <label for="eConnPick">Connect another memory</label>
+            <select id="eConnPick"></select>
+            <button type="button" class="btn-line" id="eConnAdd">Connect</button>
+          </div>
+          <p class="err" id="eConnErr" hidden></p>
+        </section>
       </div>
     </dialog>
 

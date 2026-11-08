@@ -3,6 +3,16 @@
 * {
   box-sizing: border-box;
 }
+// No italics anywhere, including the browser's own for em and cite.
+em,
+i,
+cite,
+address,
+dfn,
+var {
+  font-style: normal;
+}
+
 [hidden] {
   display: none !important;
 }
