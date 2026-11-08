@@ -393,6 +393,12 @@
     delete data.rowId;
     return data;
   }
+  // A 404 means the database is missing update_memory (supabase/migrations/…_admin_edit.sql).
+  function editProblem(e) {
+    return /^404/.test(e && e.message)
+      ? 'Editing isn’t set up in the database yet. Run the admin edit SQL in Supabase.'
+      : 'Try signing in again.';
+  }
   function updateMemory(m, data) {
     return rpc('update_memory', { row_id: m.rowId, new_data: data }).then(function (ok) {
       if (ok !== true) throw new Error('not allowed');
@@ -2434,7 +2440,7 @@
       function (e) {
         console.error(e);
         btn.disabled = false;
-        $('eConnErr').textContent = 'That change couldn’t be saved. Try signing in again.';
+        $('eConnErr').textContent = 'That change couldn’t be saved. ' + editProblem(e);
         $('eConnErr').hidden = false;
       },
     );
@@ -2586,7 +2592,7 @@
         function (e) {
           console.error(e);
           busy($('editForm'));
-          err.textContent = 'The changes couldn’t be saved. Try signing in again.';
+          err.textContent = 'The changes couldn’t be saved. ' + editProblem(e);
           err.hidden = false;
         },
       );
