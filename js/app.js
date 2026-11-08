@@ -487,6 +487,31 @@
   function plain(s) {
     return String(s).replace(/^♪\s*/, '');
   }
+  // The pieces worth listing apart from the memory itself. When nothing was added as a piece,
+  // the archive keeps the memory's opening words as one, and that shouldn't be shown twice.
+  function pieces(m) {
+    if (wordsArePieces(m)) return m.frags;
+    var text = String(m.text || '').toLowerCase();
+    return m.frags.filter(function (f) {
+      var t = plain(f[1])
+        .replace(/\u2026$/, '')
+        .trim()
+        .toLowerCase();
+      return !t || text.indexOf(t) !== 0;
+    });
+  }
+  // True when the memory's words were only made from its pieces, so quoting both would repeat.
+  function wordsArePieces(m) {
+    return (
+      m.text ===
+      m.frags
+        .map(function (f) {
+          return plain(f[1]);
+        })
+        .join('. ') +
+        '.'
+    );
+  }
 
   // What a memory can connect through: topics anywhere in its words, its details,
   // its place and decade. Two memories that share any of these are linked.
@@ -1200,17 +1225,17 @@
           (who(m.person) ? ' about ' + esc(who(m.person)) : '') +
           ' \u2192</button></p>'
         : '') +
-      '<p class="pieces-line">' +
-      m.frags
-        .slice(0, 3)
-        .map(function (f) {
-          return esc(f[1]);
-        })
-        .join(' \u00b7 ') +
-      '</p>' +
-      '<p class="excerpt">\u201C' +
-      esc(excerpt(m.text)) +
-      '\u201D</p>' +
+      (pieces(m).length
+        ? '<p class="pieces-line">' +
+          pieces(m)
+            .slice(0, 3)
+            .map(function (f) {
+              return esc(f[1]);
+            })
+            .join(' \u00b7 ') +
+          '</p>'
+        : '') +
+      (wordsArePieces(m) ? '' : '<p class="excerpt">\u201C' + esc(excerpt(m.text)) + '\u201D</p>') +
       (m.media
         ? '<p class="media-line">' +
           mediaIcon(m.media.type) +
@@ -1376,13 +1401,15 @@
       '<p class="by">' +
       esc(m.by) +
       ' · from someone living with Alzheimer’s and their family</p>' +
-      '<p class="pieces">' +
-      m.frags
-        .map(function (f) {
-          return esc(plain(f[1]));
-        })
-        .join(' · ') +
-      '</p>' +
+      (pieces(m).length && !wordsArePieces(m)
+        ? '<p class="pieces">' +
+          pieces(m)
+            .map(function (f) {
+              return esc(plain(f[1]));
+            })
+            .join(' · ') +
+          '</p>'
+        : '') +
       (siblings(m).length > 1
         ? '<div class="sibs"><span>Also about ' +
           esc(who(m.person) || 'the same person') +
