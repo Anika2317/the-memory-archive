@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Atkinson+Hyperlegible+Next:ital,wght@0,400..700;1,400..700&family=Atkinson+Hyperlegible+Mono:wght@400..600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Atkinson+Hyperlegible+Next:wght@400..700&family=Atkinson+Hyperlegible+Mono:wght@400..600&display=swap"
     />
     <link rel="stylesheet" href="css/main.css" />
     <script>
@@ -115,36 +115,27 @@
           <p class="line">A person is more than what they remember.</p>
         </div>
         <div class="intro-shot" data-shot>
-          <p class="caption">Inspired by the forget-me-not</p>
+          <p class="caption">Forget-me-not</p>
           <p class="line">
-            A place for families to share the stories, traditions, and moments that make a life
-            unique.
+            A community record of the songs, kitchens, neighborhoods, and small habits that make up
+            a life.
           </p>
         </div>
         <div class="intro-shot" data-shot>
           <p class="caption">Why we keep them</p>
           <p class="line">
-            To honor the person beyond the diagnosis, and carry their stories forward.
+            So the people we love are known for who they have always been, not only a diagnosis.
           </p>
         </div>
         <div class="intro-shot title" data-shot>
           <svg class="flower" viewBox="-100 -100 200 200" aria-hidden="true">
-            <defs>
-              <filter id="introGlow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="2.4" result="b" />
-                <feMerge>
-                  <feMergeNode in="b" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
             <g transform="translate(0 5) scale(.9)">
               <g transform="rotate(0)">
                 <g class="petal" style="--i: 0">
                   <path
                     d="M0 -20 C-22 -26 -38 -50 -32 -68 C-29 -80 -15 -86 -6 -81 L0 -77 L6 -81 C15 -86 29 -80 32 -68 C38 -50 22 -26 0 -20 Z"
                   />
-                  <g class="lights" filter="url(#introGlow)">
+                  <g class="lights">
                     <circle cx="-12" cy="-84" r="4.6" />
                     <circle cx="12" cy="-84" r="4.6" />
                     <circle cx="-34" cy="-55" r="3.4" />
@@ -157,7 +148,7 @@
                   <path
                     d="M0 -20 C-22 -26 -38 -50 -32 -68 C-29 -80 -15 -86 -6 -81 L0 -77 L6 -81 C15 -86 29 -80 32 -68 C38 -50 22 -26 0 -20 Z"
                   />
-                  <g class="lights" filter="url(#introGlow)">
+                  <g class="lights">
                     <circle cx="-12" cy="-84" r="4.6" />
                     <circle cx="12" cy="-84" r="4.6" />
                     <circle cx="-34" cy="-55" r="3.4" />
@@ -170,7 +161,7 @@
                   <path
                     d="M0 -20 C-22 -26 -38 -50 -32 -68 C-29 -80 -15 -86 -6 -81 L0 -77 L6 -81 C15 -86 29 -80 32 -68 C38 -50 22 -26 0 -20 Z"
                   />
-                  <g class="lights" filter="url(#introGlow)">
+                  <g class="lights">
                     <circle cx="-12" cy="-84" r="4.6" />
                     <circle cx="12" cy="-84" r="4.6" />
                     <circle cx="-34" cy="-55" r="3.4" />
@@ -183,7 +174,7 @@
                   <path
                     d="M0 -20 C-22 -26 -38 -50 -32 -68 C-29 -80 -15 -86 -6 -81 L0 -77 L6 -81 C15 -86 29 -80 32 -68 C38 -50 22 -26 0 -20 Z"
                   />
-                  <g class="lights" filter="url(#introGlow)">
+                  <g class="lights">
                     <circle cx="-12" cy="-84" r="4.6" />
                     <circle cx="12" cy="-84" r="4.6" />
                     <circle cx="-34" cy="-55" r="3.4" />
@@ -196,7 +187,7 @@
                   <path
                     d="M0 -20 C-22 -26 -38 -50 -32 -68 C-29 -80 -15 -86 -6 -81 L0 -77 L6 -81 C15 -86 29 -80 32 -68 C38 -50 22 -26 0 -20 Z"
                   />
-                  <g class="lights" filter="url(#introGlow)">
+                  <g class="lights">
                     <circle cx="-12" cy="-84" r="4.6" />
                     <circle cx="12" cy="-84" r="4.6" />
                     <circle cx="-34" cy="-55" r="3.4" />
@@ -234,39 +225,27 @@
     <main id="archive" class="hub">
       <div class="wrap">
         <section class="welcome" id="top">
-          <div>
+          <div class="welcome-main">
+            <div class="mono welcome-kicker">San Diego Community Archive</div>
             <h1>Every story, <em>a forget-me-not.</em></h1>
-            <p>Each one a memory, Together they reveal what Alzheimer's cannot erase.</p>
+            <p>
+              A living collection of the stories, songs, kitchens, and everyday habits that belong
+              to people living with Alzheimer's, shared by the families who love them.
+            </p>
           </div>
-          <div class="welcome-stats">
-            <p><strong id="heroCount">0</strong> memories</p>
-            <p><strong id="heroLinks">0</strong> connections</p>
+          <div class="welcome-stats" aria-label="Archive collection counts">
+            <p><span>Collection</span><strong id="heroCount">0</strong> memories</p>
+            <p><span>Network</span><strong id="heroLinks">0</strong> connections</p>
           </div>
         </section>
 
         <div class="hub-grid">
           <section class="panel panel-net">
             <header class="panel-head">
-              <span class="ico-badge" aria-hidden="true"
-                ><svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="6" cy="6" r="2.5" />
-                  <circle cx="18" cy="8" r="2.5" />
-                  <circle cx="10" cy="18" r="2.5" />
-                  <path d="M8 7l7.6 1M7.2 8.2l2 7.4M16.4 10l-4.6 6.2" /></svg
-              ></span>
-              <h2>Memory network</h2>
+              <h2>Memory Network</h2>
               <div class="panel-actions">
-                <button class="linkbtn" id="fireRandom">Open a memory</button
-                ><a class="linkbtn" href="#all">Browse every memory</a>
+                <button class="linkbtn" id="fireRandom">Open a random memory</button
+                ><a class="linkbtn" href="#all">Browse all memories ↓</a>
               </div>
             </header>
             <div class="stage" id="stage">
@@ -276,144 +255,121 @@
               ></canvas>
               <div class="tip" id="tip"></div>
               <div class="region-note" id="regionNote" hidden></div>
-              <p class="stage-hint" id="stageHint"></p>
+              <p class="stage-hint" id="stageHint" hidden></p>
               <aside class="card" id="card" aria-live="polite"></aside>
             </div>
             <div class="under">
-              <div class="chips" id="regionChips" role="group" aria-label="Light up a theme"></div>
+              <div class="chips" id="regionChips" role="group" aria-label="Filter by theme"></div>
             </div>
           </section>
 
-          <div class="hub-side">
-            <section class="panel panel-bloom">
-              <header class="panel-head">
-                <span class="ico-badge" aria-hidden="true"
-                  ><svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="2.5" />
-                    <path
-                      d="M12 9.5C10 6 10.5 3 12 3s2 3 0 6.5M14.4 11.2c3.3-2.3 6.3-2 6.5-.5s-2.8 2.8-6.5 1.7M13.5 14.2c1.6 3.7 1 6.6-.5 6.8s-2.4-3-1.4-6.8M10.4 14.1c-3 2.7-6 2.8-6.4 1.3s2.4-3.1 6.2-2.5M9.6 11.3C5.6 10.5 3.5 8.3 4.2 7s3.9-.5 5.6 2.9"
-                    /></svg
-                ></span>
-                <h2>The Monthly Bloom</h2>
-              </header>
-              <p class="hub-month" id="hubMonth"></p>
-              <p class="hub-q" id="hubQ"></p>
-              <p class="hub-note" id="hubAnswers"></p>
-              <div class="panel-buttons">
-                <button class="add-btn" id="hubAnswer">Answer this question</button>
-                <button class="btn-line" id="hubBloom">See the answers</button>
-              </div>
-            </section>
-            <section class="panel panel-add">
-              <header class="panel-head">
-                <span class="ico-badge" aria-hidden="true"
-                  ><svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M12 5v14M5 12h14" /></svg
-                ></span>
-                <h2>Share a memory</h2>
-              </header>
-              <p>
-                Share a story about someone you love, in your own words. You can add a photo or a
-                recording too.
-              </p>
-              <div class="panel-buttons">
-                <button class="add-btn" id="hubAdd">Add a memory</button>
-              </div>
-              <p class="hub-note">
-                You'll get a private link to delete it later.
-                <button class="linkbtn" id="askRemoveAbout">
-                  Lost it? Ask us to remove a memory.
-                </button>
-              </p>
-            </section>
-          </div>
-
           <section class="panel panel-latest">
             <header class="panel-head">
-              <span class="ico-badge" aria-hidden="true"
-                ><svg
-                  width="16"
-                  height="16"
+              <h2>Latest Memories</h2>
+              <button class="add-btn" id="hubAdd">Add a memory</button>
+            </header>
+            <ul class="latest" id="latest"></ul>
+            <p class="hub-note">
+              <button class="linkbtn" id="askRemoveAbout">Request a memory removal</button>
+            </p>
+          </section>
+
+          <section class="panel panel-bloom">
+            <header class="panel-head">
+              <h2>The Monthly Bloom</h2>
+              <span class="hub-month" id="hubMonth"></span>
+            </header>
+            <p class="hub-q" id="hubQ"></p>
+            <p class="hub-note" id="hubAnswers"></p>
+            <div class="panel-buttons">
+              <button class="add-btn" id="hubAnswer">Answer this question</button>
+              <button class="btn-line" id="hubBloom">See the answers</button>
+            </div>
+          </section>
+
+          <section class="panel panel-all" id="all">
+            <header class="panel-head">
+              <h2>All Memories</h2>
+              <p class="count" id="allCount" aria-live="polite"></p>
+            </header>
+            <div class="allbar">
+              <label class="search" for="q">
+                <svg
+                  width="15"
+                  height="15"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   stroke-width="2"
                   stroke-linecap="round"
-                  stroke-linejoin="round"
+                  aria-hidden="true"
                 >
-                  <circle cx="12" cy="12" r="8.5" />
-                  <path d="M12 7.5V12l3 2" /></svg
-              ></span>
-              <h2>Latest memories</h2>
-            </header>
-            <ul class="latest" id="latest"></ul>
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M20 20l-3.5-3.5" />
+                </svg>
+                <input
+                  id="q"
+                  type="search"
+                  placeholder="Search by word, place, or detail…"
+                  aria-label="Search memories"
+                />
+              </label>
+              <select id="fTheme" aria-label="Filter by theme"></select>
+              <select id="fPiece" aria-label="Filter by what the memory holds">
+                <option value="">Songs, movies, books, food</option>
+                <option value="songs">Songs and music</option>
+                <option value="movies">Movies</option>
+                <option value="books">Books</option>
+                <option value="food">Food</option>
+              </select>
+              <select id="fKind" aria-label="Filter by kind of memory">
+                <option value="">Every kind of memory</option>
+              </select>
+              <select id="fWho" aria-label="Filter by person"></select>
+            </div>
+            <div class="decades" id="decTabs" role="group" aria-label="Browse by decade"></div>
+            <div
+              class="chips years"
+              id="yearTabs"
+              role="group"
+              aria-label="Browse by year"
+              hidden
+            ></div>
+            <div class="grid" id="allGrid"></div>
+            <div class="more" id="allMoreWrap" hidden>
+              <button class="btn-line" id="allMore">Show more memories</button>
+            </div>
           </section>
 
           <section class="panel panel-map" id="where">
             <header class="panel-head">
-              <span class="ico-badge" aria-hidden="true"
-                ><svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z" />
-                  <circle cx="12" cy="10" r="2.3" /></svg
-              ></span>
-              <h2>Where these memories live</h2>
+              <h2>Where Memories Come From</h2>
             </header>
-            <p class="panel-sub">
-              Rooted in San Diego, shared from everywhere. Each one is placed by neighborhood or
-              city. Choose a light to open its memory.
-            </p>
             <div class="where-map">
               <div class="map sd-map">
                 <svg viewBox="0 0 600 800" preserveAspectRatio="none" aria-hidden="true">
                   <path
-                    fill="#FBFBFA"
-                    stroke="#B9BDC6"
+                    fill="#FAF9FD"
+                    stroke="#C5B9DE"
                     stroke-width="1.5"
                     stroke-linejoin="round"
                     d="M43 0 L55 68 L77 136 L62 200 L46 255 L31 272 L52 296 L72 323 L74 345 L81 391 L77 412 L81 425 L77 477 L86 525 L101 570 L111 528 L129 477 L146 460 L171 451 L200 470 L223 485 L266 519 L300 548 L326 579 L334 630 L326 690 L300 704 L291 723 L296 760 L300 800 L600 800 L600 0 Z"
                   />
                   <path
-                    fill="#E4E9F0"
-                    stroke="#B9BDC6"
+                    fill="#EDE8F7"
+                    stroke="#C5B9DE"
                     stroke-width="1.2"
                     d="M79 409 C92 386 118 372 142 374 C162 377 168 395 158 410 C146 424 118 425 96 419 Z"
                   />
                   <path
-                    fill="#FBFBFA"
-                    stroke="#B9BDC6"
+                    fill="#FAF9FD"
+                    stroke="#C5B9DE"
                     stroke-width="1.5"
                     stroke-linejoin="round"
                     d="M162 506 C178 496 200 496 214 508 C222 522 226 545 236 568 L262 628 L292 700 L284 712 L272 708 L244 640 L216 580 L198 556 C184 546 168 530 162 506 Z"
                   />
                   <g
-                    fill="#6B6670"
+                    fill="#584C70"
                     font-family="Atkinson Hyperlegible Mono, Courier New, monospace"
                     font-size="14"
                     letter-spacing="1"
@@ -446,175 +402,55 @@
                   <span class="mono world-label">Beyond San Diego</span>
                 </div>
               </div>
-              <p class="map-caption" id="worldCaption"></p>
-            </div>
-          </section>
-
-          <section class="panel panel-stats">
-            <header class="panel-head">
-              <span class="ico-badge" aria-hidden="true"
-                ><svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M5 20V11M12 20V5M19 20v-6" /></svg
-              ></span>
-              <h2>By the numbers</h2>
-            </header>
-            <div class="facts">
-              <div class="fact">
-                <div class="big">7.4 million</div>
-                <p>Americans age 65 and older are living with Alzheimer's.</p>
-                <div class="src">Alzheimer's Association, 2026 Facts and Figures</div>
-              </div>
-              <div class="fact">
-                <div class="big">115,000+</div>
-                <p>
-                  San Diegans age 55 and older projected to live with Alzheimer's or a related
-                  dementia by 2030.
-                </p>
-                <div class="src">San Diego County Alzheimer's Project</div>
-              </div>
-              <div class="fact">
-                <div class="big" id="memCount">0</div>
-                <p>memories in the archive so far, and every one belongs to an individual.</p>
-                <div class="src">Grows with every contribution</div>
-              </div>
-            </div>
-          </section>
-
-          <section class="panel panel-all" id="all">
-            <header class="panel-head">
-              <span class="ico-badge" aria-hidden="true"
-                ><svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <rect x="4" y="4" width="7" height="7" rx="1.5" />
-                  <rect x="13" y="4" width="7" height="7" rx="1.5" />
-                  <rect x="4" y="13" width="7" height="7" rx="1.5" />
-                  <rect x="13" y="13" width="7" height="7" rx="1.5" /></svg
-              ></span>
-              <h2>Browse the whole archive</h2>
-            </header>
-            <div class="allbar">
-              <label class="search" for="q">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  aria-hidden="true"
-                >
-                  <circle cx="11" cy="11" r="7" />
-                  <path d="M20 20l-3.5-3.5" />
-                </svg>
-                <input id="q" type="search" aria-label="Search memories" />
-              </label>
-              <select id="fTheme" aria-label="Filter by theme"></select>
-              <select id="fPiece" aria-label="Filter by what the memory holds">
-                <option value="">Songs, movies, books, food</option>
-                <option value="songs">Songs and music</option>
-                <option value="movies">Movies</option>
-                <option value="books">Books</option>
-                <option value="food">Food</option>
-              </select>
-              <select id="fKind" aria-label="Filter by kind of memory">
-                <option value="">Every kind of memory</option>
-              </select>
-              <select id="fWho" aria-label="Filter by person"></select>
-            </div>
-            <div class="decades" id="decTabs" role="group" aria-label="Browse by decade"></div>
-            <div
-              class="chips years"
-              id="yearTabs"
-              role="group"
-              aria-label="Browse by year"
-              hidden
-            ></div>
-            <p class="count" id="allCount" aria-live="polite"></p>
-            <div class="grid" id="allGrid"></div>
-            <div class="more" id="allMoreWrap" hidden>
-              <button class="btn-line" id="allMore">Show more memories</button>
+              <p class="map-caption" id="worldCaption" hidden></p>
             </div>
           </section>
 
           <section class="panel panel-about about" id="about">
-            <svg class="stamp" viewBox="0 0 120 120" aria-hidden="true">
-              <defs>
-                <path id="stampRing" d="M60 60 m-44 0 a44 44 0 1 1 88 0 a44 44 0 1 1 -88 0" />
-              </defs>
-              <circle cx="60" cy="60" r="56" />
-              <circle cx="60" cy="60" r="33" />
-              <text><textPath href="#stampRing">THE MEMORY ARCHIVE · SAN DIEGO ·</textPath></text>
-              <text x="60" y="57" text-anchor="middle" class="mid">FORGET</text>
-              <text x="60" y="71" text-anchor="middle" class="mid">ME NOT</text>
-            </svg>
             <header class="panel-head">
-              <span class="ico-badge" aria-hidden="true"
-                ><svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="12" r="8.5" />
-                  <path d="M12 11v5M12 8h.01" /></svg
-              ></span>
-              <h2>Alzheimer's changes what someone remembers, not who they are</h2>
+              <h2>About the Archive</h2>
             </header>
+            <h3 class="about-lead">
+              Alzheimer's changes what someone remembers, <em>not who they are.</em>
+            </h3>
             <p>
-              The forget-me-not has long stood for remembrance. The Memory Archive carries that
-              meaning forward: a community campaign that preserves stories, challenges
-              misconceptions about Alzheimer's, and connects generations through memory.
+              The Memory Archive is a San Diego community project collecting stories about people
+              living with Alzheimer's and related dementias, told by the families and friends who
+              know them best, or in their own words.
             </p>
             <p>
-              Alzheimer's can affect memory, but it does not erase a person's identity,
-              relationships, or history. Like the petals of a single flower, each shared memory,
-              whether a song, a recipe, or a place, is one part of a whole person. Together, the
-              petals reveal the person behind the diagnosis.
+              When someone is diagnosed with Alzheimer's, conversations often narrow to symptoms and
+              care. Yet a life is made of specific things: a song on the car radio, a recipe written
+              on an index card, a Sunday walk in North Park, a joke told the same way for forty
+              years. Like the five petals of a forget-me-not, those details belong together.
             </p>
-            <p>Within the archive:</p>
+            <p>In this archive:</p>
             <ul>
-              <li>A network of memories, connected by the songs, places, and moments they share</li>
-              <li>A monthly question answered by families across San Diego</li>
-              <li>A collection organized by theme, decade, and year</li>
+              <li>
+                Memories link to one another through shared songs, places, decades, and details
+              </li>
+              <li>Each month, families across San Diego answer a single shared question</li>
+              <li>
+                Every memory is shared with permission, and families can remove theirs at any time
+              </li>
             </ul>
-            <p>
-              Joyful, difficult, and unexpected moments are held alike, reflecting the full reality
-              of living with Alzheimer's.
-            </p>
-            <p>
-              Every memory needs consent from the person or their family. Families can ask us to
-              remove theirs at any time.
-            </p>
-            <p>
-              Contact:
-              <a href="mailto:thememoryarchive.sd@gmail.com">thememoryarchive.sd@gmail.com</a> ·
-              Instagram
-              <a href="https://www.instagram.com/memoryarchive.the/" target="_blank" rel="noopener"
-                >@memoryarchive.the</a
-              >
-            </p>
+            <div class="facts" aria-label="Context figures">
+              <div class="fact">
+                <div class="big">7.4 million</div>
+                <p>Americans age 65 and older living with Alzheimer's.</p>
+                <div class="src">Alzheimer's Association, 2026</div>
+              </div>
+              <div class="fact">
+                <div class="big">115,000+</div>
+                <p>San Diegans age 55+ projected to live with Alzheimer's or dementia by 2030.</p>
+                <div class="src">San Diego County Alzheimer's Project</div>
+              </div>
+              <div class="fact">
+                <div class="big" id="memCount">0</div>
+                <p>Memories shared in this archive so far.</p>
+                <div class="src">Updated as families contribute</div>
+              </div>
+            </div>
           </section>
         </div>
       </div>
@@ -629,10 +465,20 @@
             <div>The Memory Archive · Leucent Inc</div>
           </div>
         </div>
-        <div class="admin">
-          <span id="adminState" aria-live="polite"></span>
-          <button class="linkbtn" id="reqBtn" hidden>Removal requests</button>
-          <button class="linkbtn" id="adminBtn">Admin sign-in</button>
+        <div class="foot-right">
+          <p class="foot-contact">
+            <span>Correspondence:</span>
+            <a href="mailto:thememoryarchive.sd@gmail.com">thememoryarchive.sd@gmail.com</a> ·
+            Instagram
+            <a href="https://www.instagram.com/memoryarchive.the/" target="_blank" rel="noopener"
+              >@memoryarchive.the</a
+            >
+          </p>
+          <div class="admin">
+            <span id="adminState" aria-live="polite"></span>
+            <button class="linkbtn" id="reqBtn" hidden>Removal requests</button>
+            <button class="linkbtn" id="adminBtn">Admin sign-in</button>
+          </div>
         </div>
       </div>
     </footer>
@@ -658,15 +504,10 @@
           </svg>
         </button>
         <h2 class="sheet-title" id="addTitle">Add a memory</h2>
-        <p class="lede">Start with what you remember. Everything else is up to you.</p>
         <form class="form" id="addForm" novalidate>
           <div>
             <label for="fWords"><span class="k">What do you remember?</span></label
-            ><textarea
-              id="fWords"
-              rows="5"
-              placeholder="Anything at all. A few words is plenty."
-            ></textarea>
+            ><textarea id="fWords" rows="5"></textarea>
           </div>
           <div class="two">
             <div>
@@ -677,7 +518,7 @@
                 inputmode="numeric"
                 min="1900"
                 max="2026"
-                placeholder="A year, if you know it"
+                placeholder="Year"
               />
             </div>
             <div>
@@ -687,7 +528,7 @@
                 type="text"
                 list="placeList"
                 autocomplete="off"
-                placeholder="A neighborhood or city"
+                placeholder="Neighborhood or city"
               />
               <datalist id="placeList"></datalist>
               <p class="hint" id="fPlaceNote" aria-live="polite"></p>
@@ -698,8 +539,7 @@
             <div class="theme-pick" id="fThemes" role="group" aria-labelledby="fThemesLbl"></div>
           </div>
           <div>
-            <span class="k" id="askLbl">Want to add anything else?</span
-            ><span class="q">Pick any that feel right, or none at all.</span>
+            <span class="k" id="askLbl">Add more details</span>
             <div class="ask-pick" id="askPick" role="group" aria-labelledby="askLbl">
               <button
                 type="button"
@@ -888,9 +728,6 @@
         <div class="qm-head">
           <div>
             <h2 class="qm-title" id="qmTitle">The Monthly Bloom</h2>
-            <p class="lede">
-              Each month we ask one question. Choose a petal to read an answer, or add your own.
-            </p>
           </div>
           <div class="qm-months" id="qmMonths" role="group" aria-label="Choose a month"></div>
         </div>

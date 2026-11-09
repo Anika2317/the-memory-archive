@@ -39,13 +39,13 @@
   var FW = 1300,
     FH = 720;
   var REGIONS = [
-    { id: 'family', name: 'Family & People', c: [660, 390] },
-    { id: 'stories', name: 'Movies & Books', c: [660, 130] },
-    { id: 'places', name: 'Places', c: [990, 175] },
-    { id: 'love', name: 'Love', c: [1095, 470] },
-    { id: 'smell', name: 'Food & Kitchens', c: [850, 625] },
-    { id: 'work', name: 'Work & Routine', c: [500, 625] },
-    { id: 'music', name: 'Music & Sound', c: [250, 500] },
+    { id: 'family', name: 'Family & People', c: [650, 365] },
+    { id: 'stories', name: 'Movies & Books', c: [650, 130] },
+    { id: 'places', name: 'Places', c: [1020, 215] },
+    { id: 'love', name: 'Love', c: [1020, 510] },
+    { id: 'smell', name: 'Food & Kitchens', c: [650, 595] },
+    { id: 'work', name: 'Work & Routine', c: [280, 510] },
+    { id: 'music', name: 'Music & Sound', c: [280, 215] },
   ];
   var REG = {};
   REGIONS.forEach(function (r) {
@@ -676,12 +676,36 @@
     cctx.save();
     cctx.translate(ox, oy);
     cctx.scale(s, s);
+    // Fine background filaments connecting ambient dust
+    cctx.strokeStyle = 'rgba(99,71,166,0.045)';
+    cctx.lineWidth = 0.7 / Math.max(s, 0.6);
+    cctx.beginPath();
+    dustLinks.forEach(function (dl) {
+      var a = dust[dl[0]],
+        b = dust[dl[1]];
+      cctx.moveTo(a.x, a.y);
+      cctx.lineTo(b.x, b.y);
+    });
+    cctx.stroke();
     dust.forEach(function (d) {
-      cctx.fillStyle = 'rgba(122,80,194,0.16)';
+      cctx.fillStyle = 'rgba(99,71,166,0.13)';
       cctx.beginPath();
       cctx.arc(d.x, d.y, d.r / Math.max(s, 0.6), 0, 6.283);
       cctx.fill();
     });
+    // Subtle orbital guide lines from center cluster to outer clusters
+    var hub = REG.family.c;
+    cctx.strokeStyle = 'rgba(99,71,166,0.07)';
+    cctx.lineWidth = 1 / Math.max(s, 0.6);
+    cctx.setLineDash([3 / Math.max(s, 0.6), 6 / Math.max(s, 0.6)]);
+    REGIONS.forEach(function (r) {
+      if (r.id === 'family') return;
+      cctx.beginPath();
+      cctx.moveTo(hub[0], hub[1]);
+      cctx.lineTo(r.c[0], r.c[1]);
+      cctx.stroke();
+    });
+    cctx.setLineDash([]);
     cctx.restore();
     var old = {};
     nodes.forEach(function (n) {
@@ -790,7 +814,7 @@
     var p = onCurve(A, c, B, u),
       q = onCurve(A, c, B, u - 0.02 * dirSign);
     var ang = Math.atan2(p[1] - q[1], p[0] - q[0]);
-    ctx.strokeStyle = 'rgba(122,80,194,' + alpha + ')';
+    ctx.strokeStyle = 'rgba(82,67,130,' + alpha + ')';
     ctx.lineWidth = 0.8;
     ctx.beginPath();
     [-0.6, 0.6].forEach(function (da) {
@@ -798,7 +822,7 @@
       ctx.lineTo(p[0] + Math.cos(ang + da) * 6, p[1] + Math.sin(ang + da) * 6);
     });
     ctx.stroke();
-    ctx.fillStyle = 'rgba(106,66,176,' + alpha + ')';
+    ctx.fillStyle = 'rgba(59,47,99,' + alpha + ')';
     ctx.beginPath();
     ctx.arc(p[0], p[1], 2.1, 0, 6.283);
     ctx.fill();
@@ -818,22 +842,49 @@
 
     REGIONS.forEach(function (r) {
       var c = S(r.c[0], r.c[1]),
-        on = state.region === r.id;
-      var g = ctx.createRadialGradient(c[0], c[1], 0, c[0], c[1], 140 * s);
-      g.addColorStop(0, 'rgba(122,80,194,' + (on ? 0.24 : 0.08) + ')');
-      g.addColorStop(1, 'rgba(122,80,194,0)');
+        on = state.region === r.id,
+        rad = (r.id === 'family' ? 132 : 118) * s;
+      var g = ctx.createRadialGradient(c[0], c[1], 0, c[0], c[1], rad * 1.15);
+      g.addColorStop(0, 'rgba(116,86,190,' + (on ? 0.18 : 0.07) + ')');
+      g.addColorStop(0.65, 'rgba(116,86,190,' + (on ? 0.07 : 0.025) + ')');
+      g.addColorStop(1, 'rgba(116,86,190,0)');
       ctx.fillStyle = g;
       ctx.beginPath();
-      ctx.arc(c[0], c[1], 140 * s, 0, 6.283);
+      ctx.arc(c[0], c[1], rad * 1.15, 0, 6.283);
       ctx.fill();
+
+      // Delicate region ring
+      ctx.save();
+      ctx.strokeStyle = 'rgba(99,71,166,' + (on ? 0.38 : state.region ? 0.06 : 0.13) + ')';
+      ctx.lineWidth = on ? 1.25 : 0.85;
+      ctx.setLineDash(on ? [] : [3, 5]);
+      ctx.beginPath();
+      ctx.arc(c[0], c[1], rad * 0.86, 0, 6.283);
+      ctx.stroke();
+      ctx.restore();
+
       if (W >= 560) {
-        var a = on ? 0.95 : state.region ? 0.22 : open ? 0.3 : 0.6;
+        var a = on ? 0.98 : state.region ? 0.3 : open ? 0.42 : 0.78;
+        var fs = Math.max(10, Math.round(11.5 * Math.min(1.2, s * 1.15)));
+        ctx.font = '500 ' + fs + 'px "Atkinson Hyperlegible Mono", "Courier New", monospace';
         ctx.textAlign = 'center';
-        ctx.font =
-          Math.max(11, Math.round(13 * Math.min(1.25, s * 1.2))) +
-          'px "Atkinson Hyperlegible Mono", "Courier New", monospace';
-        ctx.fillStyle = 'rgba(74,48,120,' + a + ')';
-        ctx.fillText(r.name.toUpperCase(), c[0], c[1] - 112 * s);
+        ctx.textBaseline = 'middle';
+        var label = r.name.toUpperCase();
+        var tw = ctx.measureText(label).width;
+        var lx = c[0],
+          ly = c[1] - (r.id === 'family' ? 108 : 98) * s;
+        var pw = tw + 16,
+          ph = fs + 9;
+        ctx.fillStyle = 'rgba(255,255,255,' + Math.min(0.92, a * 1.05) + ')';
+        ctx.strokeStyle = 'rgba(99,71,166,' + a * (on ? 0.55 : 0.25) + ')';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(lx - pw / 2, ly - ph / 2, pw, ph, 3);
+        else ctx.rect(lx - pw / 2, ly - ph / 2, pw, ph);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(65,41,122,' + a + ')';
+        ctx.fillText(label, lx, ly + 0.5);
       }
     });
 
@@ -866,13 +917,13 @@
         c = curve(pA, pB, l.bend),
         g = gapU(pA, pB) * 0.5;
       if (hot) {
-        ctx.strokeStyle = 'rgba(122,80,194,0.1)';
-        ctx.lineWidth = 6;
+        ctx.strokeStyle = 'rgba(82,67,130,0.08)';
+        ctx.lineWidth = 5;
         ctx.beginPath();
         strokeSeg(pA, c, pB, g, 1 - g, 24);
         ctx.stroke();
       }
-      ctx.strokeStyle = 'rgba(122,80,194,' + alpha + ')';
+      ctx.strokeStyle = 'rgba(82,67,130,' + alpha + ')';
       ctx.lineWidth = hot ? 1.3 : 1;
       ctx.beginPath();
       strokeSeg(pA, c, pB, g, 1 - g, 24);
@@ -881,8 +932,8 @@
         var q = onCurve(pA, c, pB, u),
           rr = hot ? 7 : 5;
         var sg = ctx.createRadialGradient(q[0], q[1], 0, q[0], q[1], rr);
-        sg.addColorStop(0, 'rgba(122,80,194,' + Math.min(0.9, alpha * 1.6) + ')');
-        sg.addColorStop(1, 'rgba(122,80,194,0)');
+        sg.addColorStop(0, 'rgba(82,67,130,' + Math.min(0.85, alpha * 1.5) + ')');
+        sg.addColorStop(1, 'rgba(82,67,130,0)');
         ctx.fillStyle = sg;
         ctx.beginPath();
         ctx.arc(q[0], q[1], rr, 0, 6.283);
@@ -893,10 +944,10 @@
           var ph = (t * 0.00007 * (1 + (l.a % 3) * 0.2) + f * 0.5 + l.bend) % 1;
           if (ph < 0) ph += 1;
           var fx = onCurve(pA, c, pB, g + (1 - 2 * g) * ph),
-            fa = Math.sin(ph * Math.PI) * Math.min(0.85, alpha * 2.2);
+            fa = Math.sin(ph * Math.PI) * Math.min(0.75, alpha * 2);
           var fg = ctx.createRadialGradient(fx[0], fx[1], 0, fx[0], fx[1], 4);
-          fg.addColorStop(0, 'rgba(150,110,220,' + fa + ')');
-          fg.addColorStop(1, 'rgba(122,80,194,0)');
+          fg.addColorStop(0, 'rgba(104,89,150,' + fa + ')');
+          fg.addColorStop(1, 'rgba(82,67,130,0)');
           ctx.fillStyle = fg;
           ctx.beginPath();
           ctx.arc(fx[0], fx[1], 4, 0, 6.283);
@@ -917,14 +968,14 @@
         var pA = P[ids[q - 1]],
           pB = P[ids[q]],
           c = curve(pA, pB, -0.18);
-        ctx.strokeStyle = 'rgba(90,60,130,' + (on ? 0.12 : 0.04) + ')';
-        ctx.lineWidth = 7;
+        ctx.strokeStyle = 'rgba(59,47,99,' + (on ? 0.1 : 0.035) + ')';
+        ctx.lineWidth = 6;
         ctx.beginPath();
         ctx.moveTo(pA[0], pA[1]);
         ctx.quadraticCurveTo(c[0], c[1], pB[0], pB[1]);
         ctx.stroke();
-        ctx.strokeStyle = 'rgba(90,60,130,' + (on ? 0.75 : state.region ? 0.08 : 0.22) + ')';
-        ctx.lineWidth = on ? 1.5 : 1;
+        ctx.strokeStyle = 'rgba(59,47,99,' + (on ? 0.7 : state.region ? 0.08 : 0.2) + ')';
+        ctx.lineWidth = on ? 1.4 : 1;
         ctx.beginPath();
         ctx.moveTo(pA[0], pA[1]);
         ctx.quadraticCurveTo(c[0], c[1], pB[0], pB[1]);
@@ -935,13 +986,13 @@
       nodes.forEach(function (n, i) {
         if (!hlIds[n.m.id]) return;
         var c = curve(P[ai], P[i], 0.14);
-        ctx.strokeStyle = 'rgba(122,80,194,0.14)';
-        ctx.lineWidth = 6;
+        ctx.strokeStyle = 'rgba(82,67,130,0.12)';
+        ctx.lineWidth = 5;
         ctx.beginPath();
         ctx.moveTo(P[ai][0], P[ai][1]);
         ctx.quadraticCurveTo(c[0], c[1], P[i][0], P[i][1]);
         ctx.stroke();
-        ctx.strokeStyle = 'rgba(90,53,150,0.6)';
+        ctx.strokeStyle = 'rgba(59,47,99,0.55)';
         ctx.lineWidth = 1.2;
         ctx.beginPath();
         ctx.moveTo(P[ai][0], P[ai][1]);
@@ -975,10 +1026,10 @@
         return false;
       }
       var h = onCurve(A, c, B, u),
-        rad = p.big ? 10 : 6;
+        rad = p.big ? 9 : 5;
       var gr = ctx.createRadialGradient(h[0], h[1], 0, h[0], h[1], rad);
-      gr.addColorStop(0, 'rgba(106,66,176,' + (p.big ? 0.95 : 0.5) + ')');
-      gr.addColorStop(1, 'rgba(122,80,194,0)');
+      gr.addColorStop(0, 'rgba(59,47,99,' + (p.big ? 0.85 : 0.45) + ')');
+      gr.addColorStop(1, 'rgba(82,67,130,0)');
       ctx.fillStyle = gr;
       ctx.beginPath();
       ctx.arc(h[0], h[1], rad, 0, 6.283);
@@ -995,7 +1046,7 @@
       var e = 1 - Math.pow(1 - q, 2);
       var x = b.x + (b.tx - b.x) * e * 0.55 + Math.sin(q * 3.14) * b.wob * 0.3,
         y = b.y + (b.ty - b.y) * e * 0.55 + Math.cos(q * 3.14) * b.wob * 0.3;
-      ctx.fillStyle = 'rgba(106,66,176,' + (1 - q) * (b.big ? 0.95 : 0.6) + ')';
+      ctx.fillStyle = 'rgba(59,47,99,' + (1 - q) * (b.big ? 0.85 : 0.5) + ')';
       ctx.beginPath();
       ctx.arc(x, y, b.big ? 1.6 : 1.2, 0, 6.283);
       ctx.fill();
@@ -1012,35 +1063,60 @@
       var dim =
         (state.region && !inTheme(n.m, state.region)) ||
         (open && i !== ai && !isN && !isHL && n.lit < 0.2);
-      var a = (dim ? 0.3 : 1) * n.born;
+      var a = (dim ? 0.28 : 1) * n.born;
       var bright = i === ai || isH || isHL || n.lit > 0.4;
       var reach = ds * (1 + n.grow * 0.35) * (0.5 + 0.5 * n.born);
-      var r = (5 + n.grow * 3.5 + (isH ? 1.2 : 0) + (isHL ? 1.2 : 0)) * (0.4 + 0.6 * n.born);
-      var glow = 18 + n.grow * 30 + (isH || isN || isHL || n.lit > 0.3 ? 8 : 0);
+      // Delicate branching dendrites around each memory node
+      if (n.dend && (!dim || bright || isN)) {
+        var da = (bright ? 0.34 : isN ? 0.24 : 0.12) * a;
+        ctx.save();
+        ctx.translate(p[0], p[1]);
+        ctx.scale(reach * 0.72, reach * 0.72);
+        ctx.strokeStyle = 'rgba(99,71,166,' + da + ')';
+        n.dend.forEach(function (d) {
+          ctx.lineWidth = d.w * 0.75;
+          ctx.beginPath();
+          ctx.moveTo(d.x0, d.y0);
+          ctx.quadraticCurveTo(d.cx, d.cy, d.x1, d.y1);
+          ctx.stroke();
+        });
+        ctx.restore();
+      }
+      var r = (6.2 + n.grow * 3.8 + (isH ? 1.8 : 0) + (isHL ? 1.4 : 0)) * (0.4 + 0.6 * n.born);
+      var glow = 20 + n.grow * 28 + (isH || isN || isHL || n.lit > 0.3 ? 10 : 0);
       var gg = ctx.createRadialGradient(p[0], p[1], 0, p[0], p[1], glow);
-      gg.addColorStop(0, 'rgba(122,80,194,' + (0.55 * a + n.lit * 0.3 + n.grow * 0.2) + ')');
-      gg.addColorStop(1, 'rgba(122,80,194,0)');
+      gg.addColorStop(0, 'rgba(116,86,190,' + (0.36 * a + n.lit * 0.24 + n.grow * 0.2) + ')');
+      gg.addColorStop(1, 'rgba(116,86,190,0)');
       ctx.fillStyle = gg;
       ctx.beginPath();
       ctx.arc(p[0], p[1], glow, 0, 6.283);
       ctx.fill();
-      var body = ctx.createRadialGradient(p[0] - r * 0.3, p[1] - r * 0.3, 0, p[0], p[1], r);
-      body.addColorStop(0, 'rgba(255,255,255,' + a + ')');
-      body.addColorStop(1, bright ? 'rgba(106,66,176,' + a + ')' : 'rgba(150,115,212,' + a + ')');
+      // Crisp purple cell with white forget-me-not center
+      var body = ctx.createRadialGradient(p[0] - r * 0.25, p[1] - r * 0.25, 0, p[0], p[1], r);
+      body.addColorStop(0, bright ? 'rgba(116,86,190,' + a + ')' : 'rgba(148,124,209,' + a + ')');
+      body.addColorStop(1, bright ? 'rgba(65,41,122,' + a + ')' : 'rgba(99,71,166,' + a + ')');
       ctx.fillStyle = body;
       ctx.beginPath();
       ctx.arc(p[0], p[1], r, 0, 6.283);
       ctx.fill();
-      if (n.grow > 0.05) {
-        ctx.strokeStyle = 'rgba(90,53,150,' + 0.55 * n.grow + ')';
-        ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(255,255,255,' + 0.85 * a + ')';
+      ctx.lineWidth = 1.25;
+      ctx.stroke();
+      // White center pistil dot
+      ctx.fillStyle = 'rgba(255,255,255,' + 0.95 * a + ')';
+      ctx.beginPath();
+      ctx.arc(p[0], p[1], Math.max(1.8, r * 0.34), 0, 6.283);
+      ctx.fill();
+      if (n.grow > 0.05 || isH) {
+        ctx.strokeStyle = 'rgba(65,41,122,' + (isH ? 0.45 : 0.55 * n.grow) + ')';
+        ctx.lineWidth = 1.2;
         ctx.beginPath();
-        ctx.arc(p[0], p[1], r + 8 + n.grow * 4, 0, 6.283);
+        ctx.arc(p[0], p[1], r + 6 + n.grow * 4, 0, 6.283);
         ctx.stroke();
       }
       if (n.m.fresh) {
         ctx.strokeStyle =
-          'rgba(90,53,150,' + (0.35 + (reduce ? 0 : Math.sin(t * 0.004) * 0.25)) + ')';
+          'rgba(59,47,99,' + (0.32 + (reduce ? 0 : Math.sin(t * 0.004) * 0.22)) + ')';
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.arc(p[0], p[1], 30, 0, 6.283);
@@ -1269,7 +1345,7 @@
               );
             })
             .join('') +
-          '</div><p class="hint">Choose one to light those memories up.</p></div>'
+          '</div></div>'
         : '') +
       '<div class="card-links"><button class="linkbtn" id="addAbout">Add another memory about ' +
       esc(who(m.person) || 'this person') +
@@ -1456,7 +1532,7 @@
   function drawChips() {
     var el = $('regionChips');
     el.innerHTML =
-      '<span class="mono lbl">Light up</span>' +
+      '<span class="mono lbl">Themes</span>' +
       REGIONS.map(function (r) {
         return (
           '<button class="fchip" data-r="' +
@@ -1674,28 +1750,28 @@
           .slice(0, all.shown)
           .map(function (m) {
             var f = m.frags[0];
+            var foot = [
+              themeNames(m),
+              who(m.person),
+              m.kind,
+              m.media ? MEDIA_NAME[m.media.type] : '',
+            ]
+              .filter(Boolean)
+              .join(' · ');
             return (
               '<button class="mcard" data-id="' +
               m.id +
               '">' +
-              (meta(m) ? '<span class="mono">' + esc(meta(m)) + '</span>' : '') +
-              '<span class="first">' +
+              '<span class="mcard-top"><span class="mono mcard-no">No. ' +
+              String(m.id).padStart(3, '0') +
+              '</span><span class="mono">' +
+              esc(meta(m) || 'Undated') +
+              '</span></span>' +
+              '<span class="first">“' +
               esc(f ? f[1] : '') +
-              '</span><span class="tags">' +
-              themesOf(m)
-                .map(function (id) {
-                  return '<span class="tag">' + esc((REG[id] || REG.family).name) + '</span>';
-                })
-                .join('') +
-              (who(m.person) ? '<span class="tag who">' + esc(who(m.person)) + '</span>' : '') +
-              (m.kind ? '<span class="tag">' + esc(m.kind) + '</span>' : '') +
-              (m.media
-                ? '<span class="tag">' +
-                  mediaIcon(m.media.type) +
-                  ' ' +
-                  esc(MEDIA_NAME[m.media.type]) +
-                  '</span>'
-                : '') +
+              '”</span>' +
+              '<span class="mcard-foot mono">' +
+              esc(foot) +
               '</span></button>'
             );
           })
@@ -1815,17 +1891,11 @@
         );
       })
       .join('');
-    $('worldCaption').textContent =
-      'Illustrative map, not to scale. ' +
-      (away
-        ? away + (away === 1 ? ' memory comes' : ' memories come') + ' from beyond San Diego.'
-        : 'Memories from other cities and countries appear in the corner.');
+    $('worldCaption').textContent = '';
     $('memCount').textContent = MEMORIES.length;
     $('heroCount').textContent = MEMORIES.length;
     $('heroLinks').textContent = links.length;
-    $('stageHint').textContent = MEMORIES.length
-      ? 'Choose a bright cell to open its memory.'
-      : 'The archive is just getting started. Add the first memory.';
+    $('stageHint').textContent = '';
     drawLatest();
   }
   // The newest few memories, for the hub's Latest panel.
@@ -1839,7 +1909,12 @@
               '<li><button data-id="' +
               m.id +
               '">' +
-              (meta(m) ? '<span class="meta">' + esc(meta(m)) + '</span>' : '') +
+              '<span class="no mono">No. ' +
+              String(m.id).padStart(3, '0') +
+              '</span>' +
+              '<span class="meta">' +
+              esc(meta(m) || 'Undated') +
+              '</span>' +
               '<span class="first">' +
               esc(excerpt(m.text || (f ? f[1] : ''))) +
               '</span></button></li>'
@@ -2745,21 +2820,21 @@
       cy +
       '" r="' +
       R +
-      '"><stop offset=".45" stop-color="#EDE4F8"/><stop offset="1" stop-color="#DCCDF1"/></radialGradient>' +
+      '"><stop offset=".45" stop-color="#EAE4F2"/><stop offset="1" stop-color="#D5CCE6"/></radialGradient>' +
       '<radialGradient id="petalHov" gradientUnits="userSpaceOnUse" cx="' +
       cx +
       '" cy="' +
       cy +
       '" r="' +
       R +
-      '"><stop offset=".45" stop-color="#E2D5F5"/><stop offset="1" stop-color="#C9B3EC"/></radialGradient>' +
+      '"><stop offset=".45" stop-color="#DDD5EA"/><stop offset="1" stop-color="#C0B3DA"/></radialGradient>' +
       '<radialGradient id="petalOn" gradientUnits="userSpaceOnUse" cx="' +
       cx +
       '" cy="' +
       cy +
       '" r="' +
       R +
-      '"><stop offset=".45" stop-color="#D3C0F0"/><stop offset="1" stop-color="#A988DE"/></radialGradient>' +
+      '"><stop offset=".45" stop-color="#CCC0E0"/><stop offset="1" stop-color="#9A88C2"/></radialGradient>' +
       '</defs>';
     function f(v) {
       return v.toFixed(1);
@@ -2864,8 +2939,8 @@
         ? '<span class="mono">' +
           Q.answers.length +
           (Q.answers.length === 1 ? ' answer' : ' answers') +
-          ' so far</span><p>Choose any petal above to read the whole answer.</p>'
-        : '<span class="mono">No answers yet</span><p>Be the first to answer this month’s question.</p>';
+          '</span>'
+        : '<span class="mono">No answers yet</span>';
       return;
     }
     el.innerHTML =

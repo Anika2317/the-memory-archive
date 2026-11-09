@@ -1,143 +1,156 @@
 @use 'tokens' as *;
 
-// The home page as a collection: a title record, then sections set out like a museum's catalog.
+// The home page structured as an archival collection guide / finding aid.
 .hub {
-  padding-block: 2.5rem 0;
+  padding-block: 2.75rem 0;
 }
 
-// The collection's title record.
+// Collection cover sheet / title record.
 .welcome {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 1.25rem 2rem;
-  padding-bottom: 1.75rem;
-  border-bottom: 1px solid var(--line-2);
+  gap: 1.5rem 2.5rem;
+  padding-bottom: 2.25rem;
+  border-bottom: 3px double var(--line-2);
 
+  .welcome-main {
+    max-width: 42rem;
+  }
+  .welcome-kicker {
+    color: var(--plum);
+    margin-bottom: 0.45rem;
+  }
   h1 {
-    font-size: clamp(1.9rem, 3.6vw, 2.7rem);
+    font-size: clamp(2.35rem, 4.4vw, 3.5rem);
     font-weight: 400;
+    letter-spacing: -0.015em;
     color: var(--ink);
 
     em {
       color: var(--plum);
-      font-weight: 400;
+      font-style: normal;
+      font-weight: 600;
     }
   }
   p {
-    margin-top: 0.5rem;
+    margin-top: 0.65rem;
+    font-size: 1.05rem;
     color: var(--muted);
   }
 }
 
 .welcome-stats {
   display: flex;
-  background: var(--cream);
-  border: 1px solid var(--cream-line);
-  border-radius: var(--r-m);
+  border: 1px solid var(--line-2);
+  background: var(--bg-2);
 
   p {
     margin: 0;
-    padding: 0.6rem 1.3rem;
+    padding: 0.7rem 1.25rem;
     font-family: var(--mono);
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--muted);
+    color: var(--faint);
   }
   p + p {
-    border-left: 1px solid var(--cream-line);
+    border-left: 1px solid var(--line-2);
+  }
+  span {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: var(--plum);
   }
   strong {
-    display: block;
+    display: inline;
     font-family: var(--display);
-    font-weight: 400;
+    font-weight: 500;
     font-size: 1.6rem;
-    line-height: 1.15;
+    line-height: 1;
     letter-spacing: 0;
     color: var(--ink);
+    margin-right: 0.25rem;
   }
 }
 
 .hub-grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 1.5rem;
+  gap: 3rem 2.5rem;
   align-items: start;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
 }
 
 .panel {
   position: relative;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--r-m);
-  padding: 1.4rem 1.5rem 1.5rem;
-  box-shadow: 0 1px 2px rgba(45, 20, 80, 0.05);
+  background: transparent;
+  border: 0;
+  padding: 0;
   min-width: 0;
-  scroll-margin-top: 2rem;
+  scroll-margin-top: 4rem;
 }
 
-// A section title with a short purple rule, like a gallery label.
+// Numbered archival section header (I. — VI.)
 .panel-head {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem 0.7rem;
-  margin-bottom: 1.1rem;
-  padding-bottom: 0.8rem;
-  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.15rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--plum);
 
+  .head-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+  }
+  .sec-no {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--plum);
+  }
   h2 {
-    position: relative;
-    font-size: 1.3rem;
+    font-size: clamp(1.35rem, 2.2vw, 1.65rem);
     font-weight: 400;
     color: var(--ink);
-
-    &::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: calc(-0.8rem - 1px);
-      width: 2.5rem;
-      height: 2px;
-      background: var(--lilac);
-    }
+    letter-spacing: -0.01em;
   }
-}
-
-// A small forget-me-not blue-violet seal beside each section title.
-.ico-badge {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 1.9rem;
-  height: 1.9rem;
-  border-radius: 50%;
-  background: var(--paper-2);
-  color: var(--plum);
-  box-shadow: inset 0 0 0 1px var(--line-2);
+  .count {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
 }
 
 .panel-actions {
   margin-left: auto;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem 1.1rem;
-  font-size: 0.9rem;
+  gap: 0.4rem 1.25rem;
+  font-size: 0.88rem;
 }
 
 .panel-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1.1rem;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
 
   .btn-line {
-    padding: 0.55rem 1.05rem;
-    font-size: 0.9rem;
-    background: #fff;
+    padding: 0.45rem 0.95rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: var(--bg-2);
   }
 }
 
@@ -150,59 +163,27 @@
   margin-top: 0.9rem;
 }
 
+// I. Full-width Constellation Plate
 .panel-net {
-  grid-column: span 8;
+  grid-column: span 12;
 
   .under {
-    padding-block: 1rem 0;
+    padding-block: 0.85rem 0;
   }
 }
 
-.hub-side {
-  grid-column: span 4;
-  display: grid;
-  gap: 1.5rem;
-  align-content: start;
-}
-
-// This month's question, set apart in a soft lilac with a purple edge.
-.panel.panel-bloom {
-  background: linear-gradient(180deg, var(--paper-2), #fff 85%);
-  border-color: var(--line-2);
-  border-top: 3px solid var(--lilac);
-
-  .ico-badge {
-    background: #fff;
-  }
-
-  .hub-month {
-    @include mono-small(0.68rem);
-    color: var(--muted);
-  }
-  .hub-q {
-    font-family: var(--display);
-    font-size: 1.35rem;
-    line-height: 1.3;
-    margin-top: 0.4rem;
-  }
-  .hub-note {
-    margin-top: 0.5rem;
-  }
-}
-
-.panel-add p {
-  color: var(--muted);
-}
-
+// II. Recent Acquisitions (Tabular Accession Ledger)
 .panel-latest {
   grid-column: span 7;
 }
 
-// Newest first, each one an accession record.
 .latest {
   list-style: none;
   margin: 0;
   padding: 0;
+  border-top: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--line-2);
+  background: var(--bg-2);
 
   li + li {
     border-top: 1px solid var(--line);
@@ -210,156 +191,186 @@
   button {
     width: 100%;
     display: grid;
-    gap: 0.25rem;
+    grid-template-columns: 4.5rem 9rem minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: baseline;
     text-align: left;
     background: none;
     border: 0;
-    border-left: 2px solid transparent;
-    padding: 0.75rem;
+    border-left: 3px solid transparent;
+    padding: 0.85rem 0.9rem;
     transition:
-      background 0.2s,
-      border-color 0.2s;
+      background 0.15s,
+      border-color 0.15s;
 
     &:hover {
       background: var(--cream);
-      border-left-color: var(--lilac);
+      border-left-color: var(--plum);
     }
   }
+  .no {
+    color: var(--plum);
+    font-size: 0.72rem;
+  }
   .meta {
-    @include mono-small(0.66rem);
-    color: var(--muted);
+    @include mono-small(0.65rem);
+    color: var(--faint);
   }
   .first {
-    font-family: var(--display);
-    font-size: 1.05rem;
-    line-height: 1.45;
+    font-family: var(--body);
+    font-size: 1rem;
+    line-height: 1.42;
     color: var(--ink);
   }
   .empty {
     color: var(--muted);
-    padding: 0.5rem 0;
+    padding: 0.85rem 0.9rem;
   }
 }
 
+// III. The Monthly Bloom (Archival Inquiry / Correspondence Slip)
+.panel.panel-bloom {
+  grid-column: span 5;
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  outline: 1px solid var(--line);
+  outline-offset: -5px;
+  padding: 1.4rem 1.5rem 1.5rem;
+
+  .panel-head {
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.55rem;
+    border-bottom-color: var(--line-2);
+  }
+
+  .hub-month {
+    @include mono-small(0.66rem);
+    color: var(--plum);
+  }
+  .hub-q {
+    font-family: var(--display);
+    font-style: normal;
+    font-weight: 500;
+    font-size: 1.35rem;
+    line-height: 1.32;
+    margin-top: 0.35rem;
+    color: var(--ink);
+  }
+  .hub-note {
+    margin-top: 0.55rem;
+  }
+}
+
+// IV. Catalog Index
+.panel-all {
+  grid-column: span 12;
+  padding-top: 0.5rem;
+}
+
+// V. Geographic Index & VI. Colophon side-by-side at the foot of the finding aid
 .panel-map {
   grid-column: span 5;
+  padding-top: 0.5rem;
 
   .where-map {
     max-width: none;
-    margin-top: 1.1rem;
+    margin-top: 1rem;
   }
 }
 
-.panel-stats {
-  grid-column: span 12;
-
-  .facts {
-    margin-top: 0;
-    gap: 1.5rem;
-  }
-  .fact {
-    border-top: 2px solid var(--lilac);
-    padding-top: 1rem;
-
-    .big {
-      font-family: var(--display);
-      font-size: 2.2rem;
-      color: var(--plum);
-    }
-    .src {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-    }
-  }
-}
-
-.panel-all,
 .panel.panel-about {
-  grid-column: span 12;
-}
-
-.panel-all .mcard {
-  background: #fff;
-  border-radius: var(--r-m);
-}
-
-// A letter from the founders.
-.panel.panel-about {
+  grid-column: span 7;
   max-width: none;
-  padding: 1.75rem clamp(1.5rem, 4vw, 3rem) 2rem;
+  padding-top: 0.5rem;
 
-  .panel-head {
-    padding-right: 8rem;
+  .about-lead {
+    font-family: var(--display);
+    font-size: clamp(1.45rem, 2.3vw, 1.85rem);
+    font-weight: 400;
+    line-height: 1.25;
+    color: var(--ink);
+    margin-bottom: 0.25rem;
+
+    em {
+      color: var(--plum);
+      font-style: normal;
+      font-weight: 600;
+    }
   }
 
   > p,
   > ul {
-    max-width: 46rem;
-    font-size: 1.02rem;
+    max-width: 44rem;
+    font-size: 1rem;
   }
-}
 
-// The collection's seal on the founders' letter.
-.stamp {
-  position: absolute;
-  top: 1.2rem;
-  right: 1.5rem;
-  width: 6.5rem;
-  opacity: 0.55;
-  fill: none;
-  stroke: var(--plum);
+  .facts {
+    margin-top: 1.25rem;
+    border: 1px solid var(--line-2);
+    background: var(--bg-2);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+  .fact {
+    padding: 0.9rem 1rem;
 
-  circle:first-of-type {
-    stroke-width: 2;
-  }
-  circle + circle {
-    stroke-width: 1;
-  }
-  text {
-    fill: var(--plum);
-    stroke: none;
-    font-family: var(--mono);
-    font-weight: 500;
-    font-size: 10px;
-    letter-spacing: 1.4px;
-  }
-  .mid {
-    font-size: 10px;
+    & + .fact {
+      border-left: 1px solid var(--line);
+    }
+    .big {
+      font-family: var(--display);
+      font-size: 1.65rem;
+      color: var(--ink);
+    }
+    p {
+      font-size: 0.86rem;
+      line-height: 1.35;
+      margin-top: 0.25rem;
+    }
+    .src {
+      font-family: var(--mono);
+      font-size: 0.64rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 0.35rem;
+    }
   }
 }
 
 @media (max-width: 64rem) {
-  .panel-net,
-  .hub-side,
   .panel-latest,
-  .panel-map {
+  .panel.panel-bloom,
+  .panel-map,
+  .panel.panel-about {
     grid-column: span 12;
-  }
-  .hub-side {
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
   }
 }
 
 @media (max-width: 40rem) {
-  .panel {
-    padding: 1.1rem;
-  }
   .top .wrap {
     padding-block: 0.55rem;
     gap: 0.4rem 1rem;
   }
-  .brand-org,
-  .stamp {
+  .brand-org {
     display: none;
-  }
-  .panel.panel-about .panel-head {
-    padding-right: 0;
   }
   .nav {
     gap: 0.4rem 1rem;
     font-size: 0.88rem;
   }
   .add-btn {
-    padding: 0.45rem 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+  .latest button {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+  .panel.panel-about .facts {
+    grid-template-columns: 1fr;
+
+    .fact + .fact {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
   }
 }

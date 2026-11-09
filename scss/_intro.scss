@@ -6,8 +6,7 @@
 .intro {
   position: relative;
   color: var(--ink);
-  background: radial-gradient(ellipse 75% 65% at 50% 45%, rgba(252, 248, 251, 0.9), transparent 72%),
-    var(--bg);
+  background: var(--bg);
 }
 
 .intro-frame {
@@ -21,7 +20,7 @@
   content: '';
   position: absolute;
   inset: 1.1rem;
-  border: 1px solid rgba(70, 45, 95, 0.2);
+  border: 1px solid var(--line-2);
   pointer-events: none;
 }
 
@@ -30,17 +29,17 @@
   height: auto;
   fill: none;
   stroke: var(--lilac);
-  stroke-width: 1.3;
+  stroke-width: 1.15;
   stroke-linecap: round;
   stroke-linejoin: round;
-  opacity: 0.6;
+  opacity: 0.45;
   pointer-events: none;
 
   .sprig-heads {
     stroke: var(--plum);
   }
   .eye {
-    fill: rgba(122, 80, 194, 0.25);
+    fill: rgba(82, 67, 130, 0.2);
   }
 }
 .sprig-a {
@@ -54,7 +53,7 @@
   top: 2.5rem;
   width: clamp(4.5rem, 8vw, 6.5rem);
   rotate: 168deg;
-  opacity: 0.45;
+  opacity: 0.35;
 }
 
 .intro-shot {
@@ -64,44 +63,46 @@
 
   .caption {
     font-family: var(--mono);
-    font-size: 0.8rem;
-    letter-spacing: 0.16em;
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--faint);
   }
   // A short rule between the caption and the line.
   .caption::after {
     content: '';
     display: block;
-    width: 2.5rem;
+    width: 2rem;
     height: 1px;
     margin: 1.1rem auto 1.3rem;
-    background: var(--lilac);
-    opacity: 0.6;
+    background: var(--line-2);
   }
   .line {
     font-family: var(--display);
     font-weight: 400;
-    font-size: clamp(1.7rem, 3.8vw, 2.9rem);
-    line-height: 1.25;
-    letter-spacing: -0.01em;
+    font-size: clamp(1.85rem, 4vw, 3.1rem);
+    line-height: 1.24;
+    letter-spacing: -0.015em;
     text-wrap: balance;
   }
 }
 
 .intro-shot.title {
   .name {
-    font-family: var(--script);
-    font-weight: 500;
-    font-size: clamp(2.6rem, 7vw, 4.6rem);
-    line-height: 1.1;
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(2.8rem, 7vw, 4.8rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
     margin-top: 1.5rem;
   }
   .slogan {
-    font-family: var(--script);
-    font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+    font-family: var(--display);
+    font-style: normal;
+    font-weight: 500;
+    font-size: clamp(1.3rem, 2.2vw, 1.75rem);
     color: var(--lilac);
-    margin-top: 0.2rem;
+    margin-top: 0.25rem;
   }
   .cta {
     margin-top: 1.8rem;
@@ -114,49 +115,44 @@
   }
   .cta button {
     @include pill-solid;
-    padding: 0.75rem 1.4rem;
-    font-weight: 600;
-
-    &:hover {
-      box-shadow: 0 8px 24px -10px glow(0.7);
-    }
+    padding: 0.7rem 1.35rem;
+    font-weight: 500;
   }
 }
 
-// The logo's flower (same drawing as favicon.svg), on its own dark mat, split up so it can bloom.
+// Botanical illustration printed directly on the paper, with the logo's petal dots.
 .flower {
-  width: clamp(7.5rem, 15vw, 9.5rem);
+  width: clamp(6.5rem, 13vw, 8.2rem);
   height: auto;
   overflow: visible;
-  padding: 0.7rem;
-  background: #2d1450;
-  border-radius: 22%;
-  box-shadow: 0 16px 30px -18px rgba(45, 20, 80, 0.7);
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
 
   .petal path {
-    fill: #4b336f;
-    stroke: #e2d4fa;
-    stroke-width: 4.5;
+    fill: #e8e1f7;
+    stroke: var(--plum);
+    stroke-width: 3.5;
     stroke-linejoin: round;
   }
   .lights {
-    fill: #fff;
+    fill: var(--lilac);
   }
   .ring {
-    fill: #2d1450;
-    stroke: #e2d4fa;
-    stroke-width: 5;
+    fill: var(--bg);
+    stroke: var(--plum);
+    stroke-width: 4;
   }
   .heart {
-    fill: #4b336f;
-    stroke: #e2d4fa;
-    stroke-width: 2.5;
+    fill: #d8cdf0;
+    stroke: var(--plum);
+    stroke-width: 2.2;
   }
   .pistil {
-    fill: #fff;
+    fill: var(--plum);
   }
   .seeds {
-    fill: #e2d4fa;
+    fill: var(--lilac);
   }
 }
 

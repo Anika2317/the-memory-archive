@@ -1,11 +1,11 @@
 @use 'tokens' as *;
 
 @function flower-icon($petal) {
-  @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-10 -10 20 20'%3E%3Cg fill='%23#{$petal}'%3E%3Ccircle cx='0' cy='-5.2' r='3.6'/%3E%3Ccircle cx='4.95' cy='-1.6' r='3.6'/%3E%3Ccircle cx='3.06' cy='4.2' r='3.6'/%3E%3Ccircle cx='-3.06' cy='4.2' r='3.6'/%3E%3Ccircle cx='-4.95' cy='-1.6' r='3.6'/%3E%3C/g%3E%3Ccircle r='2.3' fill='%23F1CF6B'/%3E%3C/svg%3E");
+  @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-10 -10 20 20'%3E%3Cg fill='%23#{$petal}'%3E%3Ccircle cx='0' cy='-5.2' r='3.6'/%3E%3Ccircle cx='4.95' cy='-1.6' r='3.6'/%3E%3Ccircle cx='3.06' cy='4.2' r='3.6'/%3E%3Ccircle cx='-3.06' cy='4.2' r='3.6'/%3E%3Ccircle cx='-4.95' cy='-1.6' r='3.6'/%3E%3C/g%3E%3Ccircle r='2.3' fill='%23DCD2F2'/%3E%3C/svg%3E");
 }
 
-$petal-edge: rgb(110, 90, 140);
-$petal-gap: #faf7f4;
+$petal-edge: rgb(99, 71, 166);
+$petal-gap: #ffffff;
 
 #qmDlg {
   max-width: min(60rem, calc(100vw - 2rem));
@@ -58,10 +58,10 @@ $petal-gap: #faf7f4;
   position: relative;
   margin-top: 1.25rem;
   height: clamp(32rem, 44vw, 36rem);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-2);
   border-radius: var(--r-m);
   overflow: hidden;
-  background: radial-gradient(ellipse 48% 52% at 50% 50%, #f5f4f7 0%, #fafafa 55%, #fcfcfc 100%);
+  background: var(--bg-2);
 }
 
 .sky-lines {
@@ -130,7 +130,7 @@ $petal-gap: #faf7f4;
   pointer-events: none;
 
   &.gold {
-    background: #e3d3a8;
+    background: #b9a7de;
   }
 }
 
@@ -172,10 +172,10 @@ $petal-gap: #faf7f4;
     transform: translate(-50%, -50%);
     z-index: -1;
     border-radius: 50%;
-    background: radial-gradient(circle, $paper-bg 0 70%, #f3f2f5 100%);
+    background: var(--bg-2);
     box-shadow:
-      0 0 0 1px rgba(122, 80, 194, 0.25),
-      0 14px 34px -18px rgba($night, 0.35);
+      0 0 0 1px var(--line-2),
+      0 12px 28px -18px rgba($night, 0.25);
   }
 
   h3 {
@@ -216,7 +216,7 @@ $petal-gap: #faf7f4;
     width: 15px;
     height: 15px;
     margin: 0 auto 0.35rem;
-    background: flower-icon('B79AE0') center / contain no-repeat;
+    background: flower-icon('9A8EC2') center / contain no-repeat;
     transition: transform 0.5s var(--ease);
   }
 
@@ -229,7 +229,7 @@ $petal-gap: #faf7f4;
     transform: rotate(36deg) scale(1.3);
   }
   &.on::before {
-    background-image: flower-icon('7A50C2');
+    background-image: flower-icon('524382');
   }
   &.mine {
     text-decoration: underline dotted #a898bc;

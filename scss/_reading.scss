@@ -31,8 +31,9 @@
   blockquote {
     margin: 0;
     font-family: var(--display);
-    font-size: clamp(1.6rem, 3.68vw, 2.48rem);
-    line-height: 1.22;
+    font-style: normal;
+    font-size: clamp(1.5rem, 3.2vw, 2.2rem);
+    line-height: 1.35;
   }
   .by {
     color: var(--muted);

@@ -1,10 +1,10 @@
-$lilac: #7a50c2;
-$ink-deep: #2b1d40;
-$paper-bg: #ffffff;
-$night: rgb(60, 35, 100);
-$mist: #8c7aa6;
-$mist-2: #7e6c99;
-$err: #b3264f;
+$lilac: #6347a6;
+$ink-deep: #1e172b;
+$paper-bg: #faf9fd;
+$night: rgb(35, 23, 56);
+$mist: #6e5c94;
+$mist-2: #543d85;
+$err: #9e2a5b;
 
 $bp-bloom: 51rem;
 $bp-stage: 52rem;
@@ -14,34 +14,33 @@ $bp-stage: 52rem;
 }
 
 :root {
-  --bg: #f4f0fa;
+  --bg: #ffffff;
   --bg-2: #{$paper-bg};
-  --ink: #1f1d22;
-  --muted: #57535c;
-  --faint: #6b6670;
+  --ink: #1e172b;
+  --muted: #584c70;
+  --faint: #786b94;
   --lilac: #{$lilac};
-  --plum: #5a3596;
-  --silver: #37343b;
-  --paper: #6b43b5;
-  --paper-2: #f1ebf9;
+  --plum: #41297a;
+  --silver: #2f2442;
+  --paper: #4a3287;
+  --paper-2: #efeaf8;
   --paper-ink: #ffffff;
-  --water: #e7e3f0;
-  --line: #e4e2e7;
-  --line-2: #d0cdd5;
-  --night: #2d1450;
-  // Warm paper, only as a small touch: the stats tag and a hovered record.
-  --cream: #fcf9f3;
-  --cream-line: #ece3d2;
+  --water: #ede8f7;
+  --line: #e6e0f2;
+  --line-2: #cfc5e3;
+  --night: #231738;
+  --cream: #f3effa;
+  --cream-line: #dcd2ed;
 
-  --script: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
-  --bloom: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
-  --display: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
-  --serif: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --script: 'Bricolage Grotesque', 'Atkinson Hyperlegible Next', 'Helvetica Neue', Arial, sans-serif;
+  --bloom: 'Bricolage Grotesque', 'Atkinson Hyperlegible Next', 'Helvetica Neue', Arial, sans-serif;
+  --display: 'Bricolage Grotesque', 'Atkinson Hyperlegible Next', 'Helvetica Neue', Arial,
+    sans-serif;
+  --serif: 'Atkinson Hyperlegible Next', 'Helvetica Neue', Arial, sans-serif;
   --body: 'Atkinson Hyperlegible Next', 'Helvetica Neue', Arial, sans-serif;
   --mono: 'Atkinson Hyperlegible Mono', 'Courier New', monospace;
-  // Corner rounding: small things (buttons, chips, tags), then panels, cards and dialogs.
-  --r-s: 10px;
-  --r-m: 16px;
+  --r-s: 2px;
+  --r-m: 3px;
   --ease: cubic-bezier(0.2, 0.75, 0.2, 1);
   color-scheme: light;
 }
@@ -49,7 +48,7 @@ $bp-stage: 52rem;
 @mixin pill-solid {
   background: var(--paper);
   color: var(--paper-ink);
-  border: 0;
+  border: 1px solid transparent;
   border-radius: var(--r-s);
 
   &:hover {
@@ -62,17 +61,18 @@ $bp-stage: 52rem;
   color: var(--ink);
   border: 1px solid var(--line-2);
   border-radius: var(--r-s);
-  font-weight: 600;
+  font-weight: 500;
 
   &:hover {
     border-color: var(--lilac);
+    background: rgba(82, 67, 130, 0.04);
   }
 }
 
 @mixin mono-small($size) {
   font-family: var(--mono);
   font-weight: 500;
-  font-size: calc($size + 0.04rem);
-  letter-spacing: 0.08em;
+  font-size: calc($size + 0.02rem);
+  letter-spacing: 0.07em;
   text-transform: uppercase;
 }
