@@ -2185,7 +2185,6 @@
       }),
     );
     $('fPersonName').value = personFor(addFor);
-    if (addFor && personFor(addFor)) setAsk(askChips[0], true);
     $('fErr').hidden = true;
     try {
       $('addDlg').showModal();

@@ -509,6 +509,18 @@
             <label for="fWords"><span class="k">What do you remember?</span></label
             ><textarea id="fWords" rows="5"></textarea>
           </div>
+          <div>
+            <label for="fPersonName"><span class="k">Who is it about?</span></label
+            ><input
+              id="fPersonName"
+              type="text"
+              list="peopleList"
+              maxlength="30"
+              autocomplete="off"
+              placeholder="Their name, if you'd like to share it"
+            />
+            <datalist id="peopleList"></datalist>
+          </div>
           <div class="two">
             <div>
               <label for="fYear"><span class="k">When was it?</span></label
@@ -541,14 +553,6 @@
           <div>
             <span class="k" id="askLbl">Add more details</span>
             <div class="ask-pick" id="askPick" role="group" aria-labelledby="askLbl">
-              <button
-                type="button"
-                class="fchip ask"
-                aria-pressed="false"
-                aria-controls="askPerson"
-              >
-                Who it's about
-              </button>
               <button type="button" class="fchip ask" aria-pressed="false" aria-controls="askBy">
                 How you know them
               </button>
@@ -567,19 +571,6 @@
                 A photo or recording
               </button>
             </div>
-          </div>
-          <div class="ask-q" id="askPerson" hidden>
-            <label for="fPersonName"
-              ><span class="k">Who is it about?</span
-              ><span class="q">A first name or nickname</span></label
-            ><input
-              id="fPersonName"
-              type="text"
-              list="peopleList"
-              maxlength="30"
-              autocomplete="off"
-            />
-            <datalist id="peopleList"></datalist>
           </div>
           <div class="ask-q" id="askBy" hidden>
             <label for="fBy"
