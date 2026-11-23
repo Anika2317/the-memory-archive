@@ -337,50 +337,6 @@
   }
 }
 
-// VII. Support & Resources: compact, full width at the foot of the finding aid
-.panel-resources {
-  grid-column: span 12;
-  padding-top: 0.5rem;
-
-  a {
-    color: var(--plum);
-    text-underline-offset: 3px;
-  }
-  .res-lead {
-    color: var(--muted);
-  }
-  .res-list {
-    list-style: none;
-    margin: 0.85rem 0 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
-    gap: 0.4rem 2rem;
-
-    li {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 0.1rem 0.75rem;
-      padding: 0.35rem 0;
-      border-bottom: 1px solid var(--line);
-    }
-    a:first-child {
-      color: var(--ink);
-      font-weight: 600;
-    }
-  }
-  .res-tel {
-    font-family: var(--mono);
-    font-size: 0.85rem;
-    white-space: nowrap;
-  }
-  .res-contact {
-    margin-top: 0.85rem;
-    color: var(--muted);
-  }
-}
-
 @media (max-width: 64rem) {
   .panel-latest,
   .panel.panel-bloom,

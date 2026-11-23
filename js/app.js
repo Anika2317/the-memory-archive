@@ -3180,6 +3180,33 @@
   });
   checkAdmin();
 
+  // Support & Resources: a small card fixed to the side that opens a compact panel.
+  function setResources(open) {
+    $('resPanel').hidden = !open;
+    $('resToggle').setAttribute('aria-expanded', String(open));
+    if (open) $('resClose').focus();
+  }
+  $('resToggle').addEventListener('click', function () {
+    setResources($('resPanel').hidden);
+  });
+  $('resClose').addEventListener('click', function () {
+    setResources(false);
+    $('resToggle').focus();
+  });
+  $('resNav').addEventListener('click', function (e) {
+    e.preventDefault();
+    setResources(true);
+  });
+  document.addEventListener('click', function (e) {
+    if (!$('resPanel').hidden && !e.target.closest('#resources, #resNav')) setResources(false);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !$('resPanel').hidden) {
+      setResources(false);
+      $('resToggle').focus();
+    }
+  });
+
   // Removal requests: the one way for visitors to ask for a memory to be taken down.
   var removalFor = null;
   function openRemoval(m) {

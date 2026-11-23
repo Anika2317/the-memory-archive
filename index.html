@@ -45,7 +45,7 @@
           <button class="navbtn" id="qmOpen">The Monthly Bloom</button>
           <a href="#all">Browse</a>
           <a href="#about">About</a>
-          <a href="#resources">Resources</a>
+          <a href="#resources" id="resNav">Resources</a>
           <button class="add-btn" id="addTop">Add a memory</button>
         </nav>
       </div>
@@ -441,59 +441,78 @@
               </div>
             </div>
           </section>
-
-          <section class="panel panel-resources" id="resources" aria-labelledby="resTitle">
-            <header class="panel-head">
-              <h2 id="resTitle">Support &amp; Resources</h2>
-            </header>
-            <p class="res-lead">
-              Not sure where to start? One call is enough. Just say what's going on.
-            </p>
-            <ul class="res-list">
-              <li>
-                <a href="https://www.alz.org/help-support" target="_blank" rel="noopener"
-                  >Alzheimer's Association Helpline</a
-                ><a class="res-tel" href="tel:18002723900">1-800-272-3900</a>
-              </li>
-              <li>
-                <a href="https://www.alzsd.org/" target="_blank" rel="noopener"
-                  >Alzheimer's San Diego</a
-                ><a class="res-tel" href="tel:8584924400">858-492-4400</a>
-              </li>
-              <li>
-                <a
-                  href="https://www.sandiegocounty.gov/hhsa/programs/ais/"
-                  target="_blank"
-                  rel="noopener"
-                  >SD County Aging &amp; Independence</a
-                ><a class="res-tel" href="tel:18003394661">1-800-339-4661</a>
-              </li>
-              <li>
-                <a href="https://211sandiego.org/" target="_blank" rel="noopener">211 San Diego</a
-                ><a class="res-tel" href="tel:211">Dial 2-1-1</a>
-              </li>
-              <li>
-                <a href="https://www.caregiver.org/" target="_blank" rel="noopener"
-                  >Family Caregiver Alliance</a
-                >
-              </li>
-              <li>
-                <a
-                  href="https://www.alz.org/alzheimers-dementia/10_signs"
-                  target="_blank"
-                  rel="noopener"
-                  >10 early signs of Alzheimer's</a
-                >
-              </li>
-            </ul>
-            <p class="res-contact">
-              Contact us:
-              <a href="mailto:thememoryarchive.sd@gmail.com">thememoryarchive.sd@gmail.com</a>
-            </p>
-          </section>
         </div>
       </div>
     </main>
+
+    <aside class="res-float" id="resources" aria-label="Support and resources">
+      <div class="res-panel" id="resPanel" hidden>
+        <div class="res-panel-head">
+          <h2 id="resTitle">Support &amp; Resources</h2>
+          <button class="close" id="resClose" aria-label="Close resources">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+        <p class="res-lead">
+          Not sure where to start? One call is enough. Just say what's going on.
+        </p>
+        <ul class="res-list">
+          <li>
+            <a href="https://www.alz.org/help-support" target="_blank" rel="noopener"
+              >Alzheimer's Association Helpline</a
+            ><a class="res-tel" href="tel:18002723900">1-800-272-3900</a>
+          </li>
+          <li>
+            <a href="https://www.alzsd.org/" target="_blank" rel="noopener">Alzheimer's San Diego</a
+            ><a class="res-tel" href="tel:8584924400">858-492-4400</a>
+          </li>
+          <li>
+            <a
+              href="https://www.sandiegocounty.gov/hhsa/programs/ais/"
+              target="_blank"
+              rel="noopener"
+              >SD County Aging &amp; Independence</a
+            ><a class="res-tel" href="tel:18003394661">1-800-339-4661</a>
+          </li>
+          <li>
+            <a href="https://211sandiego.org/" target="_blank" rel="noopener">211 San Diego</a
+            ><a class="res-tel" href="tel:211">Dial 2-1-1</a>
+          </li>
+          <li>
+            <a href="https://www.caregiver.org/" target="_blank" rel="noopener"
+              >Family Caregiver Alliance</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://www.alz.org/alzheimers-dementia/10_signs"
+              target="_blank"
+              rel="noopener"
+              >10 early signs of Alzheimer's</a
+            >
+          </li>
+        </ul>
+        <p class="res-contact">
+          Contact us:
+          <a href="mailto:thememoryarchive.sd@gmail.com">thememoryarchive.sd@gmail.com</a>
+        </p>
+      </div>
+      <button class="res-toggle" id="resToggle" aria-expanded="false" aria-controls="resPanel">
+        <img src="favicon.svg" width="22" height="22" alt="" />
+        <span><strong>Need support?</strong><small>Resources</small></span>
+      </button>
+    </aside>
 
     <footer>
       <div class="wrap">
