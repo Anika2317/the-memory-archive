@@ -1,54 +1,17 @@
 @use 'tokens' as *;
 
 @media (max-width: $bp-bloom) {
-  .sky {
-    height: auto;
-    padding: 1.25rem;
-    display: grid;
-    gap: 0.6rem;
+  .qm-body {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'ask'
+      'flower'
+      'detail';
+    grid-template-rows: auto;
   }
-  .sky-lines,
-  .bgstar {
-    display: none;
-  }
-
-  .sky-q {
-    position: static;
-    transform: none;
-    width: auto;
-    margin-bottom: 0.6rem;
-
-    &::before {
-      display: none;
-    }
-  }
-
-  .bubble {
-    position: static;
-    transform: none;
-    max-width: none;
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    text-align: left;
-    background: var(--bg-2);
-    border: 1px solid var(--line);
-    padding: 0.7rem 0.9rem;
-    text-shadow: none;
-    color: var(--silver);
-
-    &:hover,
-    &.on {
-      color: var(--plum);
-    }
-    &::before {
-      display: block;
-      margin: 0;
-      flex: none;
-    }
-    &.on {
-      border-color: var(--line-2);
-    }
+  .qm-flower {
+    justify-self: center;
+    max-width: 24rem;
   }
 }
 

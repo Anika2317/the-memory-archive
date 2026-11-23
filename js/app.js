@@ -2661,23 +2661,123 @@
   });
   var QUESTIONS = [{ month: 'November 2026', q: 'What’s a memory worth keeping?', answers: [] }];
   var qm = { i: 0, sel: -1 };
-  function qmBuildStars() {
-    var sky = $('sky'),
-      r = rng(911);
-    for (var i = 0; i < 34; i++) {
-      var d = document.createElement('span');
-      d.className = 'bgstar' + (r() < 0.3 ? ' gold' : '');
-      d.style.left = r() * 100 + '%';
-      d.style.top = r() * 100 + '%';
-      d.style.animationDelay = -r() * 4 + 's';
-      if (r() < 0.4) {
-        d.style.width = d.style.height = '2px';
+  // The Monthly Bloom is drawn as the logo's forget-me-not. Each answer is a glowing dot on a
+  // petal's edge, the way the logo's dots sit around its petals.
+  var QM_CAP = 60;
+  var PETAL_D =
+    'M0 -20 C-22 -26 -38 -50 -32 -68 C-29 -80 -15 -86 -6 -81 L0 -77 L6 -81 C15 -86 29 -80 32 -68 C38 -50 22 -26 0 -20 Z';
+  // The petal's outer edge (from one side, over the notched tip, to the other), as evenly spaced points.
+  var PETAL_EDGE = (function () {
+    var segs = [
+      [
+        [0, -20],
+        [-22, -26],
+        [-38, -50],
+        [-32, -68],
+      ],
+      [
+        [-32, -68],
+        [-29, -80],
+        [-15, -86],
+        [-6, -81],
+      ],
+      [
+        [-6, -81],
+        [-6, -81],
+        [0, -77],
+        [0, -77],
+      ],
+      [
+        [0, -77],
+        [0, -77],
+        [6, -81],
+        [6, -81],
+      ],
+      [
+        [6, -81],
+        [15, -86],
+        [29, -80],
+        [32, -68],
+      ],
+      [
+        [32, -68],
+        [38, -50],
+        [22, -26],
+        [0, -20],
+      ],
+    ];
+    var pts = [];
+    segs.forEach(function (c) {
+      for (var i = 0; i <= 40; i++) {
+        var t = i / 40,
+          u = 1 - t;
+        pts.push([
+          u * u * u * c[0][0] +
+            3 * u * u * t * c[1][0] +
+            3 * u * t * t * c[2][0] +
+            t * t * t * c[3][0],
+          u * u * u * c[0][1] +
+            3 * u * u * t * c[1][1] +
+            3 * u * t * t * c[2][1] +
+            t * t * t * c[3][1],
+        ]);
       }
-      sky.insertBefore(d, sky.firstChild);
+    });
+    // keep the outer part only; the base of each petal is hidden by the flower's center
+    pts = pts.filter(function (q) {
+      return Math.hypot(q[0], q[1]) > 40;
+    });
+    var len = [0];
+    for (var i = 1; i < pts.length; i++)
+      len.push(len[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+    return { pts: pts, len: len, total: len[len.length - 1] };
+  })();
+  function edgeAt(f) {
+    var e = PETAL_EDGE,
+      target = f * e.total;
+    for (var i = 1; i < e.pts.length; i++) {
+      if (e.len[i] >= target) {
+        var k = (target - e.len[i - 1]) / (e.len[i] - e.len[i - 1] || 1);
+        return [
+          e.pts[i - 1][0] + (e.pts[i][0] - e.pts[i - 1][0]) * k,
+          e.pts[i - 1][1] + (e.pts[i][1] - e.pts[i - 1][1]) * k,
+        ];
+      }
     }
+    return e.pts[e.pts.length - 1];
   }
-  // Lay petals out over at least this many slots, so one or two answers still form a flower.
-  var QM_MIN_SLOTS = 6;
+  // Where the k dots on one petal go, along its edge: the logo's four spots first, then evenly spread.
+  function petalSpots(k) {
+    if (k <= 4) return [0.36, 0.64, 0.14, 0.86].slice(0, k);
+    var out = [];
+    for (var i = 0; i < k; i++) out.push(0.06 + (0.88 * (i + 0.5)) / k);
+    return out;
+  }
+  // Petal-local point → percent position in the flower box (matching the logo's transform).
+  function spotPos(pt, petal) {
+    var r = (petal * 72 * Math.PI) / 180,
+      x = (pt[0] * Math.cos(r) - pt[1] * Math.sin(r)) * 0.9,
+      y = (pt[0] * Math.sin(r) + pt[1] * Math.cos(r)) * 0.9 + 5;
+    return [(x + 100) / 2, (y + 100) / 2];
+  }
+  function qmDrawFlower() {
+    var html = '';
+    for (var p = 0; p < 5; p++)
+      html +=
+        '<path class="qm-petal" data-petal="' +
+        p +
+        '" d="' +
+        PETAL_D +
+        '" transform="translate(0 5) scale(.9) rotate(' +
+        p * 72 +
+        ')" style="animation-delay:' +
+        (p * 0.07).toFixed(2) +
+        's"/>';
+    html +=
+      '<g transform="translate(0 5) scale(.9)"><circle class="qm-c1" r="21"/><circle class="qm-c2" r="13"/><circle class="qm-c3" r="4.5"/>' +
+      '<g class="qm-c4"><circle cy="-8.5" r="1.9"/><circle cx="8.1" cy="-2.6" r="1.9"/><circle cx="5" cy="6.9" r="1.9"/><circle cx="-5" cy="6.9" r="1.9"/><circle cx="-8.1" cy="-2.6" r="1.9"/></g></g>';
+    $('qmPetals').innerHTML = html;
+  }
   function qmRender() {
     var Q = QUESTIONS[qm.i];
     $('qmMonths').hidden = QUESTIONS.length < 2;
@@ -2701,7 +2801,9 @@
           qmRender();
         });
       });
-    $('skyQ').innerHTML =
+    var n = Q.answers.length,
+      shown = Math.min(n, n > QM_CAP ? QM_CAP - 1 : QM_CAP);
+    $('qmAsk').innerHTML =
       '<span class="mono">' +
       esc(Q.month) +
       (qm.i === 0 ? ' · This month' : '') +
@@ -2709,64 +2811,68 @@
       esc(Q.q) +
       '</h3><button class="add-btn" id="qmAnswer">Answer this question</button>';
     $('qmAnswer').addEventListener('click', openAnswer);
-    var n = Q.answers.length,
-      shown = n > 12 ? 11 : n,
-      total = shown + (n > 12 ? 1 : 0),
-      slots = Math.max(total, QM_MIN_SLOTS),
+    // Answers take turns around the petals, so the flower fills evenly.
+    var per = [0, 0, 0, 0, 0];
+    for (var j = 0; j < shown; j++) per[j % 5]++;
+    var spots = per.map(petalSpots),
       html = '';
-    function slot(k) {
-      var t = ((-90 + (k * 360) / slots) * Math.PI) / 180;
-      return [50 + 40 * Math.cos(t), 50 + 43 * Math.sin(t)];
+    if (!shown) {
+      for (var p = 0; p < 5; p++)
+        petalSpots(4).forEach(function (f) {
+          var pos = spotPos(edgeAt(f), p);
+          html +=
+            '<span class="qm-dot ghost" style="left:' +
+            pos[0].toFixed(2) +
+            '%;top:' +
+            pos[1].toFixed(2) +
+            '%"></span>';
+        });
     }
-    for (var j = 0; j < shown; j++) {
-      var sl = slot(j),
-        a = Q.answers[j];
+    for (j = 0; j < shown; j++) {
+      var a = Q.answers[j],
+        pe = j % 5,
+        pos2 = spotPos(edgeAt(spots[pe][Math.floor(j / 5)]), pe);
       html +=
-        '<button class="bubble' +
+        '<button class="qm-dot' +
         (a.mine ? ' mine' : '') +
         (qm.sel === j ? ' on' : '') +
         '" data-b="' +
         j +
-        '" style="left:' +
-        sl[0].toFixed(2) +
-        '%;top:' +
-        sl[1].toFixed(2) +
-        '%;animation-delay:' +
-        (0.25 + j * 0.06).toFixed(2) +
-        's">' +
+        '" data-petal="' +
+        pe +
+        '" aria-label="' +
         esc(a.s) +
-        '</button>';
-    }
-    if (n > 12) {
-      var sl2 = slot(shown);
-      html +=
-        '<button class="bubble more" data-b="more" style="left:' +
-        sl2[0].toFixed(2) +
+        '" style="left:' +
+        pos2[0].toFixed(2) +
         '%;top:' +
-        sl2[1].toFixed(2) +
-        '%">+' +
-        (n - 11) +
-        ' more answers</button>';
+        pos2[1].toFixed(2) +
+        '%;animation-delay:' +
+        (0.35 + j * 0.03).toFixed(2) +
+        's"></button>';
     }
-    $('skyBubbles').innerHTML = html;
-    $('skyBubbles')
+    $('qmDots').innerHTML = html;
+    $('qmDots')
       .querySelectorAll('[data-b]')
       .forEach(function (b) {
-        var v = b.getAttribute('data-b');
+        var v = +b.getAttribute('data-b');
         b.addEventListener('click', function () {
-          qmSelect(v === 'more' ? 'more' : +v);
+          qmSelect(v);
         });
         b.addEventListener('mouseenter', function () {
-          qmHover(v, true);
+          qmTip(b, true);
         });
         b.addEventListener('mouseleave', function () {
-          qmHover(v, false);
+          qmTip(b, false);
+        });
+        b.addEventListener('focus', function () {
+          qmTip(b, true);
+        });
+        b.addEventListener('blur', function () {
+          qmTip(b, false);
         });
       });
+    qmPetalState();
     qmDetail();
-    requestAnimationFrame(function () {
-      qmLines(true);
-    });
     var now = QUESTIONS[0];
     $('hubMonth').textContent = now.month;
     $('hubQ').textContent = now.q;
@@ -2781,131 +2887,48 @@
   $('hubBloom').addEventListener('click', function () {
     $('qmOpen').click();
   });
-  function qmHover(v, on) {
-    var p = $('skyLines').querySelector('.petal[data-p="' + v + '"]');
-    if (p) p.classList.toggle('hov', on);
-  }
-  function qmLines(grow) {
-    var svg = $('skyLines'),
-      sky = $('sky');
-    if (window.matchMedia('(max-width: 51rem)').matches) {
-      svg.innerHTML = '';
+  // A short preview of the answer, floating by its dot.
+  function qmTip(dot, on) {
+    var tip = $('qmTip'),
+      petal = dot.getAttribute('data-petal');
+    $('qmPetals')
+      .querySelectorAll('.qm-petal')
+      .forEach(function (p) {
+        p.classList.toggle('hov', on && p.getAttribute('data-petal') === petal);
+      });
+    if (!on) {
+      tip.hidden = true;
       return;
     }
-    var box = sky.getBoundingClientRect();
-    if (!box.width) return;
-    svg.setAttribute('viewBox', '0 0 ' + box.width + ' ' + box.height);
-    var els = [].slice.call($('skyBubbles').querySelectorAll('.bubble'));
-    var blank = !els.length,
-      n = blank ? 8 : Math.max(els.length, QM_MIN_SLOTS),
-      cx = box.width / 2,
-      cy = box.height / 2;
-    var R = box.height / 2 - 64,
-      hw = Math.min(R * Math.sin(Math.PI / n) * 0.95, R * 0.42);
-    var out =
-      '<defs>' +
-      '<radialGradient id="petalFill" gradientUnits="userSpaceOnUse" cx="' +
-      cx +
-      '" cy="' +
-      cy +
-      '" r="' +
-      R +
-      '"><stop offset=".45" stop-color="#EAE4F2"/><stop offset="1" stop-color="#D5CCE6"/></radialGradient>' +
-      '<radialGradient id="petalHov" gradientUnits="userSpaceOnUse" cx="' +
-      cx +
-      '" cy="' +
-      cy +
-      '" r="' +
-      R +
-      '"><stop offset=".45" stop-color="#DDD5EA"/><stop offset="1" stop-color="#C0B3DA"/></radialGradient>' +
-      '<radialGradient id="petalOn" gradientUnits="userSpaceOnUse" cx="' +
-      cx +
-      '" cy="' +
-      cy +
-      '" r="' +
-      R +
-      '"><stop offset=".45" stop-color="#CCC0E0"/><stop offset="1" stop-color="#9A88C2"/></radialGradient>' +
-      '</defs>';
-    function f(v) {
-      return v.toFixed(1);
-    }
-    for (var i = 0; i < n; i++) {
-      var el = els[i] || null;
-      var t = ((-90 + (i * 360) / n) * Math.PI) / 180,
-        ux = Math.cos(t),
-        uy = Math.sin(t),
-        nx = -uy,
-        ny = ux;
-      function pt(a, o) {
-        return f(cx + ux * R * a + nx * o) + ' ' + f(cy + uy * R * a + ny * o);
-      }
-      var v = el ? el.getAttribute('data-b') : '',
-        on = el && String(qm.sel) === v;
-      if (grow && el) {
-        el.classList.remove('grow');
-        void el.offsetWidth;
-        el.classList.add('grow');
-      }
-      var g = grow
-        ? ' grow" style="transform-origin:' +
-          f(cx) +
-          'px ' +
-          f(cy) +
-          'px;animation-delay:' +
-          (i * 0.06).toFixed(2) +
-          's'
-        : '';
-      out +=
-        '<g class="petal' +
-        (on ? ' on' : '') +
-        (el ? '' : ' blank') +
-        g +
-        '" data-p="' +
-        v +
-        '"><path d="M' +
-        pt(0, 0) +
-        ' C' +
-        pt(0.25, hw * 0.7) +
-        ' ' +
-        pt(0.45, hw) +
-        ' ' +
-        pt(0.68, hw) +
-        ' C' +
-        pt(0.9, hw) +
-        ' ' +
-        pt(1, hw * 0.5) +
-        ' ' +
-        pt(1, 0) +
-        ' C' +
-        pt(1, -hw * 0.5) +
-        ' ' +
-        pt(0.9, -hw) +
-        ' ' +
-        pt(0.68, -hw) +
-        ' C' +
-        pt(0.45, -hw) +
-        ' ' +
-        pt(0.25, -hw * 0.7) +
-        ' ' +
-        pt(0, 0) +
-        'Z"/>' +
-        '<path class="vein" d="M' +
-        pt(0.4, 0) +
-        ' L' +
-        pt(0.88, 0) +
-        '"/></g>';
-    }
-    svg.innerHTML = out;
+    var a = QUESTIONS[qm.i].answers[+dot.getAttribute('data-b')];
+    tip.textContent = a.s;
+    var x = parseFloat(dot.style.left),
+      y = parseFloat(dot.style.top);
+    tip.style.left = Math.min(Math.max(x, 22), 78) + '%';
+    tip.style.top = y + '%';
+    tip.classList.toggle('below', y < 30);
+    tip.hidden = false;
+  }
+  // The petal holding the chosen answer lights up.
+  function qmPetalState() {
+    var d = $('qmDots').querySelector('.qm-dot.on'),
+      petal = d ? d.getAttribute('data-petal') : null;
+    $('qmPetals')
+      .querySelectorAll('.qm-petal')
+      .forEach(function (p) {
+        p.classList.toggle('on', p.getAttribute('data-petal') === petal);
+      });
   }
   function qmSelect(j) {
     qm.sel = j;
-    $('skyBubbles')
+    $('qmTip').hidden = true;
+    $('qmDots')
       .querySelectorAll('[data-b]')
       .forEach(function (b) {
         b.classList.toggle('on', b.getAttribute('data-b') === String(j));
       });
+    qmPetalState();
     qmDetail();
-    qmLines(false);
   }
   function qmDetail() {
     var Q = QUESTIONS[qm.i],
@@ -2916,7 +2939,7 @@
         esc(Q.month) +
         '</span><ul>' +
         Q.answers
-          .slice(11)
+          .slice(QM_CAP - 1)
           .map(function (a) {
             return '<li>' + esc(a.s) + '</li>';
           })
@@ -2926,12 +2949,22 @@
     }
     var a = Q.answers[qm.sel];
     if (!a) {
-      el.innerHTML = Q.answers.length
+      var n = Q.answers.length;
+      el.innerHTML = n
         ? '<span class="mono">' +
-          Q.answers.length +
-          (Q.answers.length === 1 ? ' answer' : ' answers') +
-          '</span>'
-        : '<span class="mono">No answers yet</span>';
+          n +
+          (n === 1 ? ' answer' : ' answers') +
+          '</span><p>Each dot on the flower is an answer. Choose one to read it.</p>' +
+          (n > QM_CAP
+            ? '<button class="linkbtn" id="qmMore">See ' +
+              (n - QM_CAP + 1) +
+              ' more answers</button>'
+            : '')
+        : '<span class="mono">No answers yet</span><p>Be the first to answer. Your answer becomes a dot on the flower.</p>';
+      if ($('qmMore'))
+        $('qmMore').addEventListener('click', function () {
+          qmSelect('more');
+        });
       return;
     }
     el.innerHTML =
@@ -3040,29 +3073,20 @@
     } catch (e) {
       $('qmDlg').setAttribute('open', '');
     }
-    requestAnimationFrame(function () {
-      qmLines(true);
-    });
+    qmGrow();
   });
-  $('skyLines').addEventListener('click', function (e) {
-    var p = e.target.closest('.petal');
-    if (p) {
-      var v = p.getAttribute('data-p');
-      qmSelect(v === 'more' ? 'more' : +v);
-    }
-  });
+  // Replays the bloom-in animation each time the dialog opens.
+  function qmGrow() {
+    var f = $('qmFlower');
+    f.classList.remove('grow');
+    void f.offsetWidth;
+    f.classList.add('grow');
+  }
   $('qmClose').addEventListener('click', function () {
     $('qmDlg').close();
   });
   $('qmDlg').addEventListener('click', function (e) {
     if (e.target === this) this.close();
-  });
-  var qrt;
-  window.addEventListener('resize', function () {
-    clearTimeout(qrt);
-    qrt = setTimeout(function () {
-      qmLines(false);
-    }, 120);
   });
   // Loads everything on first call, then only rows newer than what this tab has seen.
   var lastId = { memories: 0, answers: 0 };
@@ -3134,7 +3158,7 @@
   fillFilters();
   drawList();
   drawDots();
-  qmBuildStars();
+  qmDrawFlower();
   qmRender();
   // A private link (#manage=<row id>.<key>) hands this browser the key, then opens "Remove a memory",
   // where that memory is listed with its Delete button.

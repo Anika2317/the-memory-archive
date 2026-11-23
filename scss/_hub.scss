@@ -337,7 +337,7 @@
   }
 }
 
-// VII. Support & Resources, full width at the foot of the finding aid
+// VII. Support & Resources: compact, full width at the foot of the finding aid
 .panel-resources {
   grid-column: span 12;
   padding-top: 0.5rem;
@@ -347,70 +347,37 @@
     text-underline-offset: 3px;
   }
   .res-lead {
-    max-width: 44rem;
-    font-size: 1.05rem;
     color: var(--muted);
   }
-  .res-urgent {
-    margin-top: 1.25rem;
-    padding: 0.9rem 1.1rem;
-    border-left: 3px solid var(--plum);
-    background: var(--bg-2);
-    color: var(--ink);
-    font-size: 0.95rem;
-
-    strong {
-      display: block;
-      margin-bottom: 0.2rem;
-    }
-    a {
-      font-weight: 600;
-    }
-  }
-  .res-grid {
+  .res-list {
+    list-style: none;
+    margin: 0.85rem 0 0;
+    padding: 0;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.75rem 2rem;
-    margin-top: 1.75rem;
-  }
-  .res-group {
-    h3 {
-      @include mono-small(0.7rem);
-      color: var(--plum);
-      padding-bottom: 0.45rem;
-      margin-bottom: 0.75rem;
-      border-bottom: 1px solid var(--line-2);
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: 0.4rem 2rem;
+
+    li {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.1rem 0.75rem;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid var(--line);
     }
-    ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      gap: 1rem;
-    }
-    li > a:first-child {
-      display: block;
-      font-weight: 600;
+    a:first-child {
       color: var(--ink);
-    }
-    .res-tel {
-      display: inline-block;
-      margin-top: 0.15rem;
-      font-family: var(--mono);
-      font-size: 0.85rem;
-    }
-    span {
-      display: block;
-      margin-top: 0.2rem;
-      font-size: 0.88rem;
-      line-height: 1.4;
-      color: var(--muted);
+      font-weight: 600;
     }
   }
-  .res-note {
-    margin-top: 1.75rem;
+  .res-tel {
+    font-family: var(--mono);
     font-size: 0.85rem;
-    color: var(--faint);
+    white-space: nowrap;
+  }
+  .res-contact {
+    margin-top: 0.85rem;
+    color: var(--muted);
   }
 }
 
@@ -420,9 +387,6 @@
   .panel-map,
   .panel.panel-about {
     grid-column: span 12;
-  }
-  .panel-resources .res-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -444,9 +408,6 @@
   .latest button {
     grid-template-columns: 1fr;
     gap: 0.2rem;
-  }
-  .panel-resources .res-grid {
-    grid-template-columns: 1fr;
   }
   .panel.panel-about .facts {
     grid-template-columns: 1fr;
