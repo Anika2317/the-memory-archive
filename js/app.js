@@ -3183,7 +3183,9 @@
   // Support & Resources: a small card fixed to the side that opens a compact panel.
   function setResources(open) {
     $('resPanel').hidden = !open;
+    $('resBackdrop').hidden = !open;
     $('resToggle').setAttribute('aria-expanded', String(open));
+    document.documentElement.classList.toggle('res-open', open);
     if (open) $('resClose').focus();
   }
   $('resToggle').addEventListener('click', function () {
@@ -3198,7 +3200,11 @@
     setResources(true);
   });
   document.addEventListener('click', function (e) {
-    if (!$('resPanel').hidden && !e.target.closest('#resources, #resNav')) setResources(false);
+    if (
+      !$('resPanel').hidden &&
+      (e.target === $('resBackdrop') || !e.target.closest('#resources, #resNav'))
+    )
+      setResources(false);
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && !$('resPanel').hidden) {
