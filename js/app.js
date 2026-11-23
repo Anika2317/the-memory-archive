@@ -161,7 +161,7 @@
 
   function byLine(rel) {
     rel = rel.trim();
-    if (!rel || /^it'?s my own/i.test(rel)) return 'In their own words';
+    if (!rel || /^it'?s my own/i.test(rel)) return 'Shared by them';
     return 'Shared by ' + rel.replace(/^(i'?m|i am)\s+/i, '');
   }
   var MEDIA_NAME = {
@@ -331,8 +331,9 @@
     if (state.active != null) openMemory(state.active);
     qmDetail();
   }
+  // Only admins delete. Everyone else uses the single "Request a memory removal" link.
   function canDelete(table, rowId) {
-    return online && rowId != null && (!!admin || !!ownKeys()[table][rowId]);
+    return online && rowId != null && !!admin;
   }
   function removeRow(table, rowId) {
     var fn = table === 'memories' ? 'delete_memory' : 'delete_answer';
@@ -340,16 +341,18 @@
       if (!ok) throw new Error('not allowed');
     });
   }
-  // The private link holds the memory's delete key, so whoever has it can delete that memory.
+
+  // The private link holds a memory's delete key, so it can be deleted from any device.
   function privateLink(m) {
     var key = ownKeys().memories[m.rowId];
     return key ? location.origin + location.pathname + '#manage=' + m.rowId + '.' + key : null;
   }
   function copyText(input, btn) {
+    var label = btn.textContent;
     var done = function () {
       btn.textContent = 'Copied';
       setTimeout(function () {
-        btn.textContent = 'Copy link';
+        btn.textContent = label;
       }, 2000);
     };
     input.select();
@@ -1282,7 +1285,7 @@
       });
     });
     var nLinked = Object.keys(linked).length;
-    var link = online && m.rowId != null ? privateLink(m) : null;
+    var link = banner && online && m.rowId != null ? privateLink(m) : null;
     var card = $('card');
     card.innerHTML =
       '<button class="close" id="cardClose" aria-label="Close this memory"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
@@ -1353,19 +1356,14 @@
       (admin && online && m.rowId != null
         ? '<button class="linkbtn" id="editMem">Edit this memory</button>'
         : '') +
-      (link && !banner ? '<button class="linkbtn" id="showLink">Your private link</button>' : '') +
       (canDelete('memories', m.rowId)
         ? '<button class="linkbtn danger" id="delMem">Delete this memory</button>'
-        : online && m.rowId != null
-          ? '<button class="linkbtn" id="askRemove">Ask us to remove this memory</button>'
-          : '') +
+        : '') +
       '</div><p class="err" id="delMemErr" hidden></p>' +
       (link
-        ? '<div class="private-link" id="linkBox"' +
-          (banner ? '' : ' hidden') +
-          '><span class="mono">Your private link</span><p>Save or bookmark this link to delete your memory later, from any device. Anyone with this link can delete this memory, so keep it to yourself.</p><div class="copy-row"><input id="linkIn" readonly aria-label="Your private link" value="' +
+        ? '<div class="private-link"><span class="mono">Your private link</span><p>Save or bookmark this link. Open it on any device to delete this memory later, from “Remove a memory”. Anyone with this link can delete it, so keep it to yourself.</p><div class="copy-row"><input id="linkIn" readonly aria-label="Your private link" value="' +
           esc(link) +
-          '"><button class="btn-line" id="linkCopy">Copy link</button></div><p class="hint">Lost it? You can still ask us to remove the memory.</p></div>'
+          '"><button class="btn-line" id="linkCopy">Copy link</button></div></div>'
         : '');
     $('stage').classList.add('open');
     card.scrollTop = 0;
@@ -1380,24 +1378,14 @@
       $('editMem').addEventListener('click', function () {
         openEdit(m);
       });
+    if ($('linkCopy'))
+      $('linkCopy').addEventListener('click', function () {
+        copyText($('linkIn'), this);
+      });
     var dm = $('delMem');
     if (dm)
       dm.addEventListener('click', function () {
         deleteMemory(m, dm);
-      });
-    var ar = $('askRemove');
-    if (ar)
-      ar.addEventListener('click', function () {
-        openRemoval(m);
-      });
-    var sl = $('showLink');
-    if (sl)
-      sl.addEventListener('click', function () {
-        $('linkBox').hidden = !$('linkBox').hidden;
-      });
-    if ($('linkCopy'))
-      $('linkCopy').addEventListener('click', function () {
-        copyText($('linkIn'), this);
       });
     var sn = $('sibNext');
     if (sn)
@@ -1482,7 +1470,7 @@
       mediaBlock(m) +
       '<p class="by">' +
       esc(m.by) +
-      ' · from someone living with Alzheimer’s and their family</p>' +
+      '</p>' +
       (pieces(m).length && !wordsArePieces(m)
         ? '<p class="pieces">' +
           pieces(m)
@@ -2688,6 +2676,8 @@
       sky.insertBefore(d, sky.firstChild);
     }
   }
+  // Lay petals out over at least this many slots, so one or two answers still form a flower.
+  var QM_MIN_SLOTS = 6;
   function qmRender() {
     var Q = QUESTIONS[qm.i];
     $('qmMonths').hidden = QUESTIONS.length < 2;
@@ -2722,9 +2712,10 @@
     var n = Q.answers.length,
       shown = n > 12 ? 11 : n,
       total = shown + (n > 12 ? 1 : 0),
+      slots = Math.max(total, QM_MIN_SLOTS),
       html = '';
     function slot(k) {
-      var t = ((-90 + (k * 360) / total) * Math.PI) / 180;
+      var t = ((-90 + (k * 360) / slots) * Math.PI) / 180;
       return [50 + 40 * Math.cos(t), 50 + 43 * Math.sin(t)];
     }
     for (var j = 0; j < shown; j++) {
@@ -2806,7 +2797,7 @@
     svg.setAttribute('viewBox', '0 0 ' + box.width + ' ' + box.height);
     var els = [].slice.call($('skyBubbles').querySelectorAll('.bubble'));
     var blank = !els.length,
-      n = blank ? 8 : els.length,
+      n = blank ? 8 : Math.max(els.length, QM_MIN_SLOTS),
       cx = box.width / 2,
       cy = box.height / 2;
     var R = box.height / 2 - 64,
@@ -2838,7 +2829,8 @@
     function f(v) {
       return v.toFixed(1);
     }
-    (blank ? [null, null, null, null, null, null, null, null] : els).forEach(function (el, i) {
+    for (var i = 0; i < n; i++) {
+      var el = els[i] || null;
       var t = ((-90 + (i * 360) / n) * Math.PI) / 180,
         ux = Math.cos(t),
         uy = Math.sin(t),
@@ -2866,7 +2858,7 @@
       out +=
         '<g class="petal' +
         (on ? ' on' : '') +
-        (blank ? ' blank' : '') +
+        (el ? '' : ' blank') +
         g +
         '" data-p="' +
         v +
@@ -2902,7 +2894,7 @@
         ' L' +
         pt(0.88, 0) +
         '"/></g>';
-    });
+    }
     svg.innerHTML = out;
   }
   function qmSelect(j) {
@@ -3144,7 +3136,8 @@
   drawDots();
   qmBuildStars();
   qmRender();
-  // A private link (#manage=<row id>.<key>) hands this browser the key, then opens that memory.
+  // A private link (#manage=<row id>.<key>) hands this browser the key, then opens "Remove a memory",
+  // where that memory is listed with its Delete button.
   var manage = /^#manage=(\d+)\.([0-9a-f]+)$/.exec(location.hash);
   if (manage) {
     keepKey('memories', +manage[1], manage[2]);
@@ -3159,12 +3152,11 @@
       alert('That memory isn’t in the archive anymore.');
       return;
     }
-    $('stage').scrollIntoView({ block: 'start' });
-    openMemory(m.id);
+    openRemoval(null);
   });
   checkAdmin();
 
-  // Removal requests, for people who no longer have their private link.
+  // Removal requests: the one way for visitors to ask for a memory to be taken down.
   var removalFor = null;
   function openRemoval(m) {
     removalFor = m || null;
@@ -3179,11 +3171,99 @@
     $('rErr').hidden = true;
     $('rDone').hidden = true;
     $('removeForm').hidden = false;
+    drawOwnList();
     try {
       $('removeDlg').showModal();
     } catch (e) {
       $('removeDlg').setAttribute('open', '');
     }
+  }
+  // Everything this browser holds a delete key for, so people can delete what they shared themselves.
+  function ownItems() {
+    var own = ownKeys(),
+      items = [];
+    MEMORIES.forEach(function (m) {
+      if (m.rowId != null && own.memories[m.rowId])
+        items.push({ table: 'memories', row: m, label: excerpt(m.text) });
+    });
+    QUESTIONS.forEach(function (Q) {
+      Q.answers.forEach(function (a) {
+        if (a.rowId != null && own.answers[a.rowId])
+          items.push({ table: 'answers', row: a, Q: Q, label: Q.month + ' answer: ' + a.s });
+      });
+    });
+    return items;
+  }
+  function drawOwnList() {
+    var items = online ? ownItems() : [];
+    $('ownWrap').hidden = !items.length;
+    $('removeLede').textContent = items.length
+      ? 'Shared it from somewhere else? Tell us which memory and how we can tell it’s yours, and we’ll take it down.'
+      : 'Tell us which memory and how we can tell it’s yours, and we’ll take it down.';
+    $('ownList').innerHTML = items
+      .map(function (it, i) {
+        return (
+          '<li><span>“' +
+          esc(it.label) +
+          '”</span><span class="own-acts">' +
+          (it.table === 'memories'
+            ? '<button type="button" class="linkbtn" data-ownlink="' +
+              i +
+              '">Copy private link</button>'
+            : '') +
+          '<button type="button" class="linkbtn danger" data-own="' +
+          i +
+          '">Delete</button></span></li>'
+        );
+      })
+      .join('');
+    $('ownList')
+      .querySelectorAll('[data-ownlink]')
+      .forEach(function (b) {
+        b.addEventListener('click', function () {
+          var url = privateLink(items[+b.getAttribute('data-ownlink')].row);
+          if (!url || !navigator.clipboard) return;
+          navigator.clipboard.writeText(url).then(
+            function () {
+              b.textContent = 'Copied';
+              setTimeout(function () {
+                b.textContent = 'Copy private link';
+              }, 2000);
+            },
+            function () {},
+          );
+        });
+      });
+    $('ownList')
+      .querySelectorAll('[data-own]')
+      .forEach(function (b) {
+        b.addEventListener('click', function () {
+          var it = items[+b.getAttribute('data-own')],
+            what = it.table === 'memories' ? 'memory' : 'answer';
+          if (!confirm('Delete this ' + what + ' for everyone? This can’t be undone.')) return;
+          b.disabled = true;
+          removeRow(it.table, it.row.rowId).then(
+            function () {
+              if (it.table === 'memories') {
+                if (it.row.media) removeMedia(it.row.media.url);
+                MEMORIES.splice(MEMORIES.indexOf(it.row), 1);
+                closeMemory();
+                redrawArchive();
+              } else {
+                it.Q.answers.splice(it.Q.answers.indexOf(it.row), 1);
+                qm.sel = -1;
+                qmRender();
+              }
+              drawOwnList();
+            },
+            function (e) {
+              console.error(e);
+              b.disabled = false;
+              b.textContent = 'Couldn’t delete. Try again';
+            },
+          );
+        });
+      });
   }
   $('askRemoveAbout').addEventListener('click', function () {
     openRemoval(null);

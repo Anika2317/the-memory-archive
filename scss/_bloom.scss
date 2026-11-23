@@ -57,7 +57,7 @@ $petal-gap: #ffffff;
 .sky {
   position: relative;
   margin-top: 1.25rem;
-  height: clamp(32rem, 44vw, 36rem);
+  height: clamp(28rem, 40vw, 33rem);
   border: 1px solid var(--line-2);
   border-radius: var(--r-m);
   overflow: hidden;
@@ -96,6 +96,11 @@ $petal-gap: #ffffff;
 
     &.blank {
       pointer-events: none;
+      opacity: 0.4;
+
+      .vein {
+        display: none;
+      }
     }
 
     &.on {

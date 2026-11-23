@@ -337,12 +337,92 @@
   }
 }
 
+// VII. Support & Resources, full width at the foot of the finding aid
+.panel-resources {
+  grid-column: span 12;
+  padding-top: 0.5rem;
+
+  a {
+    color: var(--plum);
+    text-underline-offset: 3px;
+  }
+  .res-lead {
+    max-width: 44rem;
+    font-size: 1.05rem;
+    color: var(--muted);
+  }
+  .res-urgent {
+    margin-top: 1.25rem;
+    padding: 0.9rem 1.1rem;
+    border-left: 3px solid var(--plum);
+    background: var(--bg-2);
+    color: var(--ink);
+    font-size: 0.95rem;
+
+    strong {
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    a {
+      font-weight: 600;
+    }
+  }
+  .res-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.75rem 2rem;
+    margin-top: 1.75rem;
+  }
+  .res-group {
+    h3 {
+      @include mono-small(0.7rem);
+      color: var(--plum);
+      padding-bottom: 0.45rem;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid var(--line-2);
+    }
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 1rem;
+    }
+    li > a:first-child {
+      display: block;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .res-tel {
+      display: inline-block;
+      margin-top: 0.15rem;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+    }
+    span {
+      display: block;
+      margin-top: 0.2rem;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+  }
+  .res-note {
+    margin-top: 1.75rem;
+    font-size: 0.85rem;
+    color: var(--faint);
+  }
+}
+
 @media (max-width: 64rem) {
   .panel-latest,
   .panel.panel-bloom,
   .panel-map,
   .panel.panel-about {
     grid-column: span 12;
+  }
+  .panel-resources .res-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -364,6 +444,9 @@
   .latest button {
     grid-template-columns: 1fr;
     gap: 0.2rem;
+  }
+  .panel-resources .res-grid {
+    grid-template-columns: 1fr;
   }
   .panel.panel-about .facts {
     grid-template-columns: 1fr;
