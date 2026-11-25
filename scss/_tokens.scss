@@ -32,13 +32,15 @@ $bp-stage: 52rem;
   --cream: #f3effa;
   --cream-line: #dcd2ed;
 
-  --script: 'Bricolage Grotesque', 'Atkinson Hyperlegible Next', 'Helvetica Neue', Arial, sans-serif;
-  --bloom: 'Bricolage Grotesque', 'Atkinson Hyperlegible Next', 'Helvetica Neue', Arial, sans-serif;
-  --display: 'Bricolage Grotesque', 'Atkinson Hyperlegible Next', 'Helvetica Neue', Arial,
-    sans-serif;
-  --serif: 'Atkinson Hyperlegible Next', 'Helvetica Neue', Arial, sans-serif;
-  --body: 'Atkinson Hyperlegible Next', 'Helvetica Neue', Arial, sans-serif;
-  --mono: 'Atkinson Hyperlegible Mono', 'Courier New', monospace;
+  // Normal text: a book serif every device already has.
+  --body: Georgia, 'Noto Serif', 'Times New Roman', serif;
+  // Small catalogue labels only.
+  --label: 'Victoria Typewriter', monospace;
+  // Abed has letters and digits only: its punctuation comes from Georgia.
+  --title: 'Abed', Georgia, 'Noto Serif', serif;
+  // Full-height digits: Abed's old-style ones make 115,000 look like II5,ooo.
+  --figure: 'Times New Roman', Times, serif;
+  --script: 'Gourdie Cursive', Georgia, cursive;
   --r-s: 2px;
   --r-m: 3px;
   --ease: cubic-bezier(0.2, 0.75, 0.2, 1);
@@ -70,9 +72,9 @@ $bp-stage: 52rem;
 }
 
 @mixin mono-small($size) {
-  font-family: var(--mono);
+  font-family: var(--label);
   font-weight: 500;
   font-size: calc($size + 0.02rem);
-  letter-spacing: 0.07em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
 }

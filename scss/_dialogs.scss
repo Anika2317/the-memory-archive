@@ -6,7 +6,8 @@
 #qmDlg,
 #loginDlg,
 #removeDlg,
-#reqDlg {
+#reqDlg,
+#resDlg {
   border: 0;
   padding: 0;
   background: transparent;
@@ -69,7 +70,7 @@
   }
   .k {
     display: block;
-    font-family: var(--display);
+    font-family: var(--body);
     font-weight: 600;
     font-size: 1.05rem;
     line-height: 1.25;

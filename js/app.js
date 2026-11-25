@@ -325,7 +325,7 @@
   }
   function setAdmin(email) {
     admin = email ? { email: email } : null;
-    $('adminState').textContent = admin ? 'Signed in as admin (' + admin.email + ')' : '';
+    $('adminState').textContent = admin ? 'Signed in as ' + admin.email : '';
     $('adminBtn').textContent = admin ? 'Sign out' : 'Admin sign-in';
     $('reqBtn').hidden = !admin;
     if (state.active != null) openMemory(state.active);
@@ -869,7 +869,7 @@
       if (W >= 560) {
         var a = on ? 0.98 : state.region ? 0.3 : open ? 0.42 : 0.78;
         var fs = Math.max(10, Math.round(11.5 * Math.min(1.2, s * 1.15)));
-        ctx.font = '500 ' + fs + 'px "Atkinson Hyperlegible Mono", "Courier New", monospace';
+        ctx.font = '500 ' + fs + 'px "Victoria Typewriter", monospace';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         var label = r.name.toUpperCase();
@@ -3180,37 +3180,20 @@
   });
   checkAdmin();
 
-  // Support & Resources: a small card fixed to the side that opens a compact panel.
-  function setResources(open) {
-    $('resPanel').hidden = !open;
-    $('resBackdrop').hidden = !open;
-    $('resToggle').setAttribute('aria-expanded', String(open));
-    document.documentElement.classList.toggle('res-open', open);
-    if (open) $('resClose').focus();
-  }
-  $('resToggle').addEventListener('click', function () {
-    setResources($('resPanel').hidden);
+  ['resNav', 'resFoot'].forEach(function (id) {
+    $(id).addEventListener('click', function () {
+      try {
+        $('resDlg').showModal();
+      } catch (e) {
+        $('resDlg').setAttribute('open', '');
+      }
+    });
   });
   $('resClose').addEventListener('click', function () {
-    setResources(false);
-    $('resToggle').focus();
+    $('resDlg').close();
   });
-  $('resNav').addEventListener('click', function (e) {
-    e.preventDefault();
-    setResources(true);
-  });
-  document.addEventListener('click', function (e) {
-    if (
-      !$('resPanel').hidden &&
-      (e.target === $('resBackdrop') || !e.target.closest('#resources, #resNav'))
-    )
-      setResources(false);
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && !$('resPanel').hidden) {
-      setResources(false);
-      $('resToggle').focus();
-    }
+  $('resDlg').addEventListener('click', function (e) {
+    if (e.target === this) this.close();
   });
 
   // Removal requests: the one way for visitors to ask for a memory to be taken down.
@@ -3524,4 +3507,9 @@
   });
   draw(0);
   if (!reduce) requestAnimationFrame(frame);
+  // With reduced motion there is no second frame, so redraw once the label font arrives.
+  else if (document.fonts)
+    document.fonts.load('500 12px "Victoria Typewriter"').then(function () {
+      draw(performance.now());
+    });
 })();

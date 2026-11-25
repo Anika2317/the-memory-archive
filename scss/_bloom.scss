@@ -20,6 +20,8 @@ $petal-gap: #ffffff;
 }
 
 .qm-title {
+  font-family: var(--title);
+  font-weight: 400;
   font-size: clamp(1.7rem, 3vw, 2.2rem);
   padding-right: 3rem;
 }
@@ -74,7 +76,6 @@ $petal-gap: #ffffff;
   }
   h3 {
     font-size: clamp(1.5rem, 2.6vw, 2rem);
-    font-weight: 400;
     line-height: 1.2;
     color: var(--ink);
   }
@@ -84,7 +85,7 @@ $petal-gap: #ffffff;
   }
 }
 
-// The logo's forget-me-not, on the logo's night background.
+// The logo's forget-me-not, in the intro flower's light colours.
 .qm-flower {
   grid-area: flower;
   position: relative;
@@ -92,9 +93,6 @@ $petal-gap: #ffffff;
   width: 100%;
   max-width: 30rem;
   justify-self: end;
-  border-radius: 22%;
-  background: radial-gradient(circle at 50% 52%, #3a1f63 0%, #2d1450 62%);
-  box-shadow: 0 18px 40px -24px rgba($night, 0.6);
 }
 
 .qm-petals {
@@ -105,34 +103,34 @@ $petal-gap: #ffffff;
   overflow: visible;
 
   .qm-petal {
-    fill: #4b336f;
-    stroke: #e2d4fa;
-    stroke-width: 3.2;
+    fill: #e8e1f7;
+    stroke: var(--plum);
+    stroke-width: 2.6;
     stroke-linejoin: round;
     transition: fill 0.35s;
 
     &.hov {
-      fill: #5a4184;
+      fill: #dccff2;
     }
     &.on {
-      fill: #6c519c;
+      fill: #c6b4e8;
     }
   }
   .qm-c1 {
-    fill: #2d1450;
-    stroke: #e2d4fa;
-    stroke-width: 3.6;
+    fill: var(--bg);
+    stroke: var(--plum);
+    stroke-width: 3;
   }
   .qm-c2 {
-    fill: #4b336f;
-    stroke: #e2d4fa;
-    stroke-width: 2.5;
+    fill: #d8cdf0;
+    stroke: var(--plum);
+    stroke-width: 2;
   }
   .qm-c3 {
-    fill: #fff;
+    fill: var(--plum);
   }
   .qm-c4 {
-    fill: #e2d4fa;
+    fill: var(--plum);
   }
 }
 
@@ -153,7 +151,7 @@ $petal-gap: #ffffff;
   inset: 0;
 }
 
-// One glowing dot per answer, like the dots around the logo's petals.
+// One dot per answer, like the dots around the logo's petals.
 .qm-dot {
   position: absolute;
   width: 2rem;
@@ -173,11 +171,9 @@ $petal-gap: #ffffff;
     width: 0.62rem;
     height: 0.62rem;
     border-radius: 50%;
-    background: #fff;
+    background: var(--lilac);
     transform: translate(-50%, -50%);
-    box-shadow:
-      0 0 6px 2px rgba(255, 255, 255, 0.55),
-      0 0 14px 3px rgba(226, 212, 250, 0.35);
+    box-shadow: 0 0 0 3px var(--bg);
     transition:
       width 0.25s var(--ease),
       height 0.25s var(--ease),
@@ -192,14 +188,13 @@ $petal-gap: #ffffff;
   &.on::after {
     width: 1rem;
     height: 1rem;
-    background: #fff;
+    background: var(--plum);
     box-shadow:
-      0 0 0 3px #6c519c,
-      0 0 0 5px #fff,
-      0 0 18px 6px rgba(226, 212, 250, 0.6);
+      0 0 0 3px var(--bg),
+      0 0 0 5px var(--plum);
   }
   &:focus-visible {
-    outline: 2px solid #e2d4fa;
+    outline: 2px solid var(--lilac);
     outline-offset: 2px;
   }
   &.ghost {
@@ -255,7 +250,8 @@ $petal-gap: #ffffff;
   }
   blockquote {
     margin: 0.45rem 0 0.4rem;
-    font-family: var(--bloom);
+    font-family: var(--body);
+    font-weight: 400;
     font-size: clamp(0.98rem, 1.7vw, 1.2rem);
     line-height: 1.7;
     color: var(--silver);

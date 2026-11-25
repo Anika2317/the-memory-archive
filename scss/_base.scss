@@ -50,10 +50,11 @@ button {
 h1,
 h2,
 h3 {
-  font-family: var(--display);
+  font-family: var(--title);
   font-weight: 400;
   margin: 0;
   text-wrap: balance;
+  word-spacing: -0.1em;
   line-height: 1.12;
 }
 
@@ -67,7 +68,7 @@ p {
   padding-inline: 1.25rem;
 }
 .mono {
-  font-family: var(--mono);
+  font-family: var(--label);
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;

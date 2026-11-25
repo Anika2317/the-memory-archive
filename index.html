@@ -20,12 +20,6 @@
     />
     <meta property="og:url" content="https://the-memory-archive.org/" />
     <meta property="og:image" content="https://the-memory-archive.org/logo.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Atkinson+Hyperlegible+Next:wght@400..700&family=Atkinson+Hyperlegible+Mono:wght@400..600&display=swap"
-    />
     <link rel="stylesheet" href="css/main.css" />
     <script>
       // Set before first paint so the intro's hidden shots never flash.
@@ -45,7 +39,7 @@
           <button class="navbtn" id="qmOpen">The Monthly Bloom</button>
           <a href="#all">Browse</a>
           <a href="#about">About</a>
-          <a href="#resources" id="resNav">Resources</a>
+          <button class="navbtn" id="resNav" aria-haspopup="dialog">Resources</button>
           <button class="add-btn" id="addTop">Add a memory</button>
         </nav>
       </div>
@@ -113,13 +107,20 @@
         </svg>
         <div class="intro-shot" data-shot>
           <p class="caption">The Memory Archive · San Diego</p>
-          <p class="line">
-            Stories about people living with Alzheimer's, shared by their families and friends.
-          </p>
+          <p class="line">A person is more than what they remember.</p>
         </div>
         <div class="intro-shot" data-shot>
           <p class="caption">Forget-me-not</p>
-          <p class="line">Songs, recipes, places, and everyday habits.</p>
+          <p class="line">
+            A community record of the songs, kitchens, neighborhoods, and small habits that make up
+            a life.
+          </p>
+        </div>
+        <div class="intro-shot" data-shot>
+          <p class="caption">Why we keep them</p>
+          <p class="line">
+            So the people we love are known for who they have always been, not only a diagnosis.
+          </p>
         </div>
         <div class="intro-shot title" data-shot>
           <svg class="flower" viewBox="-100 -100 200 200" aria-hidden="true">
@@ -364,9 +365,9 @@
                   />
                   <g
                     fill="#584C70"
-                    font-family="Atkinson Hyperlegible Mono, Courier New, monospace"
+                    font-family="Victoria Typewriter, monospace"
                     font-size="14"
-                    letter-spacing="1"
+                    letter-spacing="0"
                   >
                     <text x="92" y="48">DEL MAR</text>
                     <text x="74" y="246">LA JOLLA</text>
@@ -445,102 +446,145 @@
       </div>
     </main>
 
-    <aside class="res-float" id="resources" aria-label="Support and resources">
-      <div class="res-backdrop" id="resBackdrop" hidden></div>
-      <div class="res-panel" id="resPanel" hidden>
-        <div class="res-panel-head">
-          <h2 id="resTitle">Support &amp; Resources</h2>
-          <button class="close" id="resClose" aria-label="Close resources">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              aria-hidden="true"
-            >
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </button>
-        </div>
-        <p class="res-lead">
-          Not sure where to start? One call is enough. Just say what's going on.
-        </p>
-        <ul class="res-list">
-          <li>
-            <a href="https://www.alz.org/help-support" target="_blank" rel="noopener"
-              >Alzheimer's Association Helpline</a
-            ><a class="res-tel" href="tel:18002723900">1-800-272-3900</a>
-          </li>
-          <li>
-            <a href="https://www.alzsd.org/" target="_blank" rel="noopener">Alzheimer's San Diego</a
-            ><a class="res-tel" href="tel:8584924400">858-492-4400</a>
-          </li>
-          <li>
-            <a
-              href="https://www.sandiegocounty.gov/hhsa/programs/ais/"
-              target="_blank"
-              rel="noopener"
-              >SD County Aging &amp; Independence</a
-            ><a class="res-tel" href="tel:18003394661">1-800-339-4661</a>
-          </li>
-          <li>
-            <a href="https://211sandiego.org/" target="_blank" rel="noopener">211 San Diego</a
-            ><a class="res-tel" href="tel:211">Dial 2-1-1</a>
-          </li>
-          <li>
-            <a href="https://www.caregiver.org/" target="_blank" rel="noopener"
-              >Family Caregiver Alliance</a
-            >
-          </li>
-          <li>
-            <a
-              href="https://www.alz.org/alzheimers-dementia/10_signs"
-              target="_blank"
-              rel="noopener"
-              >10 early signs of Alzheimer's</a
-            >
-          </li>
-        </ul>
-        <p class="res-contact">
-          Contact us:
-          <a href="mailto:thememoryarchive.sd@gmail.com">thememoryarchive.sd@gmail.com</a>
-        </p>
-      </div>
-      <button class="res-toggle" id="resToggle" aria-expanded="false" aria-controls="resPanel">
-        <img src="favicon.svg" width="22" height="22" alt="" />
-        <span><strong>Need support?</strong><small>Resources</small></span>
-      </button>
-    </aside>
-
     <footer>
       <div class="wrap">
-        <div class="mark">
-          <img src="favicon.svg" width="40" height="40" alt="" />
+        <div class="foot-grid">
+          <div class="foot-id">
+            <img src="img/logo-soft.svg" width="54" height="54" alt="" />
+            <div>
+              <div class="foot-name">The Memory Archive</div>
+              <div class="tag">Forget Me Not</div>
+            </div>
+          </div>
+          <nav aria-labelledby="footNav">
+            <h2 class="foot-head" id="footNav">Archive</h2>
+            <ul>
+              <li><a href="#all">All memories</a></li>
+              <li><a href="#where">Map of memories</a></li>
+              <li><a href="#about">About the archive</a></li>
+              <li>
+                <button class="linkbtn" id="resFoot" aria-haspopup="dialog">
+                  Support &amp; Resources
+                </button>
+              </li>
+            </ul>
+          </nav>
           <div>
-            <div class="tag">Forget Me Not</div>
-            <div>The Memory Archive · Leucent Inc</div>
+            <h2 class="foot-head">Correspondence</h2>
+            <dl class="foot-contact">
+              <div>
+                <dt>Email</dt>
+                <dd>
+                  <a href="mailto:thememoryarchive.sd@gmail.com">thememoryarchive.sd@gmail.com</a>
+                </dd>
+              </div>
+              <div>
+                <dt>Instagram</dt>
+                <dd>
+                  <a
+                    href="https://www.instagram.com/memoryarchive.the/"
+                    target="_blank"
+                    rel="noopener"
+                    >@memoryarchive.the</a
+                  >
+                </dd>
+              </div>
+            </dl>
           </div>
-        </div>
-        <div class="foot-right">
-          <p class="foot-contact">
-            <span>Correspondence:</span>
-            <a href="mailto:thememoryarchive.sd@gmail.com">thememoryarchive.sd@gmail.com</a> ·
-            Instagram
-            <a href="https://www.instagram.com/memoryarchive.the/" target="_blank" rel="noopener"
-              >@memoryarchive.the</a
-            >
-          </p>
-          <div class="admin">
+          <div class="foot-admin">
+            <h2 class="foot-head">Administration</h2>
             <span id="adminState" aria-live="polite"></span>
-            <button class="linkbtn" id="reqBtn" hidden>Removal requests</button>
-            <button class="linkbtn" id="adminBtn">Admin sign-in</button>
+            <ul>
+              <li><button class="linkbtn" id="reqBtn" hidden>Removal requests</button></li>
+              <li><button class="linkbtn" id="adminBtn">Admin sign-in</button></li>
+            </ul>
           </div>
         </div>
+        <p class="foot-base">The Memory Archive · Leucent Inc. · San Diego</p>
       </div>
     </footer>
+
+    <dialog id="resDlg" aria-labelledby="resTitle">
+      <div class="sheet">
+        <button class="close" id="resClose" aria-label="Close resources">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+        <h2 class="sheet-title" id="resTitle">Support &amp; Resources</h2>
+        <section class="res-group">
+          <h3>By phone</h3>
+          <ul>
+            <li>
+              <a
+                class="res-name"
+                href="https://www.alz.org/help-support"
+                target="_blank"
+                rel="noopener"
+                >Alzheimer's Association Helpline</a
+              ><a class="res-tel" href="tel:18002723900">1-800-272-3900</a>
+            </li>
+            <li>
+              <a class="res-name" href="https://www.alzsd.org/" target="_blank" rel="noopener"
+                >Alzheimer's San Diego</a
+              ><a class="res-tel" href="tel:8584924400">858-492-4400</a>
+            </li>
+            <li>
+              <a
+                class="res-name"
+                href="https://www.sandiegocounty.gov/hhsa/programs/ais/"
+                target="_blank"
+                rel="noopener"
+                >SD County Aging &amp; Independence</a
+              ><a class="res-tel" href="tel:18003394661">1-800-339-4661</a>
+            </li>
+            <li>
+              <a class="res-name" href="https://211sandiego.org/" target="_blank" rel="noopener"
+                >211 San Diego</a
+              ><a class="res-tel" href="tel:211">Dial 2-1-1</a>
+            </li>
+          </ul>
+        </section>
+        <section class="res-group">
+          <h3>Online</h3>
+          <ul>
+            <li>
+              <a class="res-name" href="https://www.caregiver.org/" target="_blank" rel="noopener"
+                >Family Caregiver Alliance</a
+              >
+            </li>
+            <li>
+              <a
+                class="res-name"
+                href="https://www.alz.org/alzheimers-dementia/10_signs"
+                target="_blank"
+                rel="noopener"
+                >10 early signs of Alzheimer's</a
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="res-group">
+          <h3>Contact us</h3>
+          <ul>
+            <li>
+              <a class="res-name" href="mailto:thememoryarchive.sd@gmail.com"
+                >thememoryarchive.sd@gmail.com</a
+              >
+            </li>
+          </ul>
+        </section>
+      </div>
+    </dialog>
 
     <dialog id="readDlg" aria-labelledby="readMeta">
       <div class="read"><div class="read-in" id="readIn"></div></div>

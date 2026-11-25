@@ -1,0 +1,21 @@
+// The 100–900 range stops browsers faking a bold from a font that has one weight.
+@mixin face($name, $file, $format, $weight: 100 900, $range: null) {
+  @font-face {
+    font-family: $name;
+    src: url('../fonts/#{$file}') format($format);
+    font-weight: $weight;
+    font-display: swap;
+    unicode-range: $range;
+  }
+}
+
+@include face('Victoria Typewriter', 'victoria-typewriter.ttf', 'truetype', 100 599);
+@include face('Victoria Typewriter', 'victoria-typewriter-bold.ttf', 'truetype', 600 900);
+@include face('Abed', 'abed-bold-demo.otf', 'opentype');
+// Letters, comma, and full stop only: its hyphen, apostrophe, and accents are blank.
+@include face(
+  'Gourdie Cursive',
+  'gourdie-cursive.ttf',
+  'truetype',
+  $range: (U+20, U+2C, U+2E, U+41-5A, U+61-7A)
+);

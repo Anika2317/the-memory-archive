@@ -23,15 +23,16 @@
     margin-bottom: 0.45rem;
   }
   h1 {
-    font-size: clamp(2.35rem, 4.4vw, 3.5rem);
+    font-family: Palatino, 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+    word-spacing: 0;
+    font-size: clamp(1.9rem, 3vw, 2.4rem);
     font-weight: 400;
-    letter-spacing: -0.015em;
-    color: var(--ink);
+    line-height: 1.25;
+    color: var(--plum);
 
     em {
-      color: var(--plum);
-      font-style: normal;
-      font-weight: 600;
+      display: inline-block;
+      color: #7d66b5;
     }
   }
   p {
@@ -49,7 +50,7 @@
   p {
     margin: 0;
     padding: 0.7rem 1.25rem;
-    font-family: var(--mono);
+    font-family: var(--label);
     font-size: 0.68rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -65,8 +66,8 @@
   }
   strong {
     display: inline;
-    font-family: var(--display);
-    font-weight: 500;
+    font-family: var(--figure);
+    font-weight: 700;
     font-size: 1.6rem;
     line-height: 1;
     letter-spacing: 0;
@@ -109,21 +110,21 @@
     gap: 0.65rem;
   }
   .sec-no {
-    font-family: var(--mono);
+    font-family: var(--label);
     font-size: 0.78rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     color: var(--plum);
   }
   h2 {
+    font-family: var(--title);
     font-size: clamp(1.35rem, 2.2vw, 1.65rem);
     font-weight: 400;
     color: var(--ink);
-    letter-spacing: -0.01em;
   }
   .count {
     margin: 0;
-    font-family: var(--mono);
+    font-family: var(--label);
     font-size: 0.72rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -146,10 +147,7 @@
 
   .btn-line {
     padding: 0.45rem 0.95rem;
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    font-size: 0.92rem;
     background: var(--bg-2);
   }
 }
@@ -231,6 +229,8 @@
 // III. The Monthly Bloom (Archival Inquiry / Correspondence Slip)
 .panel.panel-bloom {
   grid-column: span 5;
+  // Level with the top of the Latest Memories list, below that panel's heading.
+  margin-top: 4.4rem;
   background: var(--bg-2);
   border: 1px solid var(--line-2);
   outline: 1px solid var(--line);
@@ -248,10 +248,10 @@
     color: var(--plum);
   }
   .hub-q {
-    font-family: var(--display);
-    font-style: normal;
-    font-weight: 500;
+    font-family: var(--title);
+    font-weight: 400;
     font-size: 1.35rem;
+    word-spacing: -0.1em;
     line-height: 1.32;
     margin-top: 0.35rem;
     color: var(--ink);
@@ -284,9 +284,9 @@
   padding-top: 0.5rem;
 
   .about-lead {
-    font-family: var(--display);
-    font-size: clamp(1.45rem, 2.3vw, 1.85rem);
+    font-family: var(--title);
     font-weight: 400;
+    font-size: clamp(1.45rem, 2.3vw, 1.85rem);
     line-height: 1.25;
     color: var(--ink);
     margin-bottom: 0.25rem;
@@ -318,8 +318,9 @@
       border-left: 1px solid var(--line);
     }
     .big {
-      font-family: var(--display);
-      font-size: 1.65rem;
+      font-family: var(--figure);
+      font-weight: 700;
+      font-size: 1.75rem;
       color: var(--ink);
     }
     p {
@@ -328,7 +329,7 @@
       margin-top: 0.25rem;
     }
     .src {
-      font-family: var(--mono);
+      font-family: var(--label);
       font-size: 0.64rem;
       letter-spacing: 0.04em;
       text-transform: uppercase;
@@ -338,6 +339,13 @@
 }
 
 @media (max-width: 64rem) {
+  // Every panel spans the full row here; twelve column gaps alone are wider than a phone.
+  .hub-grid {
+    column-gap: 0;
+  }
+  .panel.panel-bloom {
+    margin-top: 0;
+  }
   .panel-latest,
   .panel.panel-bloom,
   .panel-map,

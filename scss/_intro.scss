@@ -62,7 +62,7 @@
   text-align: center;
 
   .caption {
-    font-family: var(--mono);
+    font-family: var(--label);
     font-size: 0.76rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -78,29 +78,28 @@
     background: var(--line-2);
   }
   .line {
-    font-family: var(--display);
+    font-family: var(--title);
+    word-spacing: -0.1em;
     font-weight: 400;
-    font-size: clamp(1.85rem, 4vw, 3.1rem);
+    font-size: clamp(1.7rem, 3.7vw, 2.8rem);
     line-height: 1.24;
-    letter-spacing: -0.015em;
     text-wrap: balance;
   }
 }
 
 .intro-shot.title {
   .name {
-    font-family: var(--display);
+    font-family: var(--title);
+    word-spacing: -0.1em;
     font-weight: 400;
     font-size: clamp(2.8rem, 7vw, 4.8rem);
     line-height: 1.08;
-    letter-spacing: -0.02em;
     margin-top: 1.5rem;
   }
   .slogan {
-    font-family: var(--display);
-    font-style: normal;
-    font-weight: 500;
-    font-size: clamp(1.3rem, 2.2vw, 1.75rem);
+    font-family: var(--script);
+    font-weight: 400;
+    font-size: clamp(1.9rem, 3.2vw, 2.6rem);
     color: var(--lilac);
     margin-top: 0.25rem;
   }
@@ -115,8 +114,10 @@
   }
   .cta button {
     @include pill-solid;
-    padding: 0.7rem 1.35rem;
-    font-weight: 500;
+    padding: 0.55rem 1.5rem 0.7rem;
+    font-family: var(--script);
+    font-size: 1.6rem;
+    line-height: 1.2;
   }
 }
 
@@ -267,7 +268,7 @@
   left: 50%;
   bottom: 2.2rem;
   translate: -50% 0;
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -294,7 +295,7 @@
   position: absolute;
   left: 2.2rem;
   bottom: 2rem;
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
