@@ -10,7 +10,18 @@
   window.addEventListener('resize', topHeight);
 
   var intro = document.getElementById('intro');
-  if (!intro || !document.documentElement.classList.contains('intro-on')) return;
+  if (!intro) return;
+  // Links to a part of the page still go there. Otherwise the browser's own scroll position is
+  // ignored, so a reload starts at the title too.
+  var fresh = !location.hash;
+  if (fresh && 'scrollRestoration' in history) history.scrollRestoration = 'manual';
+  if (!document.documentElement.classList.contains('intro-on')) {
+    if (fresh) {
+      var title = intro.querySelector('.intro-shot.title');
+      title.scrollIntoView({ block: 'center', behavior: 'instant' });
+    }
+    return;
+  }
   var shots = [].slice.call(intro.querySelectorAll('[data-shot]'));
   var bar = document.getElementById('introBar');
   // The sprig drawings grow in from the stem as you scroll, the second one a little later.
@@ -43,17 +54,17 @@
     at = i;
   }
 
-  // People who have seen it before start at the archive; they can scroll up to watch again.
-  var seen = false;
-  try {
-    seen = !!localStorage.getItem('archive-intro-seen');
-    localStorage.setItem('archive-intro-seen', '1');
-  } catch (e) {}
-  if (seen && !location.hash && window.scrollY === 0)
+  // Every load opens on the title shot; visitors can scroll up for the lines before it.
+  if (fresh) {
+    var p0 = (shots.length - 1) / (shots.length + 0.6);
     window.scrollTo({
-      top: document.getElementById('archive').offsetTop - topHeight(),
+      top:
+        intro.offsetTop -
+        topHeight() +
+        (p0 + (1 - p0) * 0.4) * (intro.offsetHeight - window.innerHeight + topHeight()),
       behavior: 'instant',
     });
+  }
 
   var queued = false;
   window.addEventListener(
