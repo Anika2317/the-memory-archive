@@ -11,12 +11,18 @@
 
   var intro = document.getElementById('intro');
   if (!intro) return;
-  // Links to a part of the page still go there. Otherwise the browser's own scroll position is
-  // ignored, so a reload starts at the title too.
-  var fresh = !location.hash;
-  if (fresh && 'scrollRestoration' in history) history.scrollRestoration = 'manual';
+  // Opening the link starts at the first line. Reloading, or coming back in the same tab, starts
+  // at the title instead. Links to a part of the page still go there.
+  var entry = performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+  var again = !!entry && entry.type === 'reload';
+  try {
+    again = again || !!sessionStorage.getItem('archive-intro-seen');
+    sessionStorage.setItem('archive-intro-seen', '1');
+  } catch (e) {}
+  var toTitle = again && !location.hash;
+  if (toTitle && 'scrollRestoration' in history) history.scrollRestoration = 'manual';
   if (!document.documentElement.classList.contains('intro-on')) {
-    if (fresh) {
+    if (toTitle) {
       var title = intro.querySelector('.intro-shot.title');
       title.scrollIntoView({ block: 'center', behavior: 'instant' });
     }
@@ -54,8 +60,8 @@
     at = i;
   }
 
-  // Every load opens on the title shot; visitors can scroll up for the lines before it.
-  if (fresh) {
+  // Visitors can scroll up from the title for the lines before it.
+  if (toTitle) {
     var p0 = (shots.length - 1) / (shots.length + 0.6);
     window.scrollTo({
       top:
